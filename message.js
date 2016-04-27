@@ -3,12 +3,11 @@ var yt = require('ytdl-core');
 var fn = require('./functions.js');
 var fs = require('fs');
 var Playlist = require('./playlist.json');
-var MotD = null;
-// 60,000 = 1 Minutes
-var msgTime = 1800000;
+var queue = new Array();
 
-exports.cmds = (bot, msg, queue, playing) => {
+exports.cmds = (bot, msg) => {
     var server = bot.servers.get('name', 'Milhound');
+
     // Commands Command
     if(msg.content == '!commands'){
         bot.sendMessage(msg.author,
@@ -19,17 +18,16 @@ exports.cmds = (bot, msg, queue, playing) => {
             !slap @user - Slaps all mentioned users\n
             !insult (@user - optional) - Insults the sender or @user.\n
             !hi @user - Says Hello to all mentioned users\n
-            !admin - Sends PM with a list of Admins\n
             !cat - Random Cat\n
             !music - PMs list of available music\n
             !queue - PMs current queue\n
             !play (Song Name) - Plays the specified song\n
-            !playAll - Plays all songs\n
+            !yt <url> - Plays the YouTube like a song\n
+            !playAll or !play All - Plays all songs\n
             !playlist (Playlist Name) - Plays playlist\n
             !next - Plays the next song in queue\n
             !shuffle - Shuffles current queue\n
-            !clear - Clears current queue\n
-            !end - Forces bot to stop playing`);
+            !clear - Clears current queue`);
     }
 
     // Ping Command
@@ -58,13 +56,6 @@ exports.cmds = (bot, msg, queue, playing) => {
         for (mentioned of msg.mentions){
             bot.sendMessage(msg.channel, 'Hello ' + mentioned);
         }
-    }
-
-    // Admin Command
-    if(msg.content == '!admin'){
-        console.log(msg.sender.username  + ' used the Admin Command')
-         var admin = server.usersWithRole(server.roles.get('name', 'Admin'))
-        bot.sendMessage(msg.author, 'Admins: \n' + server.usersWithRole(server.roles.get('name', 'Admin')));
     }
 
     // Cat Command
@@ -100,18 +91,6 @@ exports.cmds = (bot, msg, queue, playing) => {
 
     }
 
-    // Start MotD
-    if (msg.content == '!start' && fn.hasRole(bot, msg, server)){
-        console.log(msg.sender.username  + ' as used the Message of the Day Start command')
-        MotD = setInterval(fn.msgOfTheDay, msgTime);
-    }
-
-    // Stop MotD
-    if (msg.content == '!stop' && fn.hasRole(bot, msg, server)){
-        console.log(msg.sender.username  + ' as used the Message of the Day Stop command')
-        clearInterval(MotD);
-    }
-
     // Youtube Download
     if (msg.content.startsWith('!ytdl') && fn.hasRole(bot, msg, server)){
         var args = msg.content.split(' ');
@@ -133,14 +112,52 @@ exports.cmds = (bot, msg, queue, playing) => {
                     res.on('end', () => {
                         var json = JSON.parse(chunk);
                         title = json.items[0].snippet.title;
-                        title = title.replace(/\u+0028/, '').replace( /\u+005B/, '_').replace(/ - /g, '-').replace(/ /g, '_').replace(/\u+005D/, '').replace(/\u+0029/, '');
+                        title = title.trim();
                         yt(args[1], { filter: 'audioonly' }).pipe(fs.createWriteStream('music/' + title + '.m4a'));
                         bot.reply(msg, title + ' ready for use!');
                     });
                 }); // end get
         }
-    } else if (msg.content.startsWith('!ytdl') && !fn.hasRole(bot, msg, server)){
+        } else if (msg.content.startsWith('!ytdl') && !fn.hasRole(bot, msg, server)){
         bot.reply(msg, 'You dont have permission to download from youTube');
+    }
+
+    //youTube Player
+    if (msg.content.startsWith('!yt') && fn.hasRole(bot, msg, server)){
+        var args = msg.content.split(' ');
+        if (args[1] == null){
+            bot.reply(msg, 'Missing the URL');
+        }
+
+        if (args[1] != null && !args[2]){
+                var ready = fn.ready_state(bot);
+                var title = '';
+                var url = args[1];
+                console.log(bot.user.game);
+                if (!ready && bot.user.game && bot.user.game == "youTube"){
+                    bot.reply(msg, 'Try again when bot is not playing youTube.');
+                } else {
+                var youtube = yt(args[1], { filter: 'audioonly' });
+                youtube.pipe(fs.createWriteStream('music/youTube.m4a'));
+                youtube.on('end', () => {
+
+                            if (!ready && queue.length > 0){
+                                queue.push(args[1]);
+                                bot.reply(msg, 'Added youTube to queue');
+                                console.log('Added youTube to queue.');
+                            }
+                            if (!ready && queue.length == 0){
+                                queue.push('youTube');
+                                bot.reply('Your youTube will play next.');
+                            }
+                            if (ready && queue.length == 0){
+                                bot.reply(msg, "Playing YouTube");
+                                queue.push('youTube');
+                                fn.play(bot, msg, queue);
+                            }
+                }); // End YouTube on
+            }
+        }
     }
 
     // List Music
@@ -154,30 +171,30 @@ exports.cmds = (bot, msg, queue, playing) => {
     }
 
     // PM Queue
-    if (msg.content == '!queue' && fn.onServer(bot, msg)){
+    if (msg.content == '!queue'){
         console.log(msg.sender.username + ' used the Queue command');
         bot.sendMessage(msg.sender, queue);
     }
 
     // Clear Queue
-    if (msg.content == '!clear' && fn.onServer(bot, msg)){
+    if (msg.content == '!clear'){
         queue = new Array();
         bot.sendMessage(msg, 'Queue Cleared!');
     }
 
     // Next Song
-    if (msg.content == '!next' && queue.length > 0 && fn.onServer(bot, msg)){
+    if (msg.content == '!next' && queue.length > 0){
         var connections = bot.voiceConnections;
         for (var i = 0; i < connections.length; i++){
             var conn = bot.voiceConnections[i];
             conn.stopPlaying();
         }
-    } else if (msg.content == '!next' && queue.length == 0 && fn.onServer(bot, msg)){
-        bot.reply(msg, 'Song queue is empty.');
+        } else if (msg.content == '!next' && queue.length == 0){
+            bot.reply(msg, 'Song queue is empty.');
     }
 
     // Shuffle
-    if (msg.content == '!shuffle' && queue.length > 0 && fn.onServer(bot, msg)){
+    if (msg.content == '!shuffle' && queue.length > 0){
         console.log('Shuffling queue');
 
         var counter = queue.length;
@@ -192,12 +209,12 @@ exports.cmds = (bot, msg, queue, playing) => {
                 queue[index] = temp;
             }
         bot.reply(msg, 'Sucessfully shuffled the current queue');
-    } else if (msg.content == '!shuffle' && queue.length == 1 || msg.content == '!shuffle' && queue.length == 0){
-        bot.reply(msg, 'Queue not long enough to shuffle.');
+        } else if (msg.content == '!shuffle' && queue.length == 1 || msg.content == '!shuffle' && queue.length == 0){
+            bot.reply(msg, 'Queue not long enough to shuffle.');
     }
 
     //Play All
-    if (msg.content.startsWith('!playAll') && fn.onServer(bot, msg)){
+    if (msg.content.startsWith('!playAll') || msg.content == "!play All"){
         var music = fs.readdirSync('music');
         music.shift();
         for ( var i in music ) {
@@ -217,17 +234,17 @@ exports.cmds = (bot, msg, queue, playing) => {
             queue[counter] = queue[index];
             queue[index] = temp;
         }
-
-        if (!playing){
+        var ready = fn.ready_state(bot);
+        if (ready){
             fn.play(bot,
-                msg, queue, playing);
+                msg, queue, ready);
         }
 
         bot.reply(msg, 'Added all songs to the queue');
     }
 
     // Playlist Command
-    if (msg.content.startsWith('!playlist') && fn.onServer(bot, msg)){
+    if (msg.content.startsWith('!playlist')){
         var args = msg.content.split(' ');
         if (args[1]){
             var addedPlaylist = Playlist[args[1]]
@@ -247,8 +264,9 @@ exports.cmds = (bot, msg, queue, playing) => {
                     queue[counter] = queue[index];
                     queue[index] = temp;
                 }
-                if (!playing){
-                    fn.play(bot, msg, queue, playing);
+                var ready = fn.ready_state(bot);
+                if (ready){
+                    fn.play(bot, msg, queue);
                 }
                 console.log(queue);
             bot.reply(msg, 'Added playlist ' + args[1]);
@@ -265,16 +283,12 @@ exports.cmds = (bot, msg, queue, playing) => {
         queue = new Array();
         bot.leaveVoiceChannel(msg.sender.voiceChannel);
         bot.setPlayingGame(null);
-        playing = false;
-        forced = true;
-        bot.reply(msg, 'Bot has stopped playing Music, and can now change Servers.');
-    } else if (msg.content == '!end' && !fn.hasRole(bot, msg, server)){
-        bot.reply(msg, 'You do not have permission to !end on this server');
+        } else if (msg.content == '!end' && !fn.hasRole(bot, msg, server)){
+            bot.reply(msg, 'You do not have permission to !end on this server');
     }
 
-
     // Play Command
-    if (msg.content.startsWith('!play') && !msg.content.startsWith('!playlist') && !msg.content.startsWith('!playAll') && fn.onServer(bot, msg)){
+    if (msg.content.startsWith('!play') && !msg.content.startsWith('!playlist') && !msg.content.startsWith('!playAll') && msg.content != "!play All"){
         var args = msg.content.split(' ');
 
         if (queue.length == 0 && args[1] == null){
@@ -283,26 +297,33 @@ exports.cmds = (bot, msg, queue, playing) => {
         }
 
         if (args[1]  != null){
-            if(fs.existsSync("music/" + args[1] + ".m4a")){
+            var song = msg.content;
 
-                if (playing && queue.length > 0){
-                    queue.push(args[1]);
-                    bot.reply(msg, 'Added ' + args[1] + ' to queue');
-                    console.log('Added ' + args[1]+ ' to queue.');
+            song = song.trim();
+            song = song.replace('!play ', '');
+            song = song.replace(/ /g, '\ ');
+
+            if(fs.existsSync("music/" + song + ".m4a")){
+                var ready = fn.ready_state(bot);
+
+                if (!ready && queue.length > 0){
+                    queue.push(song);
+                    bot.reply(msg, 'Added ' + song + ' to queue');
+                    console.log('Added ' + song + ' to queue.');
                 }
 
-                if (playing && queue.length == 0){
-                    queue.push(args[1]);
-                    bot.reply(msg, args[1] + ' will play next.');
+                if (!ready && queue.length == 0){
+                    queue.push(song);
+                    bot.reply(msg, song + ' will play next.');
                     console.log('Playing Next ' + args[1]);
                 }
-                if (!playing && queue.length == 0){
-                    queue.push(args[1]);
-                    fn.play(bot, msg, queue, playing);
+                if (ready && queue.length == 0){
+                    queue.push(song);
+                    fn.play(bot, msg, queue);
                 }
             } else {
                 console.log('Unknown Song');
-                bot.reply(msg, 'Song unknown. Use !music for a list.');
+                bot.sendMessage(msg.author, song + ' song unknown. Use !music for a list.');
                 }
         }
     }
