@@ -20,6 +20,8 @@ exports.cmds = (bot, msg) => {
             !insult (@user - optional) - Insults the sender or @user.\n
             !hi @user - Says Hello to all mentioned users\n
             !cat - Random Cat\n
+            !toC <#> - Converts Fahrenheit to Celsius\n
+            !toF <#> - Converts Celsius to Fahrenheit\n
             !music - PMs list of available music\n
             !queue - PMs current queue\n
             !play (Song Name) - Plays the specified song\n
@@ -261,6 +263,7 @@ exports.cmds = (bot, msg) => {
         }
 
         bot.reply(msg, 'Added all songs to the queue');
+        bot.deleteMessage(msg);
     }
 
     // Playlist Command
@@ -290,11 +293,14 @@ exports.cmds = (bot, msg) => {
                 }
                 console.log(queue);
             bot.reply(msg, 'Added playlist ' + args[1]);
+            bot.deleteMessage(msg);
             } else {
                 bot.reply(msg, 'Invalid Playlist');
+                bot.deleteMessage(msg);
             }
         } else {
             bot.reply(msg, 'Please supply !playlist command with name of playlist');
+            bot.deleteMessage(msg);
         }
     }
 
@@ -372,6 +378,38 @@ exports.cmds = (bot, msg) => {
         } else if (args[1] > 15){
             bot.deleteMessage(msg);
             bot.sendMessage(msg.sender, 'Limit 15 on wipe.');
+        }
+    }
+
+    // Change username
+    if (msg.content.startsWith('!usrName') && fn.hasRole(bot, msg, server)){
+        var args = msg.content.split(' ');
+        if (args[1]){
+            bot.setUsername(args[1], (err) => {
+                if (err){
+                    console.log(err.text);
+                }
+            });
+        }
+    }
+
+    // Celsius to Fahrenheit
+    if (msg.content.startsWith('!toF')){
+        var args = msg.content.split(' ');
+        if(args[1] && !args[2]){
+            var C = args[1];
+            var F = (C * 1.8 + 32).toFixed(0);
+            bot.reply(msg, F);
+        }
+    }
+
+    // Fahrenheit to Celsius
+    if (msg.content.startsWith('!toC')){
+        var args = msg.content.split(' ');
+        if(args[1] && !args[2]){
+            var F = args[1];
+            var C = ((F -32) * (5/9)).toFixed(0);
+            bot.reply(msg, C);
         }
     }
 }

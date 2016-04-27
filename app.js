@@ -24,12 +24,12 @@ bot.on('message', (msg) => {
     Message.cmds(bot, msg);
 });
 
-
+/*
  // New Member has Joined
 bot.on('serverNewMember', (server, user) => {
     fn.notification(bot,server,user);
     // Wait 3 seconds for the user to update.
     setTimeout(fn.notification(bot,server,user), 3000);
 });
-
+*/
 bot.loginWithToken(Authentication.token, Authentication.email, Authentication.pass);
