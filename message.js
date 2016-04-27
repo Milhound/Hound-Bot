@@ -4,6 +4,7 @@ var fn = require('./functions.js');
 var fs = require('fs');
 var Playlist = require('./playlist.json');
 var queue = new Array();
+var async = require('async');
 
 exports.cmds = (bot, msg) => {
     var server = bot.servers.get('name', 'Milhound');
@@ -34,12 +35,13 @@ exports.cmds = (bot, msg) => {
     if(msg.content == '!ping'){
         console.log(msg.sender.username + ' as used the ping command')
         bot.reply(msg, 'pong');
+        bot.deleteMessage(msg);
     }
 
     // Help Command
     if(msg.content == '!help'){
         console.log(msg.sender.username + ' as used the help command')
-        bot.reply(msg, 'Please refer to ' + bot.channels.get('name','rules') + ' and ' + bot.channels.get('name','info') + ' for help! Bot commands can be found via !commands.')
+        bot.sendMessage(msg.sender, 'Please refer to ' + bot.channels.get('name','rules_and_info') + ' and ' + bot.channels.get('name','announcements') + ' for help! Bot commands can be found via !commands.')
     }
 
     // Slap Command
@@ -48,6 +50,7 @@ exports.cmds = (bot, msg) => {
         for (mentioned of msg.mentions){
             bot.sendMessage(msg.channel, mentioned + " You've been SLAPPED!");
         }
+        bot.deleteMessage(msg);
     }
 
     // Hi Command
@@ -56,6 +59,7 @@ exports.cmds = (bot, msg) => {
         for (mentioned of msg.mentions){
             bot.sendMessage(msg.channel, 'Hello ' + mentioned);
         }
+        bot.deleteMessage(msg);
     }
 
     // Cat Command
@@ -65,6 +69,7 @@ exports.cmds = (bot, msg) => {
             response.on('data', (data) => {
                 var json = JSON.parse(data);
                 bot.reply(msg, json.file);
+                bot.deleteMessage(msg);
             });
         });
     }
@@ -80,11 +85,12 @@ exports.cmds = (bot, msg) => {
             });
             response.on('end', () => {
                 var json = JSON.parse(jsonData);
-                console.log(json);
                 if (args[1]){
                     bot.sendMessage(msg.channel, args[1] + ' ' + json.insult);
+                    bot.deleteMessage(msg);
                 } else {
                     bot.reply(msg, json.insult);
+                    bot.deleteMessage(msg);
                 }
             });
         });
@@ -115,17 +121,20 @@ exports.cmds = (bot, msg) => {
                         title = title.trim();
                         yt(args[1], { filter: 'audioonly' }).pipe(fs.createWriteStream('music/' + title + '.m4a'));
                         bot.reply(msg, title + ' ready for use!');
+                        bot.deleteMessage(msg);
                     });
                 }); // end get
         }
         } else if (msg.content.startsWith('!ytdl') && !fn.hasRole(bot, msg, server)){
         bot.reply(msg, 'You dont have permission to download from youTube');
+        bot.deleteMessage(msg);
     }
 
     //youTube Player
     if (msg.content.startsWith('!yt') && fn.hasRole(bot, msg, server)){
         var args = msg.content.split(' ');
         if (args[1] == null){
+            bot.deleteMessage(msg);
             bot.reply(msg, 'Missing the URL');
         }
 
@@ -144,16 +153,19 @@ exports.cmds = (bot, msg) => {
                             if (!ready && queue.length > 0){
                                 queue.push(args[1]);
                                 bot.reply(msg, 'Added youTube to queue');
+                                bot.deleteMessage(msg);
                                 console.log('Added youTube to queue.');
                             }
                             if (!ready && queue.length == 0){
                                 queue.push('youTube');
                                 bot.reply('Your youTube will play next.');
+                                bot.deleteMessage(msg);
                             }
                             if (ready && queue.length == 0){
                                 bot.reply(msg, "Playing YouTube");
                                 queue.push('youTube');
                                 fn.play(bot, msg, queue);
+                                bot.deleteMessage(msg);
                             }
                 }); // End YouTube on
             }
@@ -162,12 +174,20 @@ exports.cmds = (bot, msg) => {
 
     // List Music
     if (msg.content == '!music'){
-        var message = fs.readdirSync('music');
-        message[0] = 'Music List:';
-        for ( var i in message ) {
-            message[i] = message[i].replace('.m4a', '');
-        }
-        bot.sendMessage(msg.author, message);
+        var message = fs.readdirSync('./music');
+        message[0] = "Music List:"
+        var list = new Array();
+        async.each(message, (item, callback) => {
+                    item = item.replace('.m4a', '');
+                    list.push(item);
+                    callback();
+                }, (err) => {
+                    if (err){
+                        console.log(err);
+                        throw err;
+                    }
+                    bot.reply(msg, list);
+                });
     }
 
     // PM Queue
@@ -285,6 +305,7 @@ exports.cmds = (bot, msg) => {
         bot.setPlayingGame(null);
         } else if (msg.content == '!end' && !fn.hasRole(bot, msg, server)){
             bot.reply(msg, 'You do not have permission to !end on this server');
+            bot.deleteMessage(msg);
     }
 
     // Play Command
@@ -325,6 +346,32 @@ exports.cmds = (bot, msg) => {
                 console.log('Unknown Song');
                 bot.sendMessage(msg.author, song + ' song unknown. Use !music for a list.');
                 }
+        }
+    }
+
+    // Wipe Command
+    if (msg.content.startsWith('!wipe') && fn.hasRole(bot, msg, server)){
+        var args = msg.content.split(' ');
+        if (args[1] <= 15){
+            var count = args[1];
+            count ++
+            bot.getChannelLogs(msg.channel, count, (err, msgs) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+                for(message of msgs){
+                    bot.deleteMessage(message, (err) => {
+                        if (err) {
+                            console.log (err);
+                            throw err;
+                        }
+                    });
+                }
+            });
+        } else if (args[1] > 15){
+            bot.deleteMessage(msg);
+            bot.sendMessage(msg.sender, 'Limit 15 on wipe.');
         }
     }
 }
