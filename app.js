@@ -11,4 +11,4 @@ bot.on('message', (msg) => {
     Message.cmds(bot, msg);
 });
 
-bot.loginWithToken(Authentication.token, Authentication.email, Authentication.pass);
+bot.loginWithToken(Authentication.token);
