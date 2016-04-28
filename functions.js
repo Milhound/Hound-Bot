@@ -33,18 +33,20 @@ function playSong (bot, conn, song) {
         var connection = conn;
         console.log('Playing ' + niceSongName);
         conn.playFile('./music/' + song + '.m4a', (error, intent) => {
+            if (error){console.log(error);throw error;}
+
             bot.setPlayingGame(niceSongName, (error) => {
-                if (error){
-                    throw error;
-                }
+                if (error){console.log(error);throw error;}
             });
-            if (error){
-                throw error;
-            }
+
             intent.on('end', () => {
                 var song = getNextSong(bot);
+
                 if (song != null){
                     playSong(bot, conn, song);
+                } else {
+                    bot.setPlayingGame(null);
+                    bot.leaveVoiceChannel(bot.voiceChannel, (err) => {if(err){console.log(err);throw err;}});
                 }
         }); // end play
     });
@@ -60,10 +62,8 @@ exports.play = (bot, msg, que) => {
             var channel = msg.sender.voiceChannel;
             bot.joinVoiceChannel(channel, (err, conn) => {
                 bot.voiceConnection.on("error",console.log);
-                    if (err){
-                        console.log(err);
-                        throw err;
-                    }
+                    if (err){console.log(err);throw err;}
+
                     console.log('Bot Joined Voice Channel');
                     playSong(bot, conn, song);
             });
