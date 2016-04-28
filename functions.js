@@ -7,6 +7,7 @@ function ready_state(bot) {
         return true;
     }
 }
+
 exports.ready_state = (bot) => {
     if(bot.voiceConnection && bot.voiceConnection.playing){
         return false;
@@ -58,6 +59,7 @@ exports.play = (bot, msg, que) => {
             var song = getNextSong(bot);
             var channel = msg.sender.voiceChannel;
             bot.joinVoiceChannel(channel, (err, conn) => {
+                bot.voiceConnection.on("error",console.log);
                     if (err){
                         console.log(err);
                         throw err;

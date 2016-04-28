@@ -176,20 +176,7 @@ exports.cmds = (bot, msg) => {
 
     // List Music
     if (msg.content == '!music'){
-        var message = fs.readdirSync('./music');
-        message[0] = "Music List:"
-        var list = new Array();
-        async.each(message, (item, callback) => {
-                    item = item.replace('.m4a', '');
-                    list.push(item);
-                    callback();
-                }, (err) => {
-                    if (err){
-                        console.log(err);
-                        throw err;
-                    }
-                    bot.reply(msg, list);
-                });
+        bot.sendFile(msg.sender, "./Music.txt", 'Music', 'List of Music Attached.')
     }
 
     // PM Queue
@@ -385,7 +372,8 @@ exports.cmds = (bot, msg) => {
     if (msg.content.startsWith('!usrName') && fn.hasRole(bot, msg, server)){
         var args = msg.content.split(' ');
         if (args[1]){
-            bot.setUsername(args[1], (err) => {
+            var username = msg.content.replace('!usrName', '').trim();
+            bot.setUsername(username, (err) => {
                 if (err){
                     console.log(err.text);
                 }
