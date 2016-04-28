@@ -400,4 +400,35 @@ exports.cmds = (bot, msg) => {
             bot.reply(msg, C);
         }
     }
+
+    // Time
+    if (msg.content.startsWith('!time')){
+        var args = msg.content.split(' ');
+        var date = new Date();
+        var hour = date.getUTCHours();
+
+        switch (args[1]){
+            case 'CST':
+                hour = hour - 5;
+                break;
+            case 'CET':
+                hour = hour + 2;
+                break;
+            default:
+                console.log('Timezone not avaliable yet: ' + args[1]);
+                break;
+        }
+
+        if (hour < 1){
+            hour = 12 + hour;
+        }
+
+        if (hour > 24){
+            hour = hour - 24;
+        }
+        
+        var minutes = date.getUTCMinutes();
+        console.log(msg.sender.name + " used te time command.");
+        bot.reply(msg, hour + ":" + minutes);
+    }
 }
