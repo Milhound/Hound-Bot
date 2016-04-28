@@ -409,9 +409,12 @@ exports.cmds = (bot, msg) => {
 
         switch (args[1]){
             case 'CST':
+            case 'Sweeden':
+            case 'Finland':
                 hour = hour - 5;
                 break;
             case 'CET':
+            case 'Texas':
                 hour = hour + 2;
                 break;
             default:
@@ -426,7 +429,7 @@ exports.cmds = (bot, msg) => {
         if (hour > 24){
             hour = hour - 24;
         }
-        
+
         var minutes = date.getUTCMinutes();
         console.log(msg.sender.name + " used te time command.");
         bot.reply(msg, hour + ":" + minutes);
