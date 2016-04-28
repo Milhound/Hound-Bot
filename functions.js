@@ -54,18 +54,23 @@ function playSong (bot, conn, song) {
 }
 
 exports.play = (bot, msg, que) => {
+
     var ready = ready_state(bot);
     if(ready){
+        if(bot.voiceChannel){
+            bot.leaveVoiceChannel(bot.voiceChannel, (err) => {
+                if (err){console.log(err);throw err;}
+            });
+        }
         queue = que;
         if (queue.length > 0) {
             var song = getNextSong(bot);
             var channel = msg.sender.voiceChannel;
             bot.joinVoiceChannel(channel, (err, conn) => {
                 bot.voiceConnection.on("error",console.log);
-                    if (err){console.log(err);throw err;}
-
-                    console.log('Bot Joined Voice Channel');
-                    playSong(bot, conn, song);
+                if (err){console.log(err);throw err;}
+                console.log('Bot Joined Voice Channel');
+                playSong(bot, conn, song);
             });
         }
     }
