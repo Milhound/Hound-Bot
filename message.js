@@ -438,7 +438,7 @@ exports.cmds = (bot, msg) => {
                 break;
 
             case 'CET':
-            case 'Sweeden':
+            case 'Sweden':
             case 'Finland':
                 hour = hour + 2;
                 break;
