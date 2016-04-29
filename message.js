@@ -442,7 +442,7 @@ exports.cmds = (bot, msg) => {
                 hour = hour + 2;
                 break;
 
-            case: 'EET':
+            case 'EET':
                 hour = hour + 3;
                 break;
 
