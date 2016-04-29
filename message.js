@@ -22,6 +22,7 @@ exports.cmds = (bot, msg) => {
             !cat - Random Cat\n
             !toC <#> - Converts Fahrenheit to Celsius\n
             !toF <#> - Converts Celsius to Fahrenheit\n
+            !time <TIMEZONE> - Returns current time in zone. Ex: !time CST\n
             !music - PMs list of available music\n
             !queue - PMs current queue\n
             !play (Song Name) - Plays the specified song\n
