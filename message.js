@@ -408,15 +408,44 @@ exports.cmds = (bot, msg) => {
         var hour = date.getUTCHours();
 
         switch (args[1]){
-            case 'CST':
-            case 'Sweeden':
-            case 'Finland':
+            //United States
+            case 'PDT':
+                hour = hour -7;
+                break;
+
+            case 'MDT':
+                hour = hour -6;
+                break;
+
+            case 'CDT':
+            case 'Texas':
                 hour = hour - 5;
                 break;
+
+            case 'EDT':
+                hour = hour - 4;
+                break;
+
+            //Europe
+            case 'UTC':
+            case 'GMT':
+                hour = hour;
+                break;
+
+            case 'WET':
+                hour = hour + 1;
+                break;
+
             case 'CET':
-            case 'Texas':
+            case 'Sweeden':
+            case 'Finland':
                 hour = hour + 2;
                 break;
+
+            case: 'EET':
+                hour = hour + 3;
+                break;
+
             default:
                 console.log('Timezone not avaliable yet: ' + args[1]);
                 break;
