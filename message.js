@@ -1,9 +1,11 @@
 var http = require('http');
+var https = require('https');
 var yt = require('ytdl-core');
 var fn = require('./functions.js');
 var fs = require('fs');
 var Playlist = require('./playlist.json');
 var queue = new Array();
+var Authentication = require('./auth.json');
 var async = require('async');
 
 exports.cmds = (bot, msg) => {
@@ -134,7 +136,7 @@ exports.cmds = (bot, msg) => {
     }
 
     //youTube Player
-    if (msg.content.startsWith('!yt') && fn.hasRole(bot, msg, server)){
+    if (msg.content.startsWith('!yt')){
         var args = msg.content.split(' ');
         if (args[1] == null){
             bot.deleteMessage(msg);
