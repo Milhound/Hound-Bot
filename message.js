@@ -69,6 +69,7 @@ exports.cmds = (bot, msg) => {
 
     // Cat Command
     if(msg.content == '!cat'){
+        console.log(msg.author.name + ' used the !cat command.');
         var request = http.get('http://random.cat/meow', (response) => {
             response.setEncoding('utf8');
             response.on('data', (data) => {
@@ -82,6 +83,7 @@ exports.cmds = (bot, msg) => {
     // Insult Command
     if(msg.content.startsWith('!insult')){
         var args = msg.content.split(' ');
+        console.log(msg.author.name + ' used the insult command on ' + args[1]);
         var jsonData = '';
         http.get('http://quandyfactory.com/insult/json', (response) => {
             response.setEncoding('utf8');
@@ -112,7 +114,7 @@ exports.cmds = (bot, msg) => {
         if (args[1] != null){
                 var title = '';
                 var url = args[1];
-                var api = Authentication.yt-api;
+                var api = Authentication.api;
                 var id = args[1].replace('https://www.youtube.com/watch?v=', '');
                 var url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&&id=' + id + '&&key=' + Authentication.api;
                 https.get(url, (res) => {
@@ -138,6 +140,7 @@ exports.cmds = (bot, msg) => {
     //youTube Player
     if (msg.content.startsWith('!yt')){
         var args = msg.content.split(' ');
+        console.log(msg.sender.name + ' used the !yt command on ' + args[1]);
         if (args[1] == null){
             bot.deleteMessage(msg);
             bot.reply(msg, 'Missing the URL');
@@ -179,7 +182,8 @@ exports.cmds = (bot, msg) => {
 
     // List Music
     if (msg.content == '!music'){
-        bot.sendFile(msg.sender, "./Music.txt", 'Music', 'List of Music Attached.')
+        bot.sendFile(msg.sender, "./Music.txt", 'Music', 'List of Music Attached.');
+        console.log(msg.author.name + ' used the !music command.');
     }
 
     // PM Queue
@@ -196,13 +200,16 @@ exports.cmds = (bot, msg) => {
 
     // Next Song
     if (msg.content == '!next' && queue.length > 0){
-        var connections = bot.voiceConnections;
-        for (var i = 0; i < connections.length; i++){
-            var conn = bot.voiceConnections[i];
-            conn.stopPlaying();
+        console.log(msg.author.name + ' used the next command.');
+        if(bot.voiceConnection){
+            var connections = bot.voiceConnections;
+            for (var i = 0; i < connections.length; i++){
+                var conn = bot.voiceConnections[i];
+                conn.stopPlaying();
+            }
+            } else if (msg.content == '!next' && queue.length == 0){
+                bot.reply(msg, 'Song queue is empty.');
         }
-        } else if (msg.content == '!next' && queue.length == 0){
-            bot.reply(msg, 'Song queue is empty.');
     }
 
     // Shuffle
@@ -253,12 +260,14 @@ exports.cmds = (bot, msg) => {
         }
 
         bot.reply(msg, 'Added all songs to the queue');
+        console.log(msg.author.name + ' used the Play All command.');
         bot.deleteMessage(msg);
     }
 
     // Playlist Command
     if (msg.content.startsWith('!playlist')){
         var args = msg.content.split(' ');
+        console.log(msg.author.name + ' used playlist command on ' + args[1]);
         if (args[1]){
             var addedPlaylist = Playlist[args[1]]
             if (addedPlaylist.length > 0){
@@ -295,13 +304,12 @@ exports.cmds = (bot, msg) => {
     }
 
     // Force quit music
-    if (msg.content == '!end' && fn.hasRole(bot, msg, server) && msg.sender.voiceChannel.name == 'Music'){
+    if (msg.content == '!end'){
         queue = new Array();
-        bot.leaveVoiceChannel(msg.sender.voiceChannel);
+        if(bot.voiceConnection){
+            bot.leaveVoiceChannel(bot.voiceConnection.voiceChannel);
+        }
         bot.setPlayingGame(null);
-        } else if (msg.content == '!end' && !fn.hasRole(bot, msg, server)){
-            bot.reply(msg, 'You do not have permission to !end on this server');
-            bot.deleteMessage(msg);
     }
 
     // Play Command
@@ -348,7 +356,7 @@ exports.cmds = (bot, msg) => {
     // Wipe Command
     if (msg.content.startsWith('!wipe') && fn.hasRole(bot, msg, server)){
         var args = msg.content.split(' ');
-        if (args[1] <= 15){
+        if (args[1] <= 25){
             var count = args[1];
             count ++
             bot.getChannelLogs(msg.channel, count, (err, msgs) => {
@@ -368,6 +376,7 @@ exports.cmds = (bot, msg) => {
         } else if (args[1] > 15){
             bot.deleteMessage(msg);
             bot.sendMessage(msg.sender, 'Limit 15 on wipe.');
+            console.log(msg.author.name + " wiped " args[1] + " messages.");
         }
     }
 
@@ -382,6 +391,7 @@ exports.cmds = (bot, msg) => {
                 }
             });
         }
+        console.log(msg.sender.name + " changed bot's name.");
     }
 
     // Celsius to Fahrenheit
@@ -392,6 +402,7 @@ exports.cmds = (bot, msg) => {
             var F = (C * 1.8 + 32).toFixed(0);
             bot.reply(msg, F);
         }
+        console.log(msg.sender.name + " used Cel to Far.");
     }
 
     // Fahrenheit to Celsius
@@ -402,55 +413,76 @@ exports.cmds = (bot, msg) => {
             var C = ((F -32) * (5/9)).toFixed(0);
             bot.reply(msg, C);
         }
+        console.log(msg.sender.name + " used Far to Cel.");
     }
 
     // Time
     if (msg.content.startsWith('!time')){
+        var goodTime = true;
         var args = msg.content.split(' ');
         var date = new Date();
         var hour = date.getUTCHours();
 
-        switch (args[1]){
+        switch (args[1].toLowerCase()){
             //United States
-            case 'PDT':
+            case 'pdt':
+            case 'california':
                 hour = hour -7;
                 break;
 
-            case 'MDT':
+            case 'mdt':
                 hour = hour -6;
                 break;
 
-            case 'CDT':
-            case 'Texas':
+            case 'cdt':
+            case 'texas':
                 hour = hour - 5;
                 break;
 
-            case 'EDT':
+            case 'edt':
                 hour = hour - 4;
                 break;
 
             //Europe
-            case 'UTC':
-            case 'GMT':
-                hour = hour;
-                break;
-
-            case 'WET':
+            case 'west':
+            case 'cet':
                 hour = hour + 1;
                 break;
 
-            case 'CET':
-            case 'Sweden':
-            case 'Finland':
+            case 'cest':
+            case 'sweden':
+            case 'eet':
+            case 'germany':
                 hour = hour + 2;
                 break;
 
-            case 'EET':
+            case 'eest':
+            case 'finland':
+            case 'austria':
                 hour = hour + 3;
                 break;
 
+            case 'uk':
             default:
-                console.log('Timezone not avaliable yet: ' + args[1]);
+                if(args[1].startsWith('GMT+') || args[1].startsWith('UTC+')){
+                    zone = args[1].replace('UTC+', '');
+                    zone = args[1].replace('GMT+', '');
+                    if (zone > 0){
+                        hour = hour + zone;
+                    }
+                } else if(args[1].startsWith('GMT-') || args[1].startsWith('UTC-')){
+                    zone = args[1].replace('UTC-', '');
+                    zone = args[1].replace('GMT-', '');
+                    if (zone > 0){
+                        hour = hour - zone;
+                    }
+                } if (args[1].toLowerCase() == 'uk') {
+                    hour = hour;
+                }else {
+                    bot.reply(msg, 'Unknown Timezone.');
+                    goodTime = false;
+                    console.log('Timezone not avaliable yet: ' + args[1]);
+                }
                 break;
         }
 
@@ -461,9 +493,18 @@ exports.cmds = (bot, msg) => {
         if (hour > 24){
             hour = hour - 24;
         }
+        if (hour < 10){
+            hour = "0" + hour;
+        }
 
         var minutes = date.getUTCMinutes();
-        console.log(msg.sender.name + " used te time command.");
-        bot.reply(msg, hour + ":" + minutes);
+        if(minutes < 10){
+            minutes = "0" + minutes;
+        }
+        setTimeout(()=>{
+            if (goodTime){
+                bot.reply(msg, hour + ":" + minutes);
+            }
+        }, 1000);
     }
 }
