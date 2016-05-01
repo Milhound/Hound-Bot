@@ -23,6 +23,6 @@ bot.on('message', (msg) => {
 
 bot.on('disconnected', () => {
     console.log('Bot Disconnected.');
-})
+});
 
 bot.loginWithToken(Authentication.token);
