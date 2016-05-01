@@ -472,14 +472,12 @@ exports.cmds = (bot, msg) => {
                     switch(modifier.slice(0,1)){
                         case '+':
                             hour = hour +  parseInt(modifier.slice(1));
-                            console.log('Modifier +' +modifier.slice(1));
                             break;
                         case '-':
                             hour = hour - parseInt(modifier.slice(1));
-                            console.log('Modifier' - + modifier.slice(1));
                             break;
                         default:
-                        console.log('Default ' + modifier);
+                        console.log('Incorrect format for time command used  ' + modifier);
                     }
                 } else
                 if (args[1].toLowerCase() == 'uk') {

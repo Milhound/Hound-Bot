@@ -1,5 +1,5 @@
 var Discord = require('discord.js');
-var bot = new Discord.Client();
+var bot = new Discord.Client({ autoReconnect: true});
 var Authentication = require('./auth.json');
 var Message = require('./message.js');
 var fs = require('fs');
@@ -20,5 +20,9 @@ bot.on('ready', () => {
 bot.on('message', (msg) => {
     Message.cmds(bot, msg);
 });
+
+bot.on('disconnected', () => {
+    console.log('Bot Disconnected.');
+})
 
 bot.loginWithToken(Authentication.token);
