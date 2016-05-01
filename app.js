@@ -6,8 +6,12 @@ var fs = require('fs');
 
 bot.on('ready', () => {
     // Wipe Log if necessary.
-    if(fs.statSync('./nohup.out').isFile()){
-        fs.rmdirSync('./nohup.out');
+    if(fs.stat('./nohup.out', (err) => {
+        if (err){
+            console.log('nohup.out does not exist.');
+        }
+    })){
+        fs.unlinkSync('./nohup.out');
     }
     console.log('Bot is Online');
 

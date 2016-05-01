@@ -15,7 +15,6 @@ exports.cmds = (bot, msg) => {
     if(msg.content == '!commands'){
         bot.sendMessage(msg.author,
             `List of Commands: \n
-            !commands - PMs this list\n
             !ping - Replys Pong \n
             !help - Returns Help Text \n
             !slap @user - Slaps all mentioned users\n
@@ -376,7 +375,7 @@ exports.cmds = (bot, msg) => {
         } else if (args[1] > 15){
             bot.deleteMessage(msg);
             bot.sendMessage(msg.sender, 'Limit 15 on wipe.');
-            console.log(msg.author.name + " wiped " args[1] + " messages.");
+            console.log(msg.author.name + " wiped " + args[1] + " messages.");
         }
     }
 
@@ -453,37 +452,43 @@ exports.cmds = (bot, msg) => {
             case 'sweden':
             case 'eet':
             case 'germany':
+            case 'austria':
                 hour = hour + 2;
                 break;
 
             case 'eest':
             case 'finland':
-            case 'austria':
                 hour = hour + 3;
                 break;
 
             case 'uk':
             default:
-                if(args[1].startsWith('GMT+') || args[1].startsWith('UTC+')){
-                    zone = args[1].replace('UTC+', '');
-                    zone = args[1].replace('GMT+', '');
-                    if (zone > 0){
-                        hour = hour + zone;
+                if(args[1].startsWith('GMT') || args[1].startsWith('UTC')){
+                    if(args[1].startsWith('GMT')){
+                        modifier = args[1].replace('GMT', '');
+                    }else if(args[1].startsWith('UTC')){
+                        modifier = args[1].replace('UTC', '');
                     }
-                } else if(args[1].startsWith('GMT-') || args[1].startsWith('UTC-')){
-                    zone = args[1].replace('UTC-', '');
-                    zone = args[1].replace('GMT-', '');
-                    if (zone > 0){
-                        hour = hour - zone;
+                    switch(modifier.slice(0,1)){
+                        case '+':
+                            hour = hour +  parseInt(modifier.slice(1));
+                            console.log('Modifier +' +modifier.slice(1));
+                            break;
+                        case '-':
+                            hour = hour - parseInt(modifier.slice(1));
+                            console.log('Modifier' - + modifier.slice(1));
+                            break;
+                        default:
+                        console.log('Default ' + modifier);
                     }
-                } if (args[1].toLowerCase() == 'uk') {
+                } else
+                if (args[1].toLowerCase() == 'uk') {
                     hour = hour;
                 }else {
                     bot.reply(msg, 'Unknown Timezone.');
                     goodTime = false;
                     console.log('Timezone not avaliable yet: ' + args[1]);
                 }
-                break;
         }
 
         if (hour < 1){
