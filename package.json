@@ -9,7 +9,6 @@
   "author": "Daniel MIlholland <https://www.milhound.com> (Daniel@gailwindslog.com)",
   "description": "Hound Bot for Discordapp, created using Discord.js.",
   "dependencies": {
-    "async": "^2.0.0-rc.3",
     "discord.js": "^7.0.0",
     "ytdl-core": "^0.7.13"
   },
