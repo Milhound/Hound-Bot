@@ -342,12 +342,14 @@ exports.cmds = (bot, msg) => {
 
     // Force quit music
     if (msg.content == '!end'){
+        bot.setPlayingGame(null);
         // Clear the queue
         queue = new Array();
         if(bot.voiceConnection){
-            bot.leaveVoiceChannel(bot.voiceConnection.voiceChannel);
+            for (connection of bot.voiceConnections){
+                bot.leaveVoiceChannel(connection.voiceChannel);
+            }
         }
-        bot.setPlayingGame(null);
     }
 
     // Play Command

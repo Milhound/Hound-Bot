@@ -42,7 +42,10 @@ function playSong (bot, conn, song) {
               if (song != null){playSong(bot, conn, song);}
           }); // End of intent "on"
         }); // End of playFile
-    } // End of Reay
+    } // End of Ready
+    else {
+        console.log('Bot is not Ready!');
+    }
 }
 
 // Special start playing function.
