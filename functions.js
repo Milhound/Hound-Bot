@@ -38,9 +38,8 @@ function playSong (bot, conn, song) {
     if(ready){
       // Grab a good song name.
         var niceSongName = song.replace(/_/g, ' ');
+        conn.playFile('./music/' + song + '.m4a', (error, intent) => {if(error){console.log(error);throw error;}
         console.log('Playing ' + niceSongName);
-
-        conn.playFile('./music/' + song + '.m4a', (error, intent) => {if (error){console.log(error);throw error;}
           // Set playing to current song.
           bot.setPlayingGame(niceSongName, (error) => {if (error){console.log(error);throw error;}});
           // When song ends get next song, and start playing.
