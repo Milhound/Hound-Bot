@@ -1,7 +1,7 @@
 var queue;
 
 // Confirm bot is ready to play Music.
-exports.ready_state = function ready_state(bot) {
+function ready_state(bot) {
     if(bot.voiceConnection && bot.voiceConnection.playing){
         return false;
     }else{
@@ -9,6 +9,14 @@ exports.ready_state = function ready_state(bot) {
     }
 }
 
+// Export the function ready_state
+exports.ready_state = (bot) => {
+    if(bot.voiceConnection && bot.voiceConnection.playing){
+        return false;
+    }else{
+        return true;
+    }
+}
 // Pull next song off queue.
 function getNextSong(bot) {
   if(queue.length > 0){
