@@ -1,13 +1,15 @@
+// IMPORTS
 var http = require('http');
 var https = require('https');
 var yt = require('ytdl-core');
 var fn = require('./functions.js');
 var fs = require('fs');
 var Playlist = require('./playlist.json');
-var queue = new Array();
-var Authentication = require('./auth.json');
-var async = require('async');
 
+// GLOBAL VARIABLES
+var queue = new Array();
+
+//Start Export
 exports.cmds = (bot, msg) => {
     var server = bot.servers.get('name', 'Milhound');
 
@@ -37,14 +39,13 @@ exports.cmds = (bot, msg) => {
 
     // Ping Command
     if(msg.content == '!ping'){
-        console.log(msg.sender.username + ' as used the ping command')
+        console.log(msg.sender.username + ' as used the ping command');
         bot.reply(msg, 'pong');
-        bot.deleteMessage(msg);
     }
 
     // Help Command
     if(msg.content == '!help'){
-        console.log(msg.sender.username + ' as used the help command')
+        console.log(msg.sender.username + ' as used the help command');
         bot.sendMessage(msg.sender, 'Please refer to ' + bot.channels.get('name','rules_and_info') + ' and ' + bot.channels.get('name','announcements') + ' for help! Bot commands can be found via !commands.')
     }
 
@@ -69,11 +70,13 @@ exports.cmds = (bot, msg) => {
     // Cat Command
     if(msg.content == '!cat'){
         console.log(msg.author.name + ' used the !cat command.');
+        // Get random cat
         var request = http.get('http://random.cat/meow', (response) => {
-            response.setEncoding('utf8');
             response.on('data', (data) => {
                 var json = JSON.parse(data);
+                // Reply with the url from the json under "file"
                 bot.reply(msg, json.file);
+                // Delete user's message to reduce clutter
                 bot.deleteMessage(msg);
             });
         });
@@ -81,71 +84,79 @@ exports.cmds = (bot, msg) => {
 
     // Insult Command
     if(msg.content.startsWith('!insult')){
-        var args = msg.content.split(' ');
-        console.log(msg.author.name + ' used the insult command on ' + args[1]);
-        var jsonData = '';
+      console.log(msg.author.name + ' used the insult command');
+      for (mentioned of bot.mentions) {
+        // GET request for Quandry Factory API
         http.get('http://quandyfactory.com/insult/json', (response) => {
-            response.setEncoding('utf8');
-            response.on('data', (data) => {
-                jsonData += data
-            });
-            response.on('end', () => {
-                var json = JSON.parse(jsonData);
-                if (args[1]){
-                    bot.sendMessage(msg.channel, args[1] + ' ' + json.insult);
-                    bot.deleteMessage(msg);
-                } else {
-                    bot.reply(msg, json.insult);
-                    bot.deleteMessage(msg);
-                }
-            });
-        });
-
+          var data = '';
+          response.on('data', (chunk) => {
+            // Add chunk of data to data variable
+              data += chunk
+          }); // End of on 'Data'
+          response.on('end', () => {
+            var json = JSON.parse(data);
+            bot.sendMessage(msg.channel, mentioned + ' ' + json.insult);
+            bot.deleteMessage(msg);
+          }); // End of on 'End'
+        }); // End of http.get
+      } // End of for loop
     }
 
-    // Youtube Download
+    // Youtube Download requires Admin / Moderator - Saves YouTube audio to a file.
     if (msg.content.startsWith('!ytdl') && fn.hasRole(bot, msg, server)){
         var args = msg.content.split(' ');
-        if (args[1] == null){
-            bot.reply(msg, 'Missing the URL');
-        }
-
-        if (args[1] != null){
-                var title = '';
-                var url = args[1];
-                var api = Authentication.api;
-                var id = args[1].replace('https://www.youtube.com/watch?v=', '');
-                var url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&&id=' + id + '&&key=' + Authentication.api;
-                https.get(url, (res) => {
-                    var chunk = '';
-                    res.on('data', (data) => {
-                        chunk += data;
-                    }); // end on data
-                    res.on('end', () => {
-                        var json = JSON.parse(chunk);
-                        title = json.items[0].snippet.title;
-                        title = title.trim();
-                        yt(args[1], { filter: 'audioonly' }).pipe(fs.createWriteStream('music/' + title + '.m4a'));
-                        bot.reply(msg, title + ' ready for use!');
-                        bot.deleteMessage(msg);
-                    });
-                }); // end get
-        }
-        } else if (msg.content.startsWith('!ytdl') && !fn.hasRole(bot, msg, server)){
-        bot.reply(msg, 'You dont have permission to download from youTube');
-        bot.deleteMessage(msg);
+        // Check for no url passed and confirm correct format.
+        if (args[1] == null || !args[1].startsWith('https')){
+            bot.reply(msg, 'Missing or invalid URL');
+        } else {
+          var url = args[1];
+          // Save api key to api variable
+          var api = process.env.GOOGLE_API_KEY;
+          // Remove unnecessary url component
+          var id = args[1].replace('https://www.youtube.com/watch?v=', '');
+          // Properly format the url for the api request
+          var url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&&id=' + id + '&&key=' + api;
+          // Api GET request
+          https.get(url, (res) => {
+            // Declare empty data variable
+              var data = '';
+              // When data is transmitted
+              res.on('data', (chunk) => {
+                //Add the chunks of data to data variable
+                  data += chunk;
+              }); // End of on 'data'
+              res.on('end', () => {
+                // Convert data into usable json
+                  var json = JSON.parse(data);
+                  // Save title of youtube video to title variable.
+                  var title = json.items[0].snippet.title;
+                  // Remove any spacing before / after title
+                  title = title.trim();
+                  // Perform dowload 'audio only' of the youtube video, and write it to the corresponding .m4a file
+                  yt(args[1], { filter: 'audioonly' }).pipe(fs.createWriteStream('music/' + title + '.m4a'));
+                  // Inform user that file is ready. Depending on connection speed may need to institute a wait.
+                  bot.reply(msg, title + ' ready for use!');
+                  // Remove user message, as youtube videos are large and obstructive to the channel
+                  bot.deleteMessage(msg);
+              });
+          }); // End of GET
+          // If non-Admin / Moderator attempts to use !ytdl command.
+        }} else if (msg.content.startsWith('!ytdl') && !fn.hasRole(bot, msg, server)){
+          bot.reply(msg, 'You dont have permission to download from youTube');
+          bot.deleteMessage(msg);
     }
 
-    //youTube Player
+    //youTube for non-Admin / Moderator - Overwrites existing youTube.m4a
     if (msg.content.startsWith('!yt')){
         var args = msg.content.split(' ');
         console.log(msg.sender.name + ' used the !yt command on ' + args[1]);
         if (args[1] == null){
+            // Remove bad call to !yt command.
             bot.deleteMessage(msg);
             bot.reply(msg, 'Missing the URL');
         }
 
-        if (args[1] != null && !args[2]){
+        if (args[1] != null && args[1].startsWith){
                 var ready = fn.ready_state(bot);
                 var title = '';
                 var url = args[1];

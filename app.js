@@ -1,6 +1,5 @@
 var Discord = require('discord.js');
 var bot = new Discord.Client({ autoReconnect: true});
-var Authentication = require('./auth.json');
 var Message = require('./message.js');
 var fs = require('fs');
 
@@ -10,9 +9,10 @@ bot.on('ready', () => {
         if (err){
             console.log('nohup.out does not exist.');
         }
-    })){
-        fs.unlinkSync('./nohup.out');
+      })){
+          fs.unlinkSync('./nohup.out');
     }
+
     console.log('Bot is Online');
 
 });
@@ -25,4 +25,4 @@ bot.on('disconnected', () => {
     console.log('Bot Disconnected.');
 });
 
-bot.loginWithToken(Authentication.token);
+bot.loginWithToken(process.env.HOUND_BOT_TOKEN);
