@@ -86,7 +86,7 @@ exports.cmds = (bot, msg) => {
     // Insult Command
     if(msg.content.startsWith('!insult')){
       console.log(msg.author.name + ' used the insult command');
-      for (mentioned of bot.mentions) {
+      for (mentioned of msg.mentions) {
         // GET request for Quandry Factory API
         http.get('http://quandyfactory.com/insult/json', (response) => {
           var data = '';
