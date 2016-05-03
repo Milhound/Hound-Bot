@@ -7,7 +7,7 @@ var fs = require('fs');
 var Playlist = require('./playlist.json');
 
 // GLOBAL VARIABLES
-var queue = new Array();
+var queue = fn.queue;
 
 //Start Export
 exports.cmds = (bot, msg) => {
