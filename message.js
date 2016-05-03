@@ -231,6 +231,7 @@ exports.cmds = (bot, msg) => {
         }
     }
 
+    // Previous :: IN DEVELOPMENT
     if (msg.content == '!back' || msg.content == '!previous'){
         bot.reply(msg, 'Currently in development try again later.');
     }
