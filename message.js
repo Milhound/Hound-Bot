@@ -18,6 +18,7 @@ exports.cmds = (bot, msg) => {
         bot.sendMessage(msg.author,
             `List of Commands: \n
             !ping - Replys Pong \n
+            !toast - Prints Toast\n
             !help - Returns Help Text \n
             !slap @user - Slaps all mentioned users\n
             !insult (@user - optional) - Insults the sender or @user.\n
@@ -567,5 +568,22 @@ exports.cmds = (bot, msg) => {
                 bot.reply(msg, hour + ":" + minutes);
             }
         }, 500);
+    }
+    if (msg.content == '!toast'){
+        bot.sendMessage(msg, `\`\`\`\n
+        Toast!
+              ______
+         ____((     )_
+        |\'->==))   (= \\
+        |  \\ ||_____|_ \\
+        |[> \\___________\\
+        | | |            |                                    |
+         \\  |            |             .--.                   |
+          \\ |            |)---.   .---\'    \`-.         .----(]|
+           \\|____________|     \`-'            \`.     .\'       |
+                                                \`---\'         |
+        \`\`\`
+        `);
+        bot.deleteMessage(msg);
     }
 }
