@@ -164,7 +164,7 @@ exports.cmds = (bot, msg) => {
                 var title = '';
                 // Dont allow users to overwrite currently playing youTube
                 if (!ready && bot.user.game && bot.user.game == "youTube"){
-                    bot.reply(msg, 'Try again when bot is not playing youTube.');
+                    bot.reply(msg, 'Try again when bot is not playing youTube. (Currently in development: Queuing up to 4 youTube songs.)');
                 } else {
                 // Arrange a call to the ytdl-core dependency
                 var youtube = yt(args[1], { filter: 'audioonly' });
@@ -229,6 +229,10 @@ exports.cmds = (bot, msg) => {
         } else if (msg.content == '!skip' && queue.length == 0){
                 bot.reply(msg, 'Song queue is empty.');
         }
+    }
+
+    if (msg.content == '!back' || msg.content == '!previous'){
+        bot.reply(msg, 'Currently in development try again later.');
     }
 
     // DEPRECIATED: !next
