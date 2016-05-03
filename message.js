@@ -569,6 +569,8 @@ exports.cmds = (bot, msg) => {
             }
         }, 500);
     }
+
+    // Toast
     if (msg.content == '!toast'){
         bot.sendMessage(msg, `\`\`\`\n
         Toast!
