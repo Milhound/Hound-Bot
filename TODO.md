@@ -5,3 +5,4 @@
 2. Log user info into user.json
 3. Create a !back command for music to return to previous song.
 4. Update existsSync to statSync
+5. Allow users to queue up to 4 youtube songs.

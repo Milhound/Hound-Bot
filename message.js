@@ -174,7 +174,7 @@ exports.cmds = (bot, msg) => {
                 youtube.on('end', () => {
                             // If currently playing and a queue is present
                             if (!ready && queue.length > 0){
-                                queue.push(args[1]);
+                                queue.push('youTube');
                                 bot.reply(msg, 'Added youTube to queue');
                                 bot.deleteMessage(msg);
                                 console.log('Added youTube to queue.');
