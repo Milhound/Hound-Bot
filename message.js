@@ -308,9 +308,9 @@ exports.cmds = (bot, msg) => {
         var args = msg.content.split(' ');
         console.log(msg.author.name + ' used playlist command on ' + args[1]);
         if (args[1]){
-            var addedPlaylist = Playlist[args[1]]
+            var addedPlaylist = Playlist[args[1]];
             // Check to confirm playlist added, and add all songs to queue
-            if (addedPlaylist.length > 0){
+            if (addedPlaylist != 'undefined' && addedPlaylist != null){
                 for (song of addedPlaylist){
                     queue.push(song);
                 }
