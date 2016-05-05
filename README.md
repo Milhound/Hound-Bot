@@ -9,3 +9,4 @@ npm cache clear
 npm install --save discord.js
 npm install --save ytdl-core
 ```
+__NOTES:__ The command to change the bots username currently uses my account's id, this would need to be changed for anyone else to use the command.
