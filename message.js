@@ -277,6 +277,7 @@ exports.cmds = (bot, msg) => {
         }
         // Add all songs w/o extension to the queue
         for (song of music){
+            console.log(queue);
             queue.push(song);
         }
         // Determine how many songs to shuffle.

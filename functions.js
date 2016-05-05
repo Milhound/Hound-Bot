@@ -1,7 +1,5 @@
-var queue;
-
+var queue = new Array();
 exports.queue = queue;
-
 // Confirm bot is ready to play Music.
 function ready_state(bot) {
     if(bot.voiceConnection && bot.voiceConnection.playing){
