@@ -1,4 +1,3 @@
-// IMPORTS
 var http = require('http');
 var https = require('https');
 var yt = require('ytdl-core');
@@ -9,11 +8,10 @@ var Playlist = require('./playlist.json');
 // GLOBAL VARIABLES
 var queue = fn.queue;
 
-//Start Export
 exports.cmds = (bot, msg) => {
     var server = bot.servers.get('name', 'Milhound');
 
-    // Commands Command
+    // Commands
     if(msg.content == '!commands'){
         bot.sendMessage(msg.author,
             `List of Commands: \n
@@ -94,14 +92,14 @@ exports.cmds = (bot, msg) => {
           response.on('data', (chunk) => {
             // Add chunk of data to data variable
               data += chunk
-          }); // End of on 'Data'
+          });
           response.on('end', () => {
             var json = JSON.parse(data);
             bot.sendMessage(msg.channel, mentioned + ' ' + json.insult);
             bot.deleteMessage(msg);
-          }); // End of on 'End'
-        }); // End of http.get
-      } // End of for loop
+          });
+        });
+      }
     }
 
     // Youtube Download requires Admin / Moderator - Saves YouTube audio to a file.
@@ -116,32 +114,24 @@ exports.cmds = (bot, msg) => {
           var api = process.env.GOOGLE_API_KEY;
           // Remove unnecessary url component
           var id = args[1].replace('https://www.youtube.com/watch?v=', '');
-          // Properly format the url for the api request
           var url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&&id=' + id + '&&key=' + api;
-          // Api GET request
           https.get(url, (res) => {
-            // Declare empty data variable
               var data = '';
-              // When data is transmitted
               res.on('data', (chunk) => {
-                //Add the chunks of data to data variable
                   data += chunk;
-              }); // End of on 'data'
+              });
               res.on('end', () => {
                 // Convert data into usable json
                   var json = JSON.parse(data);
-                  // Save title of youtube video to title variable.
                   var title = json.items[0].snippet.title;
-                  // Remove any spacing before / after title
                   title = title.trim();
                   // Perform dowload 'audio only' of the youtube video, and write it to the corresponding .m4a file
                   yt(args[1], { filter: 'audioonly' }).pipe(fs.createWriteStream('music/' + title + '.m4a'));
                   // Inform user that file is ready. Depending on connection speed may need to institute a wait.
                   bot.reply(msg, title + ' ready for use!');
-                  // Remove user message, as youtube videos are large and obstructive to the channel
                   bot.deleteMessage(msg);
               });
-          }); // End of GET
+          });
           // If non-Admin / Moderator attempts to use !ytdl command.
         }} else if (msg.content.startsWith('!ytdl') && !fn.hasRole(bot, msg, server)){
           bot.reply(msg, 'You dont have permission to download from youTube');
@@ -166,7 +156,6 @@ exports.cmds = (bot, msg) => {
                 if (!ready && bot.user.game && bot.user.game == "youTube"){
                     bot.reply(msg, 'Try again when bot is not playing youTube. (Currently in development: Queuing up to 4 youTube songs.)');
                 } else {
-                // Arrange a call to the ytdl-core dependency
                 var youtube = yt(args[1], { filter: 'audioonly' });
                 // Write data to the youTube.m4a file.
                 youtube.pipe(fs.createWriteStream('music/youTube.m4a'));
@@ -192,9 +181,9 @@ exports.cmds = (bot, msg) => {
                                 fn.play(bot, msg, queue);
                                 bot.deleteMessage(msg);
                             }
-                }); // End YouTube on
-            } // End else
-        } // End url passed?
+                });
+            }
+        }
     }
 
     // List Music
@@ -244,13 +233,9 @@ exports.cmds = (bot, msg) => {
     // Shuffle
     if (msg.content == '!shuffle' && queue.length > 0){
         console.log('Shuffling queue');
-        // Determine how many songs to shuffle.
         var counter = queue.length;
-
         while (counter >0) {
-            // Get a random number 0 or 1
             var index = Math.floor(Math.random() * counter);
-            // Subtract 1 from the counter variable
             counter--;
             // Select the current item in the queue
             var temp = queue[counter];
@@ -267,26 +252,19 @@ exports.cmds = (bot, msg) => {
     //Play All
     if (msg.content.startsWith('!playAll') || msg.content == "!play All"){
         console.log(msg.author.name + ' used the Play All command.');
-        // Grab all the music in the /music folder
         var music = fs.readdirSync('music');
         // Remove the first item .DS_Store
         music.shift();
-        // Remove all of the extensions from the music
         for ( var i in music ) {
             music[i] = music[i].replace('.m4a', '');
         }
-        // Add all songs w/o extension to the queue
         for (song of music){
             console.log(queue);
             queue.push(song);
         }
-        // Determine how many songs to shuffle.
         var counter = queue.length;
-
         while (counter >0) {
-            // Get a random number 0 or 1
             var index = Math.floor(Math.random() * counter);
-            // Subtract 1 from the counter variable
             counter--;
             // Select the current item in the queue
             var temp = queue[counter];
@@ -295,7 +273,6 @@ exports.cmds = (bot, msg) => {
             // Move the current item to the location that the first or second item was removed from
             queue[index] = temp;
         }
-        // If ready to play music... Play
         var ready = fn.ready_state(bot);
         if (ready){
             fn.play(bot,
@@ -315,13 +292,9 @@ exports.cmds = (bot, msg) => {
                 for (song of addedPlaylist){
                     queue.push(song);
                 }
-                // Determine how many songs to shuffle.
                 var counter = queue.length;
-
                 while (counter >0) {
-                    // Get a random number 0 or 1
                     var index = Math.floor(Math.random() * counter);
-                    // Subtract 1 from the counter variable
                     counter--;
                     // Select the current item in the queue
                     var temp = queue[counter];
@@ -350,7 +323,6 @@ exports.cmds = (bot, msg) => {
     // Force quit music
     if (msg.content == '!end'){
         bot.setPlayingGame(null);
-        // Clear the queue
         queue = new Array();
         if(bot.voiceConnection){
             for (connection of bot.voiceConnections){
@@ -370,7 +342,6 @@ exports.cmds = (bot, msg) => {
         // If an argument is given
         if (args[1]  != null){
             var song = msg.content;
-            // Remove the call from the song name
             song = song.replace('!play ', '');
             // Make the song name file resolveable by adding '\ ' to all spacing
             song = song.replace(/ /g, '\ ');
@@ -415,8 +386,8 @@ exports.cmds = (bot, msg) => {
                     // perform delete on message
                     bot.deleteMessage(message, (err) => {if (err) {console.log (err);throw err;}});
                 }
-            });
-            // Return if over the max number of wipe
+            }
+        );
         } else if (args[1] > 25){
             bot.deleteMessage(msg);
             bot.sendMessage(msg.sender, 'Limit 15 on wipe.');
@@ -428,9 +399,7 @@ exports.cmds = (bot, msg) => {
     if (msg.content.startsWith('!usrName') && msg.author.id == 167693414156992512){
         var args = msg.content.split(' ');
         if (args[1]){
-            // Remove command call from new username
             var username = msg.content.replace('!usrName', '').trim();
-            // Change bot's username to the passed argument
             bot.setUsername(username, (err) => {if (err){console.log(err.text);}});
         }
         // Console log with name to confirm correct user used command.
@@ -440,11 +409,9 @@ exports.cmds = (bot, msg) => {
     // Celsius to Fahrenheit
     if (msg.content.startsWith('!toF')){
         var args = msg.content.split(' ');
-        // Confirm only one argment is passed
         if(args[1] && !args[2]){
-            // Assign the first argument to the C variable for readability
             var C = args[1];
-            // Perform calculation and limit the result to 0 decimal places/ Whole Number
+            // Round to whole number
             var F = (C * 1.8 + 32).toFixed(0);
             bot.reply(msg, F);
         }
@@ -454,11 +421,9 @@ exports.cmds = (bot, msg) => {
     // Fahrenheit to Celsius
     if (msg.content.startsWith('!toC')){
         var args = msg.content.split(' ');
-        // Confirm only one argment is passed
         if(args[1] && !args[2]){
-            // Assign the first argument to the F variable for readability
             var F = args[1];
-            // Perform calculation and limit the result to 0 decimal places/ Whole Number
+            // Round to whole number
             var C = ((F -32) * (5/9)).toFixed(0);
             bot.reply(msg, C);
         }
@@ -470,9 +435,7 @@ exports.cmds = (bot, msg) => {
         var args = msg.content.split(' ');
         // Variable to confirm all calculations suceeded
         var goodTime = true;
-        // Get Date
         var date = new Date();
-        // Get current UTC time not local time
         var hour = date.getUTCHours();
 
         switch (args[1].toLowerCase()){
@@ -518,7 +481,6 @@ exports.cmds = (bot, msg) => {
             default:
                 // Allow users to do custom GMT/UTC timezones with GMT+1 as an example
                 if(args[1].startsWith('GMT') || args[1].startsWith('UTC')){
-                    // If the command begins with GMT or UTC remove the command from the modifier
                     if(args[1].startsWith('GMT')){
                         modifier = args[1].replace('GMT', '');
                     }else if(args[1].startsWith('UTC')){
@@ -527,11 +489,9 @@ exports.cmds = (bot, msg) => {
                     // Grab the + or - from properly formated command
                     switch(modifier.slice(0,1)){
                         case '+':
-                            // Get all numbers from 0..infinity listed in the command
                             hour = hour +  parseInt(modifier.slice(1));
                             break;
                         case '-':
-                            // Get all numbers from 0..infinity listed in the command
                             hour = hour - parseInt(modifier.slice(1));
                             break;
                         default:
@@ -549,27 +509,21 @@ exports.cmds = (bot, msg) => {
                     console.log('Timezone not avaliable yet: ' + args[1]);
                 }
         }
-        // Make sure the hour is never a negative number
         if (hour < 0){
             hour = 12 + hour;
         }
-        // Make sure when the modifier is passed that you do not exceed the 24 hour clock
         if (hour > 24){
             hour = hour - 24;
         }
-        // Prepend a zero to any single digit  i.e  9 turns into 09
         if (hour < 10){
             hour = "0" + hour;
         }
-        // Get current UTC minutes
         var minutes = date.getUTCMinutes();
-        // Prepend a zero to any single digit  i.e  9 turns into 09
         if(minutes < 10){
             minutes = "0" + minutes;
         }
         // Confirm all tasks are complete by adding a slight delay.
         setTimeout(()=>{
-            // If everything went smoothly print the time.
             if (goodTime){
                 bot.reply(msg, hour + ":" + minutes);
             }
