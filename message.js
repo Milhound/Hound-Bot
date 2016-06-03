@@ -133,9 +133,7 @@ exports.cmds = (bot, msg) => {
               });
           });
           // If non-Admin / Moderator attempts to use !ytdl command.
-        }} else if (msg.content.startsWith('!ytdl') && !fn.hasRole(bot, msg, server)){
-          bot.reply(msg, 'You dont have permission to download from youTube');
-          bot.deleteMessage(msg);
+        }
     }
 
     //youTube for non-Admin / Moderator - Overwrites existing youTube.m4a
@@ -373,7 +371,7 @@ exports.cmds = (bot, msg) => {
     }
 
     // Wipe Command
-    if (msg.content.startsWith('!wipe') && fn.hasRole(bot, msg, server)){
+    if (msg.content.startsWith('!wipe') && msg.author.id == 167693414156992512){
         var args = msg.content.split(' ');
         // Limit wipe to 25 messages
         if (args[1] <= 25){

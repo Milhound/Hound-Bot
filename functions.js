@@ -69,18 +69,6 @@ exports.play = (bot, msg, que) => {
   }
 }
 
-// Confirm user has role of Admin or Moderator.
-exports.hasRole = (bot, msg, server) => {
-    var admin = bot.memberHasRole(msg.sender, server.roles.get('name', 'Admin'));
-    var moderator = bot.memberHasRole(msg.sender, server.roles.get('name', 'Moderator'));
-    // Admin? Moderator?
-    if(admin || moderator){
-        return true;
-      } else {
-        return false;
-    }
-}
-
 // Welcome new member to the Server
 exports.notification = (bot, server, user) => {
     console.log('User ' + user.name +' has joined the Server');
