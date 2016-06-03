@@ -103,7 +103,7 @@ exports.cmds = (bot, msg) => {
     }
 
     // Youtube Download requires Admin / Moderator - Saves YouTube audio to a file.
-    if (msg.content.startsWith('!ytdl') && fn.hasRole(bot, msg, server)){
+    if (msg.content.startsWith('!ytdl')){
         var args = msg.content.split(' ');
         // Check for no url passed and confirm correct format.
         if (args[1] == null || !args[1].startsWith('https')){
