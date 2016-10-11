@@ -1,91 +1,66 @@
 var http = require('http');
 var https = require('https');
-var yt = require('ytdl-core');
 var fn = require('./functions.js');
-var fs = require('fs');
-var Playlist = require('./playlist.json');
-
-// GLOBAL VARIABLES
-var queue = fn.queue;
 
 exports.cmds = (bot, msg) => {
-    var server = bot.servers.get('name', 'Milhound');
-
     // Commands
     if(msg.content == '!commands'){
-        bot.sendMessage(msg.author,
-            `List of Commands: \n
+        msg.channel.sendMessage(`List of Commands: \n
             !ping - Replys Pong \n
             !toast - Prints Toast\n
-            !help - Returns Help Text \n
             !slap @user - Slaps all mentioned users\n
             !insult (@user - optional) - Insults the sender or @user.\n
-            !hi @user - Says Hello to all mentioned users\n
             !cat - Random Cat\n
             !toC <#> - Converts Fahrenheit to Celsius\n
             !toF <#> - Converts Celsius to Fahrenheit\n
-            !time <TIMEZONE> - Returns current time in zone. Ex: !time CST\n
-            !music - PMs list of available music\n
-            !queue - PMs current queue\n
-            !play (Song Name) - Plays the specified song\n
-            !yt <url> - Plays the YouTube like a song\n
-            !playAll or !play All - Plays all songs\n
-            !playlist (Playlist Name) - Plays playlist\n
-            !skip - Plays the next song in queue\n
-            !shuffle - Shuffles current queue\n
-            !clear - Clears current queue`);
+            !time <TIMEZONE> - Returns current time in zone. Ex: !time CST`);
     }
+    // Gamer
+        if(msg.content === '!gamer' && msg.guild.id === "167693566267752449"){
+            if(msg.member.roles.has("235440340981514240")){
+                msg.reply("Removed role Gamer. Use !gamer to undo.");
+                msg.guild.member(msg.author).removeRole("235440340981514240")
+            } else {
+                msg.reply("You have been granted role - Gamer.")
+                msg.guild.member(msg.author).addRole("235440340981514240");
+            }
+            
+        }
 
     // Ping Command
-    if(msg.content == '!ping'){
-        console.log(msg.sender.username + ' as used the ping command');
-        bot.reply(msg, 'pong');
-    }
-
-    // Help Command
-    if(msg.content == '!help'){
-        console.log(msg.sender.username + ' as used the help command');
-        bot.sendMessage(msg.sender, 'Please refer to ' + bot.channels.get('name','rules_and_info') + ' and ' + bot.channels.get('name','announcements') + ' for help! Bot commands can be found via !commands.')
+        if(msg.content === '!ping'){
+        console.log(msg.author.username + ' as used the ping command');
+        msg.channel.sendMessage('pong');
     }
 
     // Slap Command
-    if(msg.content.indexOf('!slap') == 0 && msg.mentions.length >= 0) {
-        console.log(msg.sender.username  + ' used the slap command');
-        for (mentioned of msg.mentions){
-            bot.sendMessage(msg.channel, mentioned + " You've been SLAPPED!");
+    if(msg.content.indexOf('!slap') >= 0 && msg.mentions.users.array().length >= 0) {
+        console.log(msg.author.username  + ' used the slap command');
+        for (mentioned of msg.mentions.users.array()){
+            msg.channel.sendMessage(mentioned + " You've been SLAPPED!");
         }
-        bot.deleteMessage(msg);
-    }
-
-    // Hi Command
-    if(msg.content.indexOf('!hi') == 0 && msg.mentions.length >= 0){
-        console.log(msg.sender.username  + ' used the Hi command');
-        // Say Hello to everyone who was mentioned
-        for (mentioned of msg.mentions){
-            bot.sendMessage(msg.channel, 'Hello ' + mentioned);
-        }
-        bot.deleteMessage(msg);
+        msg.delete;
     }
 
     // Cat Command
     if(msg.content == '!cat'){
-        console.log(msg.author.name + ' used the !cat command.');
+        console.log(msg.author.username + ' used the !cat command.');
         // Get random cat
         var request = http.get('http://random.cat/meow', (response) => {
             response.on('data', (data) => {
                 var json = JSON.parse(data);
                 // Reply with the url from the json under "file"
-                bot.reply(msg, json.file);
+                msg.reply(json.file);
                 // Delete user's message to reduce clutter
-                bot.deleteMessage(msg);
+                msg.delete;
             });
         });
     }
 
     // Insult Command
     if(msg.content.startsWith('!insult')){
-      console.log(msg.author.name + ' used the insult command');
-      for (mentioned of msg.mentions) {
+      console.log(msg.author.username + ' used the insult command');
+      for (mentioned of msg.mentions.users.array()) {
         // GET request for Quandry Factory API
         http.get('http://quandyfactory.com/insult/json', (response) => {
           var data = '';
@@ -95,279 +70,11 @@ exports.cmds = (bot, msg) => {
           });
           response.on('end', () => {
             var json = JSON.parse(data);
-            bot.sendMessage(msg.channel, mentioned + ' ' + json.insult);
-            bot.deleteMessage(msg);
+            msg.channel.sendMessage(mentioned + ' ' + json.insult);
+            msg.delete;
           });
         });
       }
-    }
-
-    // Youtube Download requires Admin / Moderator - Saves YouTube audio to a file.
-    if (msg.content.startsWith('!ytdl')){
-        var args = msg.content.split(' ');
-        // Check for no url passed and confirm correct format.
-        if (args[1] == null || !args[1].startsWith('https')){
-            bot.reply(msg, 'Missing or invalid URL');
-        } else {
-          var url = args[1];
-          // Save api key to api variable
-          var api = process.env.GOOGLE_API_KEY;
-          // Remove unnecessary url component
-          var id = args[1].replace('https://www.youtube.com/watch?v=', '');
-          var url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&&id=' + id + '&&key=' + api;
-          https.get(url, (res) => {
-              var data = '';
-              res.on('data', (chunk) => {
-                  data += chunk;
-              });
-              res.on('end', () => {
-                // Convert data into usable json
-                  var json = JSON.parse(data);
-                  var title = json.items[0].snippet.title;
-                  title = title.trim();
-                  // Perform dowload 'audio only' of the youtube video, and write it to the corresponding .m4a file
-                  yt(args[1], { filter: 'audioonly' }).pipe(fs.createWriteStream('music/' + title + '.m4a'));
-                  // Inform user that file is ready. Depending on connection speed may need to institute a wait.
-                  bot.reply(msg, title + ' ready for use!');
-                  bot.deleteMessage(msg);
-              });
-          });
-          // If non-Admin / Moderator attempts to use !ytdl command.
-        }
-    }
-
-    //youTube for non-Admin / Moderator - Overwrites existing youTube.m4a
-    if (msg.content.startsWith('!yt')){
-        var args = msg.content.split(' ');
-        console.log(msg.sender.name + ' used the !yt command on ' + args[1]);
-        if (args[1] == null){
-            // Remove bad call to !yt command.
-            bot.deleteMessage(msg);
-            bot.reply(msg, 'Missing the URL');
-        }
-        // Confirm url is passed
-        if (args[1] != null && args[1].startsWith('http')){
-            // Check if ready then play the song if bot is available
-                var ready = fn.ready_state(bot);
-                var title = '';
-                // Dont allow users to overwrite currently playing youTube
-                if (!ready && bot.user.game && bot.user.game == "youTube"){
-                    bot.reply(msg, 'Try again when bot is not playing youTube. (Currently in development: Queuing up to 4 youTube songs.)');
-                } else {
-                var youtube = yt(args[1], { filter: 'audioonly' });
-                // Write data to the youTube.m4a file.
-                youtube.pipe(fs.createWriteStream('music/youTube.m4a'));
-                // When finished downloading perform the appropriate action.
-                youtube.on('end', () => {
-                            // If currently playing and a queue is present
-                            if (!ready && queue.length > 0){
-                                queue.push('youTube');
-                                bot.reply(msg, 'Added youTube to queue');
-                                bot.deleteMessage(msg);
-                                console.log('Added youTube to queue.');
-                            }
-                            // If currently playing and no songs in queue
-                            if (!ready && queue.length == 0){
-                                queue.push('youTube');
-                                bot.reply('Your youTube will play next.');
-                                bot.deleteMessage(msg);
-                            }
-                            // If no song is playing and the queue is empty
-                            if (ready && queue.length == 0){
-                                bot.reply(msg, "Playing YouTube");
-                                queue.push('youTube');
-                                fn.play(bot, msg, queue);
-                                bot.deleteMessage(msg);
-                            }
-                });
-            }
-        }
-    }
-
-    // List Music
-    if (msg.content == '!music'){
-        // Send Music.txt file to message sender as listing all songs in message is too long.
-        bot.sendFile(msg.sender, "./Music.txt", 'Music', 'List of Music Attached.');
-        console.log(msg.author.name + ' used the !music command.');
-    }
-
-    // PM Queue
-    if (msg.content == '!queue'){
-        // Currently possible to have a queue too long to send to user. User will not be notified if too long.
-        console.log(msg.sender.username + ' used the Queue command');
-        bot.sendMessage(msg.sender, queue);
-    }
-
-    // Clear Queue
-    if (msg.content == '!clear'){
-        queue = new Array();
-        bot.sendMessage(msg, 'Queue Cleared!');
-    }
-
-    // Skip Song
-    if (msg.content == '!skip' && queue.length > 0){
-        console.log(msg.author.name + ' used the next command.');
-        if(bot.voiceConnection){
-            var connections = bot.voiceConnections;
-            for (var i = 0; i < connections.length; i++){
-                var conn = bot.voiceConnections[i];
-                conn.stopPlaying();
-            }
-        } else if (msg.content == '!skip' && queue.length == 0){
-                bot.reply(msg, 'Song queue is empty.');
-        }
-    }
-
-    // Previous :: IN DEVELOPMENT
-    if (msg.content == '!back' || msg.content == '!previous'){
-        bot.reply(msg, 'Currently in development try again later.');
-    }
-
-    // DEPRECIATED: !next
-    if (msg.content == '!next'){
-        bot.reply(msg, '!next is depreciated please use !skip');
-    }
-
-    // Shuffle
-    if (msg.content == '!shuffle' && queue.length > 0){
-        console.log('Shuffling queue');
-        var counter = queue.length;
-        while (counter >0) {
-            var index = Math.floor(Math.random() * counter);
-            counter--;
-            // Select the current item in the queue
-            var temp = queue[counter];
-            // Grab the first or second item in the queue to the location of the current item
-            queue[counter] = queue[index];
-            // Move the current item to the location that the first or second item was removed from
-            queue[index] = temp;
-        }
-        bot.reply(msg, 'Sucessfully shuffled the current queue');
-        } else if (msg.content == '!shuffle' && queue.length == 1 || msg.content == '!shuffle' && queue.length == 0){
-            bot.reply(msg, 'Queue not long enough to shuffle.');
-    }
-
-    //Play All
-    if (msg.content.startsWith('!playAll') || msg.content == "!play All"){
-        console.log(msg.author.name + ' used the Play All command.');
-        var music = fs.readdirSync('music');
-        // Remove the first item .DS_Store
-        music.shift();
-        for ( var i in music ) {
-            music[i] = music[i].replace('.m4a', '');
-        }
-        for (song of music){
-            console.log(queue);
-            queue.push(song);
-        }
-        var counter = queue.length;
-        while (counter >0) {
-            var index = Math.floor(Math.random() * counter);
-            counter--;
-            // Select the current item in the queue
-            var temp = queue[counter];
-            // Grab the first or second item in the queue to the location of the current item
-            queue[counter] = queue[index];
-            // Move the current item to the location that the first or second item was removed from
-            queue[index] = temp;
-        }
-        var ready = fn.ready_state(bot);
-        if (ready){
-            fn.play(bot,
-                msg, queue, ready);
-        }
-        bot.reply(msg, 'Added all songs to the queue');
-    }
-
-    // Playlist Command
-    if (msg.content.startsWith('!playlist')){
-        var args = msg.content.split(' ');
-        console.log(msg.author.name + ' used playlist command on ' + args[1]);
-        if (args[1]){
-            var addedPlaylist = Playlist[args[1]];
-            // Check to confirm playlist added, and add all songs to queue
-            if (addedPlaylist != 'undefined' && addedPlaylist != null){
-                for (song of addedPlaylist){
-                    queue.push(song);
-                }
-                var counter = queue.length;
-                while (counter >0) {
-                    var index = Math.floor(Math.random() * counter);
-                    counter--;
-                    // Select the current item in the queue
-                    var temp = queue[counter];
-                    // Grab the first or second item in the queue to the location of the current item
-                    queue[counter] = queue[index];
-                    // Move the current item to the location that the first or second item was removed from
-                    queue[index] = temp;
-                }
-                // If ready to play music... Play
-                var ready = fn.ready_state(bot);
-                if (ready){
-                    fn.play(bot, msg, queue);
-                }
-            console.log(msg.author.name + ' used playlist command on ' + args[1]);
-            bot.reply(msg, 'Added playlist ' + args[1]);
-            } else {
-                bot.reply(msg, 'Invalid Playlist');
-            }
-        } else {
-            bot.reply(msg, 'Please supply !playlist command with name of playlist');
-            // Avoid repeated bad call spam by deleting bad call message.
-            bot.deleteMessage(msg);
-        }
-    }
-
-    // Force quit music
-    if (msg.content == '!end'){
-        bot.setPlayingGame(null);
-        queue = new Array();
-        if(bot.voiceConnection){
-            for (connection of bot.voiceConnections){
-                bot.leaveVoiceChannel(connection.voiceChannel);
-            }
-        }
-    }
-
-    // Play Command
-    if (msg.content.startsWith('!play') && !msg.content.startsWith('!playlist') && !msg.content.startsWith('!playAll') && msg.content != "!play All"){
-        var args = msg.content.split(' ');
-        // If queue is empty and there is no second argument given
-        if (queue.length == 0 && args[1] == null){
-            console.log('Queue Empty');
-            bot.reply(msg, 'Queue is Empty');
-        }
-        // If an argument is given
-        if (args[1]  != null){
-            var song = msg.content;
-            song = song.replace('!play ', '');
-            // Make the song name file resolveable by adding '\ ' to all spacing
-            song = song.replace(/ /g, '\ ');
-            // Confirm song exists (.esistsSync is DEPRECIATED update to .statSync)
-            if(fs.existsSync("music/" + song + ".m4a")){
-                var ready = fn.ready_state(bot);
-                // Currently playing and songs are in queue
-                if (!ready && queue.length > 0){
-                    queue.push(song);
-                    bot.reply(msg, 'Added ' + song + ' to queue');
-                    console.log('Added ' + song + ' to queue.');
-                }
-                // Currently playing and no songs in queue
-                if (!ready && queue.length == 0){
-                    queue.push(song);
-                    bot.reply(msg, song + ' will play next.');
-                    console.log('Playing Next ' + args[1]);
-                }
-                // Not playing and no songs in queue
-                if (ready && queue.length == 0){
-                    queue.push(song);
-                    fn.play(bot, msg, queue);
-                }
-            } else {
-                console.log('Unknown Song');
-                bot.sendMessage(msg.author, song + ' song unknown. Use !music for a list.');
-                }
-        }
     }
 
     // Wipe Command
@@ -379,17 +86,13 @@ exports.cmds = (bot, msg) => {
             // Add 1 to count to include the actual wipe command
             count ++
             // Get logs limited to the count variable
-            bot.getChannelLogs(msg.channel, count, (err, msgs) => {if (err) {console.log(err);throw err;}
+            bot.getChannelLogs(count, (err, msgs) => {if (err) {console.log(err);throw err;}
                 for(message of msgs){
                     // perform delete on message
                     bot.deleteMessage(message, (err) => {if (err) {console.log (err);throw err;}});
                 }
             }
         );
-        } else if (args[1] > 25){
-            bot.deleteMessage(msg);
-            bot.sendMessage(msg.sender, 'Limit 15 on wipe.');
-            console.log(msg.author.name + " wiped " + args[1] + " messages.");
         }
     }
 
@@ -401,7 +104,7 @@ exports.cmds = (bot, msg) => {
             bot.setUsername(username, (err) => {if (err){console.log(err.text);}});
         }
         // Console log with name to confirm correct user used command.
-        console.log(msg.sender.name + " changed bot's name.");
+        console.log(msg.author.username + " changed bot's name.");
     }
 
     // Celsius to Fahrenheit
@@ -411,9 +114,9 @@ exports.cmds = (bot, msg) => {
             var C = args[1];
             // Round to whole number
             var F = (C * 1.8 + 32).toFixed(0);
-            bot.reply(msg, F);
+            msg.reply(F);
         }
-        console.log(msg.sender.name + " used Cel to Far.");
+        console.log(msg.author.username + " used Cel to Far.");
     }
 
     // Fahrenheit to Celsius
@@ -423,9 +126,9 @@ exports.cmds = (bot, msg) => {
             var F = args[1];
             // Round to whole number
             var C = ((F -32) * (5/9)).toFixed(0);
-            bot.reply(msg, C);
+            msg.reply(C);
         }
-        console.log(msg.sender.name + " used Far to Cel.");
+        console.log(msg.author.username + " used Far to Cel.");
     }
 
     // Time
@@ -501,7 +204,7 @@ exports.cmds = (bot, msg) => {
                     hour = hour;
                 }else {
                     // All other checks failed, its is not a timezone currently in code.
-                    bot.reply(msg, 'Unknown Timezone.');
+                    msg.reply('Unknown Timezone.');
                     goodTime = false;
                     // Log passed timezone for a potential addition
                     console.log('Timezone not avaliable yet: ' + args[1]);
@@ -523,14 +226,14 @@ exports.cmds = (bot, msg) => {
         // Confirm all tasks are complete by adding a slight delay.
         setTimeout(()=>{
             if (goodTime){
-                bot.reply(msg, hour + ":" + minutes);
+                msg.reply(hour + ":" + minutes);
             }
         }, 500);
     }
 
     // Toast
     if (msg.content == '!toast'){
-        bot.sendMessage(msg, `\`\`\`\n
+        msg.channel.sendMessage(`\`\`\`\n
         Toast!
               ______
          ____((     )_
@@ -544,6 +247,6 @@ exports.cmds = (bot, msg) => {
                                                 \`---\'         |
         \`\`\`
         `);
-        bot.deleteMessage(msg);
+        msg.delete;
     }
 }

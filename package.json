@@ -8,15 +8,6 @@
   },
   "author": "Daniel MIlholland <https://www.milhound.com> (Daniel@gailwindslog.com)",
   "description": "Hound Bot for Discordapp, created using Discord.js.",
-  "dependencies": {
-    "discord.js": "^7.0.0",
-    "ytdl-core": "^0.7.13"
-  },
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "https://git.heroku.com/hound-bot.git"
-  },
   "keywords": [
     "Discord",
     "Bot",
@@ -24,5 +15,8 @@
     "Node",
     "Music"
   ],
-  "license": "LGPL-3.0"
+  "license": "LGPL-3.0",
+  "dependencies": {
+    "discord.js": "^9.3.0"
+  }
 }
