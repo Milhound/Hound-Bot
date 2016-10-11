@@ -251,6 +251,7 @@ exports.cmds = (bot, msg) => {
     // Boom
     if(msg.content == '!boom'){
         var x = Math.floor(Math.random()*5+1);
+        console.log(msg.author.username + ' used the boom command. (boom' + x + '.jpeg)');
         msg.channel.sendFile('./img/boom' + x + '.jpeg');
     }
 }
