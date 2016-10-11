@@ -5,7 +5,7 @@ var fn = require('./functions.js');
 exports.cmds = (bot, msg) => {
     // Commands
     if(msg.content == '!commands'){
-        msg.channel.sendMessage(`List of Commands: \n
+        var text = `List of Commands: \n
             !ping - Replys Pong \n
             !toast - Prints Toast\n
             !slap @user - Slaps all mentioned users\n
@@ -13,9 +13,16 @@ exports.cmds = (bot, msg) => {
             !cat - Random Cat\n
             !toC <#> - Converts Fahrenheit to Celsius\n
             !toF <#> - Converts Celsius to Fahrenheit\n
-            !time <TIMEZONE> - Returns current time in zone. Ex: !time CST`);
+            !time <TIMEZONE> - Returns current time in zone. Ex: !time CST`;
+        
+        if(msg.guild.id == "167693566267752449"){
+            msg.channel.sendMessage(text + "\n !gamer to add/remove Gamer role.");
+        } else {
+            msg.channel.sendMessage(text);
+        }
+        
     }
-    // Gamer
+    // Gamer Command
         if(msg.content === '!gamer' && msg.guild.id === "167693566267752449"){
             if(msg.member.roles.has("235440340981514240")){
                 msg.reply("Removed role Gamer. Use !gamer to undo.");
@@ -75,36 +82,6 @@ exports.cmds = (bot, msg) => {
           });
         });
       }
-    }
-
-    // Wipe Command
-    if (msg.content.startsWith('!wipe') && msg.author.id == 167693414156992512){
-        var args = msg.content.split(' ');
-        // Limit wipe to 25 messages
-        if (args[1] <= 25){
-            var count = args[1];
-            // Add 1 to count to include the actual wipe command
-            count ++
-            // Get logs limited to the count variable
-            bot.getChannelLogs(count, (err, msgs) => {if (err) {console.log(err);throw err;}
-                for(message of msgs){
-                    // perform delete on message
-                    bot.deleteMessage(message, (err) => {if (err) {console.log (err);throw err;}});
-                }
-            }
-        );
-        }
-    }
-
-    // Change username only performable by user with id
-    if (msg.content.startsWith('!usrName') && msg.author.id == 167693414156992512){
-        var args = msg.content.split(' ');
-        if (args[1]){
-            var username = msg.content.replace('!usrName', '').trim();
-            bot.setUsername(username, (err) => {if (err){console.log(err.text);}});
-        }
-        // Console log with name to confirm correct user used command.
-        console.log(msg.author.username + " changed bot's name.");
     }
 
     // Celsius to Fahrenheit
