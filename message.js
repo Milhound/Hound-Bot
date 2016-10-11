@@ -16,7 +16,9 @@ exports.cmds = (bot, msg) => {
             !time <TIMEZONE> - Returns current time in zone. Ex: !time CST`;
         
         if(msg.guild.id == "167693566267752449"){
-            msg.channel.sendMessage(text + "\n !gamer to add/remove Gamer role.");
+            msg.channel.sendMessage(text + 
+            `\n 
+            !gamer to add/remove Gamer role.`);
         } else {
             msg.channel.sendMessage(text);
         }
