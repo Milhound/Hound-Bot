@@ -11,10 +11,12 @@ exports.cmds = (bot, msg) => {
             !slap @user - Slaps all mentioned users\n
             !insult (@user - optional) - Insults the sender or @user.\n
             !cat - Random Cat\n
+            !boom - Roast your fellow users\n
             !toC <#> - Converts Fahrenheit to Celsius\n
             !toF <#> - Converts Celsius to Fahrenheit\n
             !time <TIMEZONE> - Returns current time in zone. Ex: !time CST`;
         
+        // If on Milhound's Server add the following commands
         if(msg.guild.id == "167693566267752449"){
             msg.channel.sendMessage(text + 
             `\n 
@@ -25,19 +27,36 @@ exports.cmds = (bot, msg) => {
         
     }
     // Gamer Command
-        if(msg.content === '!gamer' && msg.guild.id === "167693566267752449"){
-            if(msg.member.roles.has("235440340981514240")){
-                msg.reply("Removed role Gamer. Use !gamer to undo.");
-                msg.guild.member(msg.author).removeRole("235440340981514240")
-            } else {
-                msg.reply("You have been granted role - Gamer.")
-                msg.guild.member(msg.author).addRole("235440340981514240");
-            }
-            
+    if(msg.content === '!gamer' && msg.guild.id === "167693566267752449"){
+        if(msg.member.roles.has("235440340981514240")){
+            msg.reply("Removed role Gamer. Use !gamer to undo.");
+            msg.guild.member(msg.author).removeRole("235440340981514240")
+        } else {
+            msg.reply("You have been granted role - Gamer.")
+            msg.guild.member(msg.author).addRole("235440340981514240");
         }
+        
+    }
+
+    // Mute Command
+    if(msg.content.startsWith('!mute') && msg.guild.member(msg.author).hasPermission("MUTE_MEMBERS")){
+        for(mention of msg.mentions.users.array()){
+            console.log(msg.author.username + " has muted " + mention.username);
+            msg.guild.member(mention).setMute(true);
+            msg.reply(mention + " has been globally muted!");
+        }
+    }
+    // Mute Command
+    if(msg.content.startsWith('!unmute') && msg.guild.member(msg.author).hasPermission("MUTE_MEMBERS")){
+        for(mention of msg.mentions.users.array()){
+            console.log(msg.author.username + " has unmuted " + mention.username);
+            msg.guild.member(mention).setMute(false);
+            msg.reply(mention + " has been unmuted!");
+        }
+    }
 
     // Ping Command
-        if(msg.content === '!ping'){
+    if(msg.content === '!ping'){
         console.log(msg.author.username + ' as used the ping command');
         msg.channel.sendMessage('pong');
     }
@@ -227,5 +246,11 @@ exports.cmds = (bot, msg) => {
         \`\`\`
         `);
         msg.delete;
+    }
+
+    // Boom
+    if(msg.content == '!boom'){
+        var x = Math.floor(Math.random()*5+1);
+        msg.channel.sendFile('./img/boom' + x + '.jpeg');
     }
 }
