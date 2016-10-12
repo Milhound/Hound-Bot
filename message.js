@@ -7,6 +7,8 @@ exports.cmds = (bot, msg) => {
     if(msg.content == '!commands'){
         var text = `List of Commands: \n
             !ping - Replys Pong \n
+            !coin - Flip a coin\n
+            !dice (opt X) - Roll the dice (x)\n
             !toast - Prints Toast\n
             !slap @user - Slaps all mentioned users\n
             !insult (@user - optional) - Insults the sender or @user.\n
@@ -57,6 +59,28 @@ exports.cmds = (bot, msg) => {
     if(msg.content === '!ping'){
         console.log(msg.author.username + ' as used the ping command');
         msg.channel.sendMessage('pong');
+    }
+
+    // Coin Flip
+    if(msg.content === '!coin'){
+        console.log(msg.author.username + " used the coin flip command.");
+        if(Math.floor(Math.random()*2+1) === 1){
+            msg.channel.sendMessage("Heads");
+        } else {
+            msg.channel.sendMessage("Tails");
+        }
+    }
+
+    // Dice
+
+    if(msg.content.startsWith('!dice')){
+        console.log(msg.author.username + " used the dice command.");
+        var args = msg.content.split(' ');
+        if (args[1] !== undefined){
+            msg.channel.sendMessage(Math.floor(Math.random()*parseInt(args[1])+1));
+        } else {
+            msg.channel.sendMessage(Math.floor((Math.random()*6)+1));
+        }
     }
 
     // Slap Command
@@ -256,7 +280,7 @@ exports.cmds = (bot, msg) => {
     // Wipe
     if(msg.content.startsWith('!wipe') && msg.guild.member(msg.author).hasPermission("MANAGE_MESSAGES")){
         var args = msg.content.split(' ');
-        if(args[1] !== null && args[1] <= 50){
+        if(args[1] !== undefined && args[1] <= 50){
             var messages = msg.channel.fetchMessages({limit: (parseInt(args[1]) + 1)});
             console.log(msg.author.username + " has wiped away " + (parseInt(args[1])+1) + " messages.");
             messages.then(messages => {msg.channel.bulkDelete(messages)});
