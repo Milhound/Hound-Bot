@@ -73,13 +73,13 @@ exports.cmds = (bot, msg) => {
 
     // Dice
 
-    if(msg.content.startsWith('!dice')){
+    if(msg.content.startsWith('!dice') || msg.content.startsWith('!roll')){
         console.log(msg.author.username + " used the dice command.");
         var args = msg.content.split(' ');
         if (args[1] !== undefined){
             msg.channel.sendMessage(Math.floor(Math.random()*parseInt(args[1])+1));
         } else {
-            msg.channel.sendMessage(Math.floor((Math.random()*6)+1));
+            msg.channel.sendFile('./img/dice' + Math.floor((Math.random()*6)+1) + '.png');
         }
     }
 
