@@ -1,12 +1,6 @@
 var http = require('http');
 var https = require('https');
 
-// Welcome new member to the Server
-exports.notification = (bot, server, user) => {
-    console.log('User ' + user.name +' has joined the Server');
-    bot.sendMessage(server.channels.get('name', 'general'), user.name + ' has joined us!');
-}
-
 exports.toggleRole = (msg, role) => {
     if(msg.member.roles.has(role)){
         console.log(msg.author.username + " has granted themselves role - " + msg.guild.roles.get(role).name);
@@ -32,20 +26,14 @@ exports.filterWords = (msg) => {
 
 exports.apiRequest = (url, callback) => {
     if(url.startsWith('https:')){
-        https.get(url, (response) => {
-            var data = '';
-            response.on('data', (chunk) => {data += chunk});
-            response.on('end', () => {
-                callback(JSON.parse(data));
-            });
-        });
+        https.get(url, response => collectJSON(response, callback));
     } else {
-        http.get(url, (response) => {
-            var data = '';
-            response.on('data', (chunk) => {data += chunk});
-            response.on('end', () => {
-                callback(JSON.parse(data));
-            });
-        });
+        http.get(url, response => collectJSON(response, callback));
     }
+}
+
+function collectJSON(response, callback){
+    var data = '';
+    response.on('data', (chunk) => {data += chunk});
+    response.on('end', () => {callback(JSON.parse(data));});
 }
