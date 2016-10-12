@@ -252,4 +252,12 @@ exports.cmds = (bot, msg) => {
         console.log(msg.author.username + ' used the boom command. (boom' + x + '.jpeg)');
         msg.channel.sendFile('./img/boom' + x + '.jpeg');
     }
+
+    // Wipe
+    if(msg.content.startsWith('!wipe') && msg.guild.member(msg.author).hasPermission("MANAGE_MESSAGES")){
+        var args = msg.content.split(' ');
+        var messages = msg.channel.fetchMessages({limit: (parseInt(args[1]) + 1)});
+        console.log(msg.author.username + " has wiped away " + (parseInt(args[1])+1) + " messages.");
+        messages.then(messages => {msg.channel.bulkDelete(messages)});
+    }
 }
