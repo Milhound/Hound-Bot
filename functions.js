@@ -1,3 +1,5 @@
+var http = require('http');
+
 // Welcome new member to the Server
 exports.notification = (bot, server, user) => {
     console.log('User ' + user.name +' has joined the Server');
@@ -25,4 +27,14 @@ exports.filterWords = (msg) => {
             
         } 
     }
+}
+
+exports.apiRequest = (url, callback) => {
+    http.get(url, (response) => {
+        var data = '';
+        response.on('data', (chunk) => {data += chunk});
+        response.on('end', () => {
+        callback(JSON.parse(data));
+        });
+    });
 }

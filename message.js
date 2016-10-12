@@ -1,5 +1,4 @@
 var http = require('http');
-var https = require('https');
 var fn = require('./functions.js');
 
 exports.cmds = (bot, msg) => {
@@ -96,14 +95,8 @@ exports.cmds = (bot, msg) => {
     if(msg.content == '!cat'){
         console.log(msg.author.username + ' used the !cat command.');
         // Get random cat
-        var request = http.get('http://random.cat/meow', (response) => {
-            response.on('data', (data) => {
-                var json = JSON.parse(data);
-                // Reply with the url from the json under "file"
-                msg.reply(json.file);
-                // Delete user's message to reduce clutter
-                msg.delete;
-            });
+        fn.apiRequest('http://random.cat/meow', (response) => {
+            msg.channel.sendMessage(response.file);
         });
     }
 
@@ -111,18 +104,8 @@ exports.cmds = (bot, msg) => {
     if(msg.content.startsWith('!insult')){
       console.log(msg.author.username + ' used the insult command');
       for (mentioned of msg.mentions.users.array()) {
-        // GET request for Quandry Factory API
-        http.get('http://quandyfactory.com/insult/json', (response) => {
-          var data = '';
-          response.on('data', (chunk) => {
-            // Add chunk of data to data variable
-              data += chunk
-          });
-          response.on('end', () => {
-            var json = JSON.parse(data);
-            msg.channel.sendMessage(mentioned + ' ' + json.insult);
-            msg.delete;
-          });
+        fn.apiRequest("http://quandyfactory.com/insult/json", (response) => {
+            msg.channel.sendMessage(mentioned + ' ' + response.insult);
         });
       }
     }
