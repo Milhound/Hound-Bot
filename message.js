@@ -256,8 +256,14 @@ exports.cmds = (bot, msg) => {
     // Wipe
     if(msg.content.startsWith('!wipe') && msg.guild.member(msg.author).hasPermission("MANAGE_MESSAGES")){
         var args = msg.content.split(' ');
-        var messages = msg.channel.fetchMessages({limit: (parseInt(args[1]) + 1)});
-        console.log(msg.author.username + " has wiped away " + (parseInt(args[1])+1) + " messages.");
-        messages.then(messages => {msg.channel.bulkDelete(messages)});
+        if(args[1] !== null && args[1] <= 50){
+            var messages = msg.channel.fetchMessages({limit: (parseInt(args[1]) + 1)});
+            console.log(msg.author.username + " has wiped away " + (parseInt(args[1])+1) + " messages.");
+            messages.then(messages => {msg.channel.bulkDelete(messages)});
+        } else if (args[1] > 50){
+            console.log(msg.author.username + " attempted to delete more than 50 messages.");
+            msg.reply('Attempted to wipe too many messages');
+        }
+        
     }
 }

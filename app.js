@@ -28,7 +28,7 @@ bot.on('ready', () => {
 });
 
 bot.on('message', message => {
-    console.log(message.author.username + "Says: " + message.content);
+    console.log(message.author.username + " Says: " + message.content);
     if(message.guild.id == "167693566267752449") fn.filterWords(message);
     Message.cmds(bot, message);
 });
