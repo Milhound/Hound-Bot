@@ -17,7 +17,7 @@ exports.toggleRole = (msg, role) => {
 }
 
 exports.filterWords = (msg) => {
-    var bad_word_list = ["gay", "queer", "fuck", "ass", "nigger", "slut", "cunt", "boi", "fag", "testie", "cool"];
+    var bad_word_list = ["gay", "queer", "fuck", "ass", "nigger", "slut", "cunt", "boi", "fag", "testie"];
     for(word of bad_word_list){
         if(msg.content.toLowerCase().indexOf(word) !== -1){
             msg.delete();
