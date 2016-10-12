@@ -1,4 +1,5 @@
 var http = require('http');
+var https = require('https');
 
 // Welcome new member to the Server
 exports.notification = (bot, server, user) => {
@@ -30,11 +31,21 @@ exports.filterWords = (msg) => {
 }
 
 exports.apiRequest = (url, callback) => {
-    http.get(url, (response) => {
-        var data = '';
-        response.on('data', (chunk) => {data += chunk});
-        response.on('end', () => {
-        callback(JSON.parse(data));
+    if(url.startsWith('https:')){
+        https.get(url, (response) => {
+            var data = '';
+            response.on('data', (chunk) => {data += chunk});
+            response.on('end', () => {
+                callback(JSON.parse(data));
+            });
         });
-    });
+    } else {
+        http.get(url, (response) => {
+            var data = '';
+            response.on('data', (chunk) => {data += chunk});
+            response.on('end', () => {
+                callback(JSON.parse(data));
+            });
+        });
+    }
 }

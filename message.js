@@ -8,6 +8,7 @@ exports.cmds = (bot, msg) => {
             !ping - Replys Pong \n
             !coin - Flip a coin\n
             !dice (opt X) - Roll the dice (x)\n
+            !chuck - Chuck Norris Joke\n
             !toast - Prints Toast\n
             !slap @user - Slaps all mentioned users\n
             !insult (@user - optional) - Insults the sender or @user.\n
@@ -104,7 +105,7 @@ exports.cmds = (bot, msg) => {
     if(msg.content.startsWith('!insult')){
       console.log(msg.author.username + ' used the insult command');
       for (mentioned of msg.mentions.users.array()) {
-        fn.apiRequest("http://quandyfactory.com/insult/json", (response) => {
+        fn.apiRequest("https://quandyfactory.com/insult/json", (response) => {
             msg.channel.sendMessage(mentioned + ' ' + response.insult);
         });
       }
@@ -272,5 +273,13 @@ exports.cmds = (bot, msg) => {
             msg.reply('Attempted to wipe too many messages');
         }
         
+    }
+
+    // Chuck
+    if(msg.content == '!chuck'){
+        console.log(msg.author.username + " used the Chuck Norris fact command.");
+       fn.apiRequest('https://api.chucknorris.io/jokes/random', (response) => {
+            msg.channel.sendMessage(response.value);
+        });
     }
 }
