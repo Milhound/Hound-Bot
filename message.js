@@ -12,30 +12,28 @@ exports.cmds = (bot, msg) => {
             !insult (@user - optional) - Insults the sender or @user.\n
             !cat - Random Cat\n
             !boom - Roast your fellow users\n
-            !toC <#> - Converts Fahrenheit to Celsius\n
-            !toF <#> - Converts Celsius to Fahrenheit\n
+            !to_C <#> - Converts Fahrenheit to Celsius\n
+            !to_F <#> - Converts Celsius to Fahrenheit\n
             !time <TIMEZONE> - Returns current time in zone. Ex: !time CST`;
         
         // If on Milhound's Server add the following commands
         if(msg.guild.id == "167693566267752449"){
-            msg.channel.sendMessage(text + 
+            text +=
             `\n 
-            !gamer to add/remove Gamer role.`);
-        } else {
-            msg.channel.sendMessage(text);
+            !gamer to add/remove Gamer role.\n
+            !programmer to add/remove Programmer role.`;
         }
-        
+        msg.channel.sendMessage(text);        
     }
+
     // Gamer Command
     if(msg.content === '!gamer' && msg.guild.id === "167693566267752449"){
-        if(msg.member.roles.has("235440340981514240")){
-            msg.reply("Removed role Gamer. Use !gamer to undo.");
-            msg.guild.member(msg.author).removeRole("235440340981514240")
-        } else {
-            msg.reply("You have been granted role - Gamer.")
-            msg.guild.member(msg.author).addRole("235440340981514240");
-        }
-        
+        fn.toggleRole(msg, "235440340981514240");
+    }
+
+    // Programmer Command
+    if(msg.content === '!programmer' && msg.guild.id === "167693566267752449"){
+        fn.toggleRole(msg, "235562658877800448");
     }
 
     // Mute Command
@@ -106,7 +104,7 @@ exports.cmds = (bot, msg) => {
     }
 
     // Celsius to Fahrenheit
-    if (msg.content.startsWith('!toF')){
+    if (msg.content.startsWith('!to_F')){
         var args = msg.content.split(' ');
         if(args[1] && !args[2]){
             var C = args[1];
@@ -118,7 +116,7 @@ exports.cmds = (bot, msg) => {
     }
 
     // Fahrenheit to Celsius
-    if (msg.content.startsWith('!toC')){
+    if (msg.content.startsWith('!to_C')){
         var args = msg.content.split(' ');
         if(args[1] && !args[2]){
             var F = args[1];
