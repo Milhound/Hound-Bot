@@ -75,9 +75,9 @@ exports.cmds = (msg) => {
   }
 
   // Slap Command
-  if (msg.content.indexOf('!slap') >= 0 && msg.mentions.users.array().length >= 0) {
-    for (var mentioned of msg.mentions.users.array()) {
-      msg.channel.sendMessage(mentioned + ' You\'ve been SLAPPED!')
+  if (msg.content.startsWith('!slap') && msg.mentions.users.array().length >= 0) {
+    for (var slapTarget of msg.mentions.users.array()) {
+      msg.channel.sendMessage(slapTarget + ' You\'ve been SLAPPED!')
     }
     msg.delete
   }
@@ -88,10 +88,10 @@ exports.cmds = (msg) => {
   }
 
   // Insult Command
-  if (msg.content.startsWith('!insult')) {
-    for (mentioned of msg.mentions.users.array()) {
+  if (msg.content.startsWith('!insult') && msg.mentions.users.array().length >= 0) {
+    for (var insultTarget of msg.mentions.users.array()) {
       fn.apiRequest('https://quandyfactory.com/insult/json').then(response =>
-        msg.channel.sendMessage(mentioned + ' ' + response.insult))
+        msg.channel.sendMessage(insultTarget + ' ' + response.insult))
     }
   }
 
