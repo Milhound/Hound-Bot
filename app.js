@@ -3,7 +3,7 @@ const bot = new Discord.Client()
 const Message = require('./message.js')
 const fn = require('./functions.js')
 
-const newUsers = []
+var newUsers = []
 
 'use strict'
 
@@ -30,7 +30,7 @@ bot.on('message', message => {
   console.log(message.author.username + ' Says: ' + message.content)
   // Filter Profanity on Milhound's Server
   if (message.guild.id === '167693566267752449') fn.filterWords(message)
-  Message.cmds(bot, message)
+  Message.cmds(message)
 })
 
 bot.on('disconnected', () => {

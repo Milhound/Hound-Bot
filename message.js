@@ -1,6 +1,6 @@
-var fn = require('./functions.js')
+const fn = require('./functions.js')
 
-exports.cmds = (bot, msg) => {
+exports.cmds = (msg) => {
     // Commands
   if (msg.content === '!commands') {
     var text = `List of Commands: \n
@@ -37,7 +37,6 @@ exports.cmds = (bot, msg) => {
   // Mute Command
   if (msg.content.startsWith('!mute') && msg.guild.member(msg.author).hasPermission('MUTE_MEMBERS')) {
     for (var muteMention of msg.mentions.users.array()) {
-      console.log(msg.author.username + ' has muted ' + muteMention.username)
       msg.guild.member(muteMention).setMute(true)
       msg.reply(muteMention + ' has been globally muted!')
     }
@@ -46,7 +45,6 @@ exports.cmds = (bot, msg) => {
   // Mute Command
   if (msg.content.startsWith('!unmute') && msg.guild.member(msg.author).hasPermission('MUTE_MEMBERS')) {
     for (var unmuteMention of msg.mentions.users.array()) {
-      console.log(msg.author.username + ' has unmuted ' + unmuteMention.username)
       msg.guild.member(unmuteMention).setMute(false)
       msg.reply(unmuteMention + ' has been unmuted!')
     }
@@ -54,13 +52,11 @@ exports.cmds = (bot, msg) => {
 
   // Ping Command
   if (msg.content === '!ping') {
-    console.log(msg.author.username + ' as used the ping command')
     msg.channel.sendMessage('pong')
   }
 
   // Coin Flip
   if (msg.content === '!coin') {
-    console.log(msg.author.username + ' used the coin flip command.')
     if (Math.floor(Math.random() * 2 + 1) === 1) {
       msg.channel.sendMessage('Heads')
     } else {
@@ -70,7 +66,6 @@ exports.cmds = (bot, msg) => {
 
   // Dice
   if (msg.content.startsWith('!dice') || msg.content.startsWith('!roll')) {
-    console.log(msg.author.username + ' used the dice command.')
     var argsDice = msg.content.split(' ')
     if (argsDice[1] !== undefined) {
       msg.channel.sendMessage(Math.floor(Math.random() * parseInt(argsDice[1]) + 1))
@@ -81,7 +76,6 @@ exports.cmds = (bot, msg) => {
 
   // Slap Command
   if (msg.content.indexOf('!slap') >= 0 && msg.mentions.users.array().length >= 0) {
-    console.log(msg.author.username + ' used the slap command')
     for (var mentioned of msg.mentions.users.array()) {
       msg.channel.sendMessage(mentioned + ' You\'ve been SLAPPED!')
     }
@@ -90,17 +84,14 @@ exports.cmds = (bot, msg) => {
 
   // Cat Command
   if (msg.content === '!cat') {
-    console.log(msg.author.username + ' used the !cat command.')
     fn.apiRequest('http://random.cat/meow').then(response => msg.channel.sendMessage(response.file))
   }
 
   // Insult Command
   if (msg.content.startsWith('!insult')) {
-    console.log(msg.author.username + ' used the insult command')
     for (mentioned of msg.mentions.users.array()) {
-      fn.apiRequest('https://quandyfactory.com/insult/json', (response) => {
-        msg.channel.sendMessage(mentioned + ' ' + response.insult)
-      })
+      fn.apiRequest('https://quandyfactory.com/insult/json').then(response =>
+        msg.channel.sendMessage(mentioned + ' ' + response.insult))
     }
   }
 
@@ -113,7 +104,6 @@ exports.cmds = (bot, msg) => {
       var toF = (fromC * 1.8 + 32).toFixed(0)
       msg.reply(toF)
     }
-    console.log(msg.author.username + ' used Cel to Far.')
   }
 
   // Fahrenheit to Celsius
@@ -125,7 +115,6 @@ exports.cmds = (bot, msg) => {
       var toC = ((fromF - 32) * (5 / 9)).toFixed(0)
       msg.reply(toC)
     }
-    console.log(msg.author.username + ' used Far to Cel.')
   }
 
   // Time
@@ -248,7 +237,6 @@ exports.cmds = (bot, msg) => {
   // Boom
   if (msg.content === '!boom') {
     var x = Math.floor(Math.random() * 5 + 1)
-    console.log(msg.author.username + ' used the boom command. (boom' + x + '.jpeg)')
     msg.channel.sendFile('./img/boom' + x + '.jpeg')
   }
 
@@ -257,19 +245,15 @@ exports.cmds = (bot, msg) => {
     var argsWipe = msg.content.split(' ')
     if (argsWipe[1] !== undefined && argsWipe[1] <= 50) {
       var messages = msg.channel.fetchMessages({limit: (parseInt(argsWipe[1]) + 1)})
-      console.log(msg.author.username + ' has wiped away ' + (parseInt(argsWipe[1]) + 1) + ' messages.')
       messages.then(messages => { msg.channel.bulkDelete(messages) })
     } else if (argsWipe[1] > 50) {
-      console.log(msg.author.username + ' attempted to delete more than 50 messages.')
       msg.reply('Attempted to wipe too many messages')
     }
   }
 
   // Chuck
   if (msg.content === '!chuck') {
-    console.log(msg.author.username + ' used the Chuck Norris fact command.')
-    fn.apiRequest('https://api.chucknorris.io/jokes/random', (response) => {
-      msg.channel.sendMessage(response.value)
-    })
+    fn.apiRequest('https://api.chucknorris.io/jokes/random').then(response => 
+      msg.channel.sendMessage(response.value))
   }
 }

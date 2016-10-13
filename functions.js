@@ -1,12 +1,10 @@
-var superagent = require('superagent')
+const superagent = require('superagent')
 
 exports.toggleRole = (msg, role) => {
   if (msg.member.roles.has(role)) {
-    console.log(msg.author.username + ' has granted themselves role - ' + msg.guild.roles.get(role).name)
     msg.reply('Removed role ' + msg.guild.roles.get(role).name + '. Use !' + msg.guild.roles.get(role).name.toLowerCase() + ' to undo.')
     msg.guild.member(msg.author).removeRole(role)
   } else {
-    console.log(msg.author.username + ' has removed their role - ' + msg.guild.roles.get(role).name)
     msg.reply('You have been granted role - ' + msg.guild.roles.get(role).name + '.')
     msg.guild.member(msg.author).addRole(role)
   }
