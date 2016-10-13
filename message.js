@@ -253,7 +253,7 @@ exports.cmds = (msg) => {
 
   // Chuck
   if (msg.content === '!chuck') {
-    fn.apiRequest('https://api.chucknorris.io/jokes/random').then(response => 
+    fn.apiRequest('https://api.chucknorris.io/jokes/random').then(response =>
       msg.channel.sendMessage(response.value))
   }
 }
