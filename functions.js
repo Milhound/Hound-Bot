@@ -10,16 +10,6 @@ exports.toggleRole = (msg, role) => {
   }
 }
 
-exports.filterWords = (msg) => {
-  var badWordList = ['gay', 'queer', 'fuck', 'ass', 'nigger', 'nigga', 'nig', 'slut', 'cunt', 'boi', 'fag', 'testie']
-  for (var word of badWordList) {
-    if (msg.content.toLowerCase().indexOf(word) !== -1) {
-      msg.delete()
-      msg.channel.sendMessage('Please refrain from using profanity. If you feel this is an error please contact ' + msg.guild.owner + '.')
-    }
-  }
-}
-
 exports.apiRequest = (url, callback) => {
   return new Promise((resolve, reject) => {
     superagent.get(url)
