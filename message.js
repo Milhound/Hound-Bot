@@ -1,8 +1,11 @@
 const fn = require('./functions.js')
 
+'use strict'
+
 exports.cmds = (msg) => {
+  var message = msg.content.toLowerCase()
     // Commands
-  if (msg.content === '!commands') {
+  if (message === '!commands') {
     var text = `List of Commands: \n
             !ping - Replys Pong \n
             !coin - Flip a coin\n
@@ -25,17 +28,17 @@ exports.cmds = (msg) => {
   }
 
   // Gamer Command
-  if (msg.content === '!gamer' && msg.guild.id === '167693566267752449') {
+  if (message === '!gamer' && msg.guild.id === '167693566267752449') {
     fn.toggleRole(msg, '235440340981514240')
   }
 
   // Programmer Command
-  if (msg.content === '!programmer' && msg.guild.id === '167693566267752449') {
+  if (message === '!programmer' && msg.guild.id === '167693566267752449') {
     fn.toggleRole(msg, '235562658877800448')
   }
 
   // Mute Command
-  if (msg.content.startsWith('!mute') && msg.guild.member(msg.author).hasPermission('MUTE_MEMBERS')) {
+  if (message.startsWith('!mute') && msg.guild.member(msg.author).hasPermission('MUTE_MEMBERS')) {
     for (var muteMention of msg.mentions.users.array()) {
       msg.guild.member(muteMention).setMute(true)
       msg.reply(muteMention + ' has been globally muted!')
@@ -43,7 +46,7 @@ exports.cmds = (msg) => {
   }
 
   // Mute Command
-  if (msg.content.startsWith('!unmute') && msg.guild.member(msg.author).hasPermission('MUTE_MEMBERS')) {
+  if (message.startsWith('!unmute') && msg.guild.member(msg.author).hasPermission('MUTE_MEMBERS')) {
     for (var unmuteMention of msg.mentions.users.array()) {
       msg.guild.member(unmuteMention).setMute(false)
       msg.reply(unmuteMention + ' has been unmuted!')
@@ -51,12 +54,12 @@ exports.cmds = (msg) => {
   }
 
   // Ping Command
-  if (msg.content === '!ping') {
+  if (message === '!ping') {
     msg.channel.sendMessage('pong')
   }
 
   // Coin Flip
-  if (msg.content === '!coin') {
+  if (message === '!coin') {
     if (Math.floor(Math.random() * 2 + 1) === 1) {
       msg.channel.sendMessage('Heads')
     } else {
@@ -65,8 +68,8 @@ exports.cmds = (msg) => {
   }
 
   // Dice
-  if (msg.content.startsWith('!dice') || msg.content.startsWith('!roll')) {
-    var argsDice = msg.content.split(' ')
+  if (message.startsWith('!dice') || message.startsWith('!roll')) {
+    var argsDice = message.split(' ')
     if (argsDice[1] !== undefined) {
       msg.channel.sendMessage(Math.floor(Math.random() * parseInt(argsDice[1]) + 1))
     } else {
@@ -75,7 +78,7 @@ exports.cmds = (msg) => {
   }
 
   // Slap Command
-  if (msg.content.startsWith('!slap') && msg.mentions.users.array().length >= 0) {
+  if (message.startsWith('!slap') && msg.mentions.users.array().length >= 0) {
     for (var slapTarget of msg.mentions.users.array()) {
       msg.channel.sendMessage(slapTarget + ' You\'ve been SLAPPED!')
     }
@@ -83,12 +86,12 @@ exports.cmds = (msg) => {
   }
 
   // Cat Command
-  if (msg.content === '!cat') {
+  if (message === '!cat') {
     fn.apiRequest('http://random.cat/meow').then(response => msg.channel.sendMessage(response.file))
   }
 
   // Insult Command
-  if (msg.content.startsWith('!insult') && msg.mentions.users.array().length >= 0) {
+  if (message.startsWith('!insult') && msg.mentions.users.array().length >= 0) {
     for (var insultTarget of msg.mentions.users.array()) {
       fn.apiRequest('https://quandyfactory.com/insult/json').then(response =>
         msg.channel.sendMessage(insultTarget + ' ' + response.insult))
@@ -96,8 +99,8 @@ exports.cmds = (msg) => {
   }
 
   // Celsius to Fahrenheit
-  if (msg.content.startsWith('!to_F')) {
-    var argsF = msg.content.split(' ')
+  if (message.startsWith('!to_F')) {
+    var argsF = message.split(' ')
     if (argsF[1] && !argsF[2]) {
       var fromC = argsF[1]
       // Round to whole number
@@ -107,8 +110,8 @@ exports.cmds = (msg) => {
   }
 
   // Fahrenheit to Celsius
-  if (msg.content.startsWith('!to_C')) {
-    var argsC = msg.content.split(' ')
+  if (message.startsWith('!to_C')) {
+    var argsC = message.split(' ')
     if (argsC[1] && !argsC[2]) {
       var fromF = argsC[1]
       // Round to whole number
@@ -118,8 +121,8 @@ exports.cmds = (msg) => {
   }
 
   // Time
-  if (msg.content.startsWith('!time')) {
-    var argsTime = msg.content.split(' ')
+  if (message.startsWith('!time')) {
+    var argsTime = message.split(' ')
     // Variable to confirm all calculations suceeded
     var goodTime = true
     var date = new Date()
@@ -216,7 +219,7 @@ exports.cmds = (msg) => {
   }
 
   // Toast
-  if (msg.content === '!toast') {
+  if (message === '!toast') {
     msg.channel.sendMessage(`\`\`\`\n
       Toast!
             ______
@@ -235,14 +238,14 @@ exports.cmds = (msg) => {
   }
 
   // Boom
-  if (msg.content === '!boom') {
+  if (message === '!boom') {
     var x = Math.floor(Math.random() * 5 + 1)
     msg.channel.sendFile('./img/boom' + x + '.jpeg')
   }
 
   // Wipe
-  if (msg.content.startsWith('!wipe') && msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')) {
-    var argsWipe = msg.content.split(' ')
+  if (message.startsWith('!wipe') && msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')) {
+    var argsWipe = message.split(' ')
     if (argsWipe[1] !== undefined && argsWipe[1] <= 50) {
       var messages = msg.channel.fetchMessages({limit: (parseInt(argsWipe[1]) + 1)})
       messages.then(messages => { msg.channel.bulkDelete(messages) })
@@ -252,7 +255,7 @@ exports.cmds = (msg) => {
   }
 
   // Chuck
-  if (msg.content === '!chuck') {
+  if (message === '!chuck') {
     fn.apiRequest('https://api.chucknorris.io/jokes/random').then(response =>
       msg.channel.sendMessage(response.value))
   }

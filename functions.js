@@ -1,5 +1,7 @@
 const superagent = require('superagent')
 
+'use strict'
+
 exports.toggleRole = (msg, role) => {
   if (msg.member.roles.has(role)) {
     msg.reply('Removed role ' + msg.guild.roles.get(role).name + '. Use !' + msg.guild.roles.get(role).name.toLowerCase() + ' to undo.')
