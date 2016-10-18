@@ -9,7 +9,7 @@ bot.on('ready', () => {
 })
 
 bot.on('message', message => {
-  console.log(message.author.username + ' Says: ' + message.content)
+  console.log(message.author.username + ' - ' + message.guild.name + ' says: ' + message.content)
   Message.cmds(message)
 })
 

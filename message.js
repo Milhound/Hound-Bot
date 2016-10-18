@@ -131,26 +131,42 @@ exports.cmds = (msg) => {
     switch (argsTime[1].toLowerCase()) {
       // United States
       case 'pdt':
+      case 'pst':
       case 'california':
         hour = hour - 7
         break
 
       case 'mdt':
+      case 'mst':
         hour = hour - 6
         break
 
       case 'cdt':
+      case 'cst':
       case 'texas':
         hour = hour - 5
         break
 
       case 'edt':
+      case 'est':
         hour = hour - 4
         break
 
+      case 'hst':
+      case 'hawaii':
+        hour = hour - 10
+        break
+
+      // Rio de Janeiro
+      case 'brt':
+        hour = hour - 3
+        break
+
       // Europe
+      case 'bst':
       case 'west':
       case 'cet':
+      case 'london':
         hour = hour + 1
         break
 
@@ -167,29 +183,46 @@ exports.cmds = (msg) => {
         hour = hour + 3
         break
 
-      case 'uk':
+      case 'ist':
+      case 'india':
+        hour = Math.floor(hour + 5.5)
+        break
+
+      case 'sgt':
+      case 'singapore':
+        hour = hour + 8
+        break
+
+      case 'jst':
+      case 'japan':
+      case 'tokyo':
+        hour = hour + 9
+        break
+      
+      case 'aedt':
+      case 'australia':
+        hour = hour + 11
+        break
+
+      case 'nzdt':
+      case 'new-zealand':
+        hour = hour + 13
+        break
+
       default:
         // Allow users to do custom GMT/UTC timezones with GMT+1 as an example
-        if (argsTime[1].startsWith('GMT') || argsTime[1].startsWith('UTC')) {
-          if (argsTime[1].startsWith('GMT')) {
-            var modifier = argsTime[1].replace('GMT', '')
-          } else if (argsTime[1].startsWith('UTC')) {
-            modifier = argsTime[1].replace('UTC', '')
-          }
-          // Grab the + or - from properly formated command
-          switch (modifier.slice(0, 1)) {
-            case '+':
-              hour = hour + parseInt(modifier.slice(1))
-              break
-            case '-':
+        if (argsTime[1].toLowerCase() === 'gmt' || argsTime[1].toLowerCase() === 'utc') {
+          if (argsTime[2] !== undefined) {
+            var modifier = argsTime[2]
+            console.log(modifier)
+            // Grab the + or - from properly formated command
+            if (modifier.slice(0, 1) === '-') {
               hour = hour - parseInt(modifier.slice(1))
-              break
-            default:
-              console.log('Incorrect format for time command used  ' + modifier)
+            } else {
+              hour = hour + parseInt(modifier)
+            }
           }
-        } else
-        // Check if UK was passed
-        if (argsTime[1].toLowerCase() !== 'uk') {
+        } else {
           // All other checks failed, its is not a timezone currently in code.
           msg.reply('Unknown Timezone.')
           goodTime = false
