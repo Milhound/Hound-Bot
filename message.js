@@ -231,7 +231,7 @@ exports.cmds = (msg) => {
         }
     }
     if (hour < 0) {
-      hour = 12 + hour
+      hour = 24 + hour
     }
     if (hour > 24) {
       hour = hour - 24
