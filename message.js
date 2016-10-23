@@ -307,9 +307,9 @@ exports.cmds = (msg) => {
       .then(connection => {
         let stream = yt('www.youtube.com/watch?v=4KJpXriYC9A', {filter: 'audioonly'})
         const dispatcher = connection.playStream(stream)
-        dispatcher.on('end', () => {
-          voiceChannel.leave()
-        })
+        dispatcher.on('end', () => {voiceChannel.leave()})
+        dispatcher.on('error', err => {console.log('Error: ' + err)})
+        dispatcher.on('debug', info => {console.log('DEBUG: ' + info)})
       })
   }
 
