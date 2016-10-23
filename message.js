@@ -1,7 +1,7 @@
 const fn = require('./functions.js')
 const yt = require('ytdl-core')
 
-var voiceChannel
+let queue = {}
 
 'use strict'
 
@@ -30,6 +30,8 @@ exports.cmds = (msg) => {
             
             IN BETA:
             !play <url> - Plays a song from YouTube.
+            !pause - Pauses song
+            !resume - Resumes song
             !volume - Tells you current volume
             !volume+ - Increases volume by 10%
             !volume- - Reduces volume by 10% ` }
@@ -302,49 +304,97 @@ exports.cmds = (msg) => {
       msg.channel.sendMessage(response.value))
   }
 
-  // Play
-  if (message.startsWith('!play') || message === '!join') {
-    var argsSong = msg.content.split(' ')
-    voiceChannel = msg.member.voiceChannel
-    if (!voiceChannel) {
-      return msg.reply('Unable to join. Are you in a voice channel?')
-    }
-    voiceChannel.join()
-      .then(connection => {
-        yt.getInfo(argsSong[1], (err, info) => {
-          if (err) return msg.reply('Invalid Link')
-          msg.reply(`Playing **${info.title}**`)
-        })
-        let stream = yt(argsSong[1], {filter: 'audioonly'})
-        const dispatcher = connection.playStream(stream, {volume: 0.5})
-        let collector = msg.channel.createCollector(msg => msg)
+  const commands = {
+    'add': (msg) => {
+      let url = msg.content.split(' ')[1]
+      yt.getInfo(url, (err, info) => {
+        if (err) return msg.channel.sendMessage('Invalid URL:' + err)
+        if (!queue.hasOwnProperty(msg.guild.id)) {
+          queue[msg.guild.id] = {}
+          queue[msg.guild.id].playing = false
+          queue[msg.guild.id].songs = []
+        }
+        queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
+        console.log(queue)
+        msg.channel.sendMessage(`Added **${info.title}** to queue.`)
+      })
+    },
+    'join': (msg) => {
+      return new Promise((resolve, reject) => {
+        const voiceChannel = msg.member.voiceChannel
+        if (!voiceChannel || voiceChannel.type !== 'voice') return msg.reply('Unable to join voice channel')
+        voiceChannel.join().then(connection => resolve(connection).catch(err => reject(err)))
+      })
+    },
+    'queue': (msg) => {
+      if (queue[msg.guild.id] === undefined) { return msg.reply('Queue is empty') }
+      var currentQueue = []
+      queue[msg.guild.id].songs.forEach((song, i) => { currentQueue.push(`${i + 1}. ${song.title} - Requested by: ${song.requester}`) })
+      msg.channel.sendMessage(
+        `**${msg.guild.name} Queue:**
+        *${currentQueue.length} songs in queue*
+
+        ${currentQueue.slice(0, 5).join('\n')}
+        ${(currentQueue > 5) ? '*[Only next 5 shown]*' : ''}
+      `)
+    },
+    'play': (msg) => {
+      if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage('No songs in queue add with !add')
+      if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg))
+      if (!msg.guild.voiceConnection) {
+        var voiceChannel = msg.member.voiceChannel
+        voiceChannel.join()
+      }
+      if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing')
+
+      let dispatcher
+
+      queue[msg.guild.id].playing = true;
+
+      (function play (song) {
+        if (song === undefined) {
+          return msg.channel.sendMessage('Queue is empty').then(() => {
+            queue[msg.guild.id].playing = false
+            msg.member.voiceChannel.leave()
+          })
+        }
+        msg.channel.sendMessage(`Playing: **${song.title}** as requested by: ${song.requester}`)
+        dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, {filter: 'audioonly'}))
+        let collector = msg.channel.createCollector(m => m)
         collector.on('message', m => {
-          if (m.content.toLowerCase().startsWith('!volume')) {
-            if (m.content.toLowerCase() === '!volume+' && dispatcher.volume !== 1) {
-              dispatcher.setVolume(dispatcher.volume + 0.1)
-            } else if (dispatcher.volume === 1) { msg.reply('Already at max volume!') }
-            if (m.content.toLowerCase() === '!volume-') {
-              dispatcher.setVolume(dispatcher.volume - 0.1)
-            }
-            if (m.content.toLowerCase() === '!volume') { m.reply(Math.floor(dispatcher.volume * 100) + '%') }
+          if (m.content.startsWith('!pause')) {
+            msg.channel.sendMessage('Paused').then(() => { dispatcher.pause() })
+          }
+          if (m.content.startsWith('!resume')) {
+            msg.channel.sendMessage('Paused').then(() => { dispatcher.resume() })
+          }
+          if (m.content === '!skip') {
+            msg.channel.sendMessage('Skipping').then(() => { dispatcher.end() })
+          }
+          if (m.content === '!volume') {
+            msg.channel.sendMessage(`Volume: ${dispatcher.volume * 100}%`)
+          }
+          if (m.content === '!volume+') {
+            dispatcher.setVolume(dispatcher.volume + 0.1)
+            msg.channel.sendMessage(`Volume set to ${dispatcher.volume * 100}%`)
           }
         })
-        dispatcher.on('end', () => { voiceChannel.leave() })
-        dispatcher.on('error', err => { console.log('Error: ' + err) })
-        dispatcher.on('debug', info => { console.log('DEBUG: ' + info) })
-        connection.on('error', err => {
-          console.log(err)
+        dispatcher.on('end', () => {
+          collector.stop()
+          queue[msg.guild.id].songs.shift()
+          play(queue[msg.guild.id].songs[0])
         })
-      }).catch(err => { console.log(err) })
-  }
-
-  // Leave - Voice
-  if (message === '!end') {
-    if (typeof voiceChannel !== 'undefined') {
-      msg.reply('Stopped playing.')
-      voiceChannel.leave()
-    } else {
-      msg.reply('Not currrently playing.')
+        dispatcher.on('error', (err) => {
+          return msg.channel.sendMessage('Error: ' + err).then(() => {
+            collector.stop()
+            queue[msg.guild.id].songs.shift()
+            play(queue[msg.guild.id].songs[0])
+          })
+        })
+      })(queue[msg.guild.id].songs[0])
     }
+  }
+  if (commands.hasOwnProperty(message.slice(1).split(' ')[0])) {
+    commands[message.slice(1).split(' ')[0]](msg)
   }
 }
