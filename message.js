@@ -1,4 +1,5 @@
 const fn = require('./functions.js')
+const yt = require('ytdl-core')
 
 'use strict'
 
@@ -291,5 +292,53 @@ exports.cmds = (msg) => {
   if (message === '!chuck') {
     fn.apiRequest('https://api.chucknorris.io/jokes/random').then(response =>
       msg.channel.sendMessage(response.value))
+  }
+
+  // Play 
+  if (message.startsWith('!play') || message === '!join') {
+    // var argsSong = msg.content.split(' ')
+    const voiceChannel = msg.member.voiceChannel
+    if (!voiceChannel) {
+      return msg.reply('Unable to join. Are you in a voice channel?')
+    }
+    voiceChannel.join()
+      .then(connection => {
+        
+        var stream = yt('https://www.youtube.com/watch?v=4KJpXriYC9A', {audioonly:true})
+        const dispatcher = connection.playStream(stream)
+        dispatcher.on('end', () => {
+          voiceChannel.leave()
+        })
+        
+        // const dispatcher = connection.playFile('dumb.mp3')
+    }).catch(console.log);
+  }
+
+  // Volume
+  if (message === '!volume') {
+    if (typeof dispatcher !== 'undefined'){
+      var argsVolume = msg.content.split(' ')
+      if (argsVolume[1] === undefined && typeof disp){
+        dispatcher.volume()
+      } else 
+      if (argsVolume[1] < 10 && argsVolume[1] > 0){
+        dispatcher.setVolume(parseInt(argsVolume[1]))
+        message.reply('Volume set to ' + argsVolume[1])
+      } else {
+        message.reply('Incorrect volume setting.')
+      }
+    } else {
+      msg.reply('Unable to locate Voice Channel.')
+    }
+  }
+
+  // Leave - Voice
+  if (message === '!end') {
+    if (typeof voiceChannel !== 'undefined'){
+      msg.reply('Stopped playing.')
+      voiceChannel.leave()
+    } else {
+      msg.reply('Not currrently playing.')
+    }
   }
 }
