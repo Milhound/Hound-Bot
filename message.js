@@ -298,19 +298,26 @@ exports.cmds = (msg) => {
 
   // Play
   if (message.startsWith('!play') || message === '!join') {
-    // var argsSong = msg.content.split(' ')
+    var argsSong = msg.content.split(' ')
     voiceChannel = msg.member.voiceChannel
     if (!voiceChannel) {
       return msg.reply('Unable to join. Are you in a voice channel?')
     }
     voiceChannel.join()
       .then(connection => {
-        let stream = yt('www.youtube.com/watch?v=4KJpXriYC9A', {filter: 'audioonly'})
+        yt.getInfo(argsSong[1], (err, info) => {
+          if (err) return msg.reply('Invalid Link')
+          msg.reply(`Playing **${info.title}**`)
+        })
+        let stream = yt(argsSong[1], {filter: 'audioonly'})
         const dispatcher = connection.playStream(stream)
-        dispatcher.on('end', () => {voiceChannel.leave()})
-        dispatcher.on('error', err => {console.log('Error: ' + err)})
-        dispatcher.on('debug', info => {console.log('DEBUG: ' + info)})
-      })
+        dispatcher.on('end', () => { voiceChannel.leave() })
+        dispatcher.on('error', err => { console.log('Error: ' + err) })
+        dispatcher.on('debug', info => { console.log('DEBUG: ' + info) })
+        connection.on('error', err => {
+          console.log(err)
+        })
+      }).catch(err => { console.log(err) })
   }
 
   // Volume
