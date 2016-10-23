@@ -9,24 +9,30 @@ exports.cmds = (msg) => {
   var message = msg.content.toLowerCase()
     // Commands
   if (message === '!commands') {
-    var text = `List of Commands: \n
-            !ping - Replys Pong \n
-            !coin - Flip a coin\n
-            !dice (opt X) - Roll the dice (x)\n
-            !chuck - Chuck Norris Joke\n
-            !toast - Prints Toast\n
-            !slap @user - Slaps all mentioned users\n
-            !insult (@user - optional) - Insults the sender or @user.\n
-            !cat - Random Cat\n
-            !boom - Roast your fellow users\n
-            !to_C <#> - Converts Fahrenheit to Celsius\n
-            !to_F <#> - Converts Celsius to Fahrenheit\n
+    var text = `List of Commands:
+            !ping - Replys Pong
+            !coin - Flip a coin
+            !dice (opt X) - Roll the dice (x)
+            !chuck - Chuck Norris Joke
+            !toast - Prints Toast
+            !slap @user - Slaps all mentioned users
+            !insult (@user - optional) - Insults the sender or @user.
+            !cat - Random Cat
+            !boom - Roast your fellow users
+            !to_C <#> - Converts Fahrenheit to Celsius
+            !to_F <#> - Converts Celsius to Fahrenheit
             !time <TIMEZONE> - Returns current time in zone. Ex: !time CST`
     // If on Milhound's Server add the following commands
     if (msg.guild.id === '167693566267752449') {
-      text += `\n 
-            !gamer to add/remove Gamer role.\n
-            !programmer to add/remove Programmer role.` }
+      text += `
+            !gamer to add/remove Gamer role.
+            !programmer to add/remove Programmer role.
+            
+            IN BETA:
+            !play <url> - Plays a song from YouTube.
+            !volume - Tells you current volume
+            !volume+ - Increases volume by 10%
+            !volume- - Reduces volume by 10% ` }
     msg.channel.sendMessage(text)
   }
 
@@ -315,10 +321,10 @@ exports.cmds = (msg) => {
         collector.on('message', m => {
           if (m.content.toLowerCase().startsWith('!volume')) {
             if (m.content.toLowerCase() === '!volume+' && dispatcher.volume !== 1) {
-              dispatcher.setVolume(dispatcher.volume + 0.05)
+              dispatcher.setVolume(dispatcher.volume + 0.1)
             } else if (dispatcher.volume === 1) { msg.reply('Already at max volume!') }
             if (m.content.toLowerCase() === '!volume-') {
-              dispatcher.setVolume(dispatcher.volume - 0.05)
+              dispatcher.setVolume(dispatcher.volume - 0.1)
             }
             if (m.content.toLowerCase() === '!volume') { m.reply(Math.floor(dispatcher.volume * 100) + '%') }
           }
