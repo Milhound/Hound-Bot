@@ -324,16 +324,16 @@ exports.cmds = (msg) => {
   if (message === '!volume') {
     if (typeof dispatcher !== 'undefined') {
       var argsVolume = msg.content.split(' ')
-      if (argsVolume[1] === undefined && typeof disp) {
-        dispatcher.volume()
-      } else if (argsVolume[1] < 10 && argsVolume[1] > 0) {
-        dispatcher.setVolume(parseInt(argsVolume[1]))
-        message.reply('Volume set to ' + argsVolume[1])
+      if (argsVolume[1]) {
+        var volume = parseInt(argsVolume[1])
+        if (volume < 10 && volume > 0) {
+          dispatcher.setVolume(volume)
+          message.reply('Volume set to ' + argsVolume[1])
+        }
       } else {
         message.reply('Incorrect volume setting.')
       }
-    } else {
-      msg.reply('Unable to locate Voice Channel.')
+      if (argsVolume[1] === undefined && typeof disp) { dispatcher.volume() }
     }
   }
 
