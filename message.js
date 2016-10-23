@@ -352,8 +352,12 @@ exports.cmds = (msg) => {
           if (m.content === '!volume') {
             msg.channel.sendMessage(`Volume: ${dispatcher.volume * 100}%`)
           }
-          if (m.content === '!volume+') {
+          if (m.content === '!volume+' && dispatcher.volume !== 1) {
             dispatcher.setVolume(dispatcher.volume + 0.1)
+            msg.channel.sendMessage(`Volume set to ${dispatcher.volume * 100}%`)
+          }
+          if (m.content === '!volume-' && dispatcher.volume !== 0.1) {
+            dispatcher.setVolume(dispatcher.volume - 0.1)
             msg.channel.sendMessage(`Volume set to ${dispatcher.volume * 100}%`)
           }
         })
