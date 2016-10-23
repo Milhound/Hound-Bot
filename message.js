@@ -1,7 +1,7 @@
 const fn = require('./functions.js')
 const yt = require('ytdl-core')
 
-var voiceChannel, dispatcher
+var voiceChannel
 
 'use strict'
 
@@ -310,7 +310,19 @@ exports.cmds = (msg) => {
           msg.reply(`Playing **${info.title}**`)
         })
         let stream = yt(argsSong[1], {filter: 'audioonly'})
-        const dispatcher = connection.playStream(stream)
+        const dispatcher = connection.playStream(stream, {volume: 0.5})
+        let collector = msg.channel.createCollector(msg => msg)
+        collector.on('message', m => {
+          if (m.content.toLowerCase().startsWith('!volume')) {
+            if (m.content.toLowerCase() === '!volume+' && dispatcher.volume !== 1) {
+              dispatcher.setVolume(dispatcher.volume + 0.05)
+            } else if (dispatcher.volume === 1) { msg.reply('Already at max volume!') }
+            if (m.content.toLowerCase() === '!volume-') {
+              dispatcher.setVolume(dispatcher.volume - 0.05)
+            }
+            if (m.content.toLowerCase() === '!volume') { m.reply(Math.floor(dispatcher.volume * 100) + '%') }
+          }
+        })
         dispatcher.on('end', () => { voiceChannel.leave() })
         dispatcher.on('error', err => { console.log('Error: ' + err) })
         dispatcher.on('debug', info => { console.log('DEBUG: ' + info) })
@@ -318,23 +330,6 @@ exports.cmds = (msg) => {
           console.log(err)
         })
       }).catch(err => { console.log(err) })
-  }
-
-  // Volume
-  if (message === '!volume') {
-    if (typeof dispatcher !== 'undefined') {
-      var argsVolume = msg.content.split(' ')
-      if (argsVolume[1]) {
-        var volume = parseInt(argsVolume[1])
-        if (volume < 10 && volume > 0) {
-          dispatcher.setVolume(volume)
-          message.reply('Volume set to ' + argsVolume[1])
-        }
-      } else {
-        message.reply('Incorrect volume setting.')
-      }
-      if (argsVolume[1] === undefined && typeof disp) { dispatcher.volume() }
-    }
   }
 
   // Leave - Voice
