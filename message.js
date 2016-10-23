@@ -354,11 +354,11 @@ exports.cmds = (msg) => {
           }
           if (m.content === '!volume+' && dispatcher.volume !== 1) {
             dispatcher.setVolume(dispatcher.volume + 0.1)
-            msg.channel.sendMessage(`Volume set to ${dispatcher.volume * 100}%`)
+            msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 100)}%`)
           }
           if (m.content === '!volume-' && dispatcher.volume !== 0.1) {
             dispatcher.setVolume(dispatcher.volume - 0.1)
-            msg.channel.sendMessage(`Volume set to ${dispatcher.volume * 100}%`)
+            msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 100)}%`)
           }
         })
         dispatcher.on('end', () => {
