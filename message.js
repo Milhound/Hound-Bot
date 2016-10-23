@@ -262,49 +262,43 @@ exports.cmds = (msg) => {
     }, 500)
   }
 
-  // Toast
-  if (message === '!toast') {
-    msg.channel.sendMessage(`\`\`\`\n
-      Toast!
-            ______
-        ____((     )_
-      |\'->==))   (= \\
-      |  \\ ||_____|_ \\
-      |[> \\___________\\
-      | | |            |                                    |
-        \\  |            |             .--.                   |
-        \\ |            |)---.   .---\'    \`-.         .----(]|
-          \\|____________|     \`-'            \`.     .\'       |
-                                              \`---\'         |
-      \`\`\`
-      `)
-    msg.delete
-  }
-
-  // Boom
-  if (message === '!boom') {
-    var x = Math.floor(Math.random() * 5 + 1)
-    msg.channel.sendFile('./img/boom' + x + '.jpeg')
-  }
-
-  // Wipe
-  if (message.startsWith('!wipe') && msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')) {
-    var argsWipe = message.split(' ')
-    if (argsWipe[1] !== undefined && argsWipe[1] <= 50) {
-      var messages = msg.channel.fetchMessages({limit: (parseInt(argsWipe[1]) + 1)})
-      messages.then(messages => { msg.channel.bulkDelete(messages) })
-    } else if (argsWipe[1] > 50) {
-      msg.reply('Attempted to wipe too many messages')
-    }
-  }
-
-  // Chuck
-  if (message === '!chuck') {
-    fn.apiRequest('https://api.chucknorris.io/jokes/random').then(response =>
-      msg.channel.sendMessage(response.value))
-  }
-
   const commands = {
+    'wipe': (msg) => {
+      if (msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')) {
+        var argsWipe = message.split(' ')
+        if (argsWipe[1] !== undefined && argsWipe[1] <= 50) {
+          var messages = msg.channel.fetchMessages({limit: (parseInt(argsWipe[1]) + 1)})
+          messages.then(messages => { msg.channel.bulkDelete(messages) })
+        } else if (argsWipe[1] > 50) {
+          msg.reply('Attempted to wipe too many messages')
+        }
+      }
+    },
+    'boom': (msg) => {
+      var x = Math.floor(Math.random() * 5 + 1)
+      msg.channel.sendFile('./img/boom' + x + '.jpeg')
+    },
+    'chuck': (msg) => {
+      fn.apiRequest('https://api.chucknorris.io/jokes/random').then(response =>
+      msg.channel.sendMessage(response.value))
+    },
+    'toast': (msg) => {
+      msg.channel.sendMessage(`\`\`\`
+        Toast!
+              ______
+          ____((     )_
+        |\'->==))   (= \\
+        |  \\ ||_____|_ \\
+        |[> \\___________\\
+        | | |            |                                    |
+          \\  |            |             .--.                   |
+          \\ |            |)---.   .---\'    \`-.         .----(]|
+            \\|____________|     \`-'            \`.     .\'       |
+                                                \`---\'         |
+        \`\`\`
+        `)
+      msg.delete
+    },
     'add': (msg) => {
       let url = msg.content.split(' ')[1]
       yt.getInfo(url, (err, info) => {
@@ -394,6 +388,7 @@ exports.cmds = (msg) => {
       })(queue[msg.guild.id].songs[0])
     }
   }
+
   if (commands.hasOwnProperty(message.slice(1).split(' ')[0])) {
     commands[message.slice(1).split(' ')[0]](msg)
   }
