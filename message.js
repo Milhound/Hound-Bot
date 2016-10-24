@@ -29,8 +29,9 @@ exports.cmds = (msg) => {
       // If on Milhound's Server add the following commands
       if (msg.guild.id === '167693566267752449') {
         text += `
-        !gamer to add/remove Gamer role.
-        !programmer to add/remove Programmer role.
+        !gamer - add/remove Gamer role.
+        !programmer - add/remove Programmer role.
+        !dj or music - add/remove DJ role.
         
         IN BETA:
         !play <url> - Plays a song from YouTube.
