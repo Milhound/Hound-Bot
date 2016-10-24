@@ -58,9 +58,9 @@ exports.getLevel = (msg) => {
     if (!usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) {
       reject('No Experince Recorded')
     }
-    if (usr[msg.guild.id].users[msg.author.id].experience > 1000) {
+    if (usr[msg.guild.id].users[msg.author.id].experience < 1000) {
       resolve(0)
-    } else if (usr[msg.guild.id].users[msg.author.id].experience <= 1000) {
+    } else if (usr[msg.guild.id].users[msg.author.id].experience >= 1000) {
       resolve(Math.floor(usr[msg.guild.id].users[msg.author.id].experience / 1000))
     }
     console.log(Math.floor(usr[msg.guild.id].users[msg.author.id].experience / 1000))
