@@ -6,7 +6,9 @@ let queue = {}
 'use strict'
 
 exports.cmds = (msg) => {
+  if(!msg.content.startsWith('!')) return
   var message = msg.content.toLowerCase()
+
   const commands = {
     'commands': (msg) => {
       var text = `List of Commands:
@@ -337,7 +339,7 @@ exports.cmds = (msg) => {
           })
         }
         msg.channel.sendMessage(`Playing: **${song.title}** as requested by: ${song.requester}`)
-        dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, {filter: 'audioonly'}))
+        dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, {filter: 'audioonly'}), { volume: 0.05 })
         let collector = msg.channel.createCollector(m => m)
         collector.on('message', m => {
           if (m.content.startsWith('!pause')) {
@@ -353,13 +355,13 @@ exports.cmds = (msg) => {
             msg.channel.sendMessage(`Volume: ${dispatcher.volume * 100}%`)
           }
           if (m.content === '!volume+' && dispatcher.volume !== 1) {
-            dispatcher.setVolume(dispatcher.volume + 0.1)
+            dispatcher.setVolume(dispatcher.volume + 0.25)
             msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 100)}%`)
-          }
-          if (m.content === '!volume-' && dispatcher.volume !== 0.1) {
-            dispatcher.setVolume(dispatcher.volume - 0.1)
+          } else if (dispatcher.volume === 1) msg.reply('Already playing at max volume.')
+          if (m.content === '!volume-' && dispatcher.volume !== 0.25) {
+            dispatcher.setVolume(dispatcher.volume - 0.25)
             msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 100)}%`)
-          }
+          } else if (dispatcher.volume === 1) msg.reply('Already playing as low as it gets.')
         })
         dispatcher.on('end', () => {
           collector.stop()
@@ -374,6 +376,13 @@ exports.cmds = (msg) => {
           })
         })
       })(queue[msg.guild.id].songs[0])
+    },
+    'yt': (msg) => {
+      const apiKey = process.env.GOOGLE_API_KEY
+      const baseUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&order=rating&q='
+      const query = msg.content.slice(3)
+      fn.apiRequest(baseUrl + query + '&key=' + apiKey)
+      .then(info => bot.reply('https://www.youtube.com/watch?v=' + info.id.videoId)
     }
   }
 
