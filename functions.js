@@ -1,6 +1,7 @@
 const superagent = require('superagent')
 const usr = require('./user.json')
 const fs = require('fs')
+var expLocked = new Map()
 
 'use strict'
 
@@ -35,12 +36,19 @@ exports.apiRequest = (url, callback) => {
 }
 
 exports.addExperience = (msg) => {
-  if (!usr.hasOwnProperty(msg.guild.id) || !usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
-  const exp = Math.random() * 10 + 10
-  usr[msg.guild.id].users[msg.author.id].experience += exp
-  fs.writeFile('./user.json', JSON.stringify(usr), (err) => {
-    if (err) return console.log(err)
-    console.log('Saved File')
-  })
-  console.log(`Added ${exp} to ${msg.author.username}!`)
+  if (!expLocked.hasOwnProperty(msg.author.id)) expLocked[msg.author.id] = false
+  if (expLocked[msg.author.id] === false) {
+    if (!usr.hasOwnProperty(msg.guild.id) || !usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
+    const exp = Math.floor(Math.random() * 10 + 11)
+    usr[msg.guild.id].users[msg.author.id].experience += exp
+    fs.writeFile('./user.json', JSON.stringify(usr), (err) => {
+      if (err) return console.log(err)
+      console.log('Saved File')
+    })
+    expLocked[msg.author.id] = true
+    setTimeout(() => {
+      expLocked[msg.author.id] = false
+    }, 5000)
+    console.log(`Added ${exp} to ${msg.author.username}!`)
+  }
 }
