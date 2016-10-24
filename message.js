@@ -8,6 +8,7 @@ let queue = {}
 'use strict'
 
 exports.cmds = (msg) => {
+  fn.addExperience(msg)
   if (!msg.content.startsWith('!')) return
   var message = msg.content.toLowerCase()
 

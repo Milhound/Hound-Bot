@@ -1,6 +1,16 @@
 const superagent = require('superagent')
+const usr = require('user.json')
 
 'use strict'
+
+function addUser (msg) {
+  if (!usr.hasOwnProperty(msg.guild.id)) {
+    usr[msg.guild.id] = {}
+    usr[msg.guild.id].users = {}
+  }
+  usr[msg.guild.id].users[msg.author.id].username = msg.author.username
+  usr[msg.guild.id].users[msg.author.id].experience = 0
+}
 
 exports.toggleRole = (msg, role) => {
   if (msg.member.roles.has(role)) {
@@ -20,4 +30,10 @@ exports.apiRequest = (url, callback) => {
       return resolve(res.body)
     })
   })
+}
+
+exports.addExperience = (msg) => {
+  if (!usr.hasOwnProperty(msg.guild.id) || !usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
+  const exp = Math.random() * 10 + 10
+  usr[msg.guild.id].users[msg.author.id].experience += exp
 }
