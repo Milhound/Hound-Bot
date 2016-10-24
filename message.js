@@ -8,7 +8,7 @@ let queue = {}
 'use strict'
 
 exports.cmds = (msg) => {
-  fn.addExperience(msg)
+  
   if (!msg.content.startsWith('!')) return
   var message = msg.content.toLowerCase()
 
@@ -426,6 +426,9 @@ exports.cmds = (msg) => {
       fn.getLevel(msg)
       .then(response => { msg.channel.sendMessage(`Level: ${response}`) })
       .catch((err) => msg.channel.sendMessage(err))
+    },
+    'exp': (msg) => {
+      fn.addExperience(msg)
     }
   }
 
