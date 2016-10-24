@@ -1,5 +1,6 @@
 const superagent = require('superagent')
 const usr = require('./user.json')
+const fs = require('fs')
 
 'use strict'
 
@@ -37,4 +38,7 @@ exports.addExperience = (msg) => {
   if (!usr.hasOwnProperty(msg.guild.id) || !usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
   const exp = Math.random() * 10 + 10
   usr[msg.guild.id].users[msg.author.id].experience += exp
+  fs.writeFile('./user.json', JSON.stringify(usr), (err) => {
+    if (err) return console.log(err)
+  })
 }
