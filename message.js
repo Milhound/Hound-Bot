@@ -424,10 +424,10 @@ exports.cmds = (msg) => {
     },
     'level': (msg) => {
       fn.getLevel(msg)
-      .then(response => { msg.channel.sendMessage(`Level: ${response / 1000} Experience: ${response}`) })
+      .then(response => { msg.channel.sendMessage(`Level: ${Math.floor(response / 1000)} Experience: ${response}`) })
       .catch((err) => msg.channel.sendMessage(err))
     },
-    'addexperience': (msg) => {
+    'addexp': (msg) => {
       if (msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')) {
         fn.addExperience(msg)
       }
