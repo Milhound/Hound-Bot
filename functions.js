@@ -49,12 +49,12 @@ exports.addExperience = (msg) => {
     setTimeout(() => {
       expLocked[msg.author.id] = false
     }, 15000)
-    if (msg.guild.id === '167693566267752449') applyPerks(msg.guild.member[msg.author], Math.floor(usr[msg.guild.id].users[msg.author.id].experience / 1000)).then(response => { msg.channel.sendMessage(response) })
+    if (msg.guild.id === '167693566267752449') applyPerks(msg, getLevel(msg)).then(response => { msg.channel.sendMessage(response) })
     console.log(`Added ${exp} to ${msg.author.username}!`)
   }
 }
 
-exports.getLevel = (msg) => {
+function getLevel (msg) {
   return new Promise((resolve, reject) => {
     if (!usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) {
       reject('No Experince Recorded')
@@ -66,17 +66,17 @@ exports.getLevel = (msg) => {
     }
   })
 }
-
-function applyPerks (member, rank) {
+function applyPerks (msg, level) {
   return new Promise((resolve, reject) => {
-    if (rank <= 1 && !member.roles.exists('id', '180510856868528128')) {
-      member.role.addRole('180510856868528128')
-      resolve(`${member.user.username} you have achieved the rank of Member`)
+    if (level <= 1 && !msg.guild.member[msg.author].roles.exists('id', '180510856868528128')) {
+      msg.guild.member[msg.author].addRole('180510856868528128')
+      resolve(`${msg.author.username} you have achieved the rank of Member`)
     }
-    if (rank <= 10 && !member.roles.exists('id', '234345530803748874')) {
-      member.role.addRole('234345530803748874')
-      resolve(`${member.user.username} you have achieved the rank of VIP`)
+    if (level <= 10 && !msg.guild.member[msg.author].roles.exists('id', '234345530803748874')) {
+      msg.guild.member[msg.author].addRole('234345530803748874')
+      resolve(`${msg.author.username} you have achieved the rank of VIP`)
     }
     reject()
   })
 }
+exports.getLevel
