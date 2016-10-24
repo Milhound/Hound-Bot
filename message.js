@@ -2,7 +2,7 @@ const fn = require('./functions.js')
 const yt = require('ytdl-core')
 
 const apiKey = process.env.GOOGLE_API_KEY
-const baseYtUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q='
+const baseYtUrl = 'https://www.googleapis.com/youtube/v3/search?type=video&part=snippet&order=viewCount&q='
 let queue = {}
 
 'use strict'
