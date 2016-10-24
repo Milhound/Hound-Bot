@@ -328,7 +328,7 @@ exports.cmds = (msg) => {
       *${currentQueue.length} songs in queue*
 
       ${currentQueue.slice(0, 5).join('\n     ')}
-      ${(currentQueue > 5) ? '*[Only next 5 shown]*' : ''}
+      ${(currentQueue.length > 5) ? '*[Only next 5 shown]*' : ''}
     `)
     },
     'play': (msg, alreadyAdded) => {
