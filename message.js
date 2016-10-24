@@ -309,8 +309,8 @@ exports.cmds = (msg) => {
         }
         queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
         msg.channel.sendMessage(`Added **${info.title}** to queue.`)
+        if (queue[msg.guild.id].playing === false) commands.play(msg, true)
       })
-      if (queue[msg.guild.id].playing === false) commands.play(msg, true)
     },
     'join': (msg) => {
       return new Promise((resolve, reject) => {
@@ -332,7 +332,7 @@ exports.cmds = (msg) => {
     `)
     },
     'play': (msg, alreadyAdded) => {
-      if (message.indexOf('http') !== -1 && alreadyAdded !== true) return commands.add(msg)
+      if (message.indexOf('http') !== -1 && alreadyAdded !== true) return setTimeout((msg) => commands.add(msg), 1000)
       if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg))
       if (!msg.guild.voiceConnection) {
         var voiceChannel = msg.member.voiceChannel
