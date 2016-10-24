@@ -300,6 +300,7 @@ exports.cmds = (msg) => {
         }
         queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
         msg.channel.sendMessage(`Added **${info.title}** to queue.`)
+        if(queue[msg.guild.id].playing === false) commands.play(msg)
       })
     },
     'join': (msg) => {
@@ -402,6 +403,7 @@ exports.cmds = (msg) => {
         }
         queue[msg.guild.id].songs.push({url: songUrl, title: songTitle, requester: msg.author.username})
         msg.reply(`Added **${songTitle}** to queue`)
+        if (queuep[msg.guild.id].playing === false) commands.play(msg)
       })
     }
   }
