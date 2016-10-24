@@ -332,6 +332,7 @@ exports.cmds = (msg) => {
       `)
     },
     'play': (msg) => {
+      if (message.indexOf('http') !== -1) return commands.add(msg)
       if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg))
       if (!msg.guild.voiceConnection) {
         var voiceChannel = msg.member.voiceChannel
