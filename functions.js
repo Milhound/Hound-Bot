@@ -63,5 +63,6 @@ exports.getLevel = (msg) => {
     } else if (usr[msg.guild.id].users[msg.author.id] <= 1000) {
       resolve(Math.floor(usr[msg.guild.id].users[msg.author.id] / 1000))
     }
+    console.log(Math.floor(usr[msg.guild.id].users[msg.author.id] / 1000))
   })
 }

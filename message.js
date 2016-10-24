@@ -423,7 +423,9 @@ exports.cmds = (msg) => {
       })
     },
     'level': (msg) => {
-      fn.getLevel(msg).then(response => { msg.channel.sendMessage(`Level: ${response}`) })
+      fn.getLevel(msg)
+      .then(response => { msg.channel.sendMessage(`Level: ${response}`) })
+      .catch((err) => msg.channel.sendMessage(err))
     }
   }
 
