@@ -1,6 +1,8 @@
 const fn = require('./functions.js')
 const yt = require('ytdl-core')
 
+const apiKey = process.env.GOOGLE_API_KEY
+const baseYtUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q='
 let queue = {}
 
 'use strict'
@@ -35,8 +37,10 @@ exports.cmds = (msg) => {
         !pause - Pauses song
         !resume - Resumes song
         !volume - Tells you current volume
-        !volume+ - Increases volume by 10%
-        !volume- - Reduces volume by 10% ` }
+        !volume+ - Increases volume by 25%
+        !volume- - Reduces volume by 25%
+        !yt - Search for YouTube video
+        !request <Search Query> - Add youtube video to queue` }
       msg.channel.sendMessage(text)
     },
     'time': (msg) => {
@@ -295,7 +299,6 @@ exports.cmds = (msg) => {
           queue[msg.guild.id].songs = []
         }
         queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
-        console.log(queue)
         msg.channel.sendMessage(`Added **${info.title}** to queue.`)
       })
     },
@@ -319,12 +322,12 @@ exports.cmds = (msg) => {
       `)
     },
     'play': (msg) => {
-      if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage('No songs in queue add with !add')
       if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg))
       if (!msg.guild.voiceConnection) {
         var voiceChannel = msg.member.voiceChannel
         voiceChannel.join()
       }
+      if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage('No songs in queue add with !add')
       if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing')
 
       let dispatcher
@@ -378,11 +381,28 @@ exports.cmds = (msg) => {
       })(queue[msg.guild.id].songs[0])
     },
     'yt': (msg) => {
-      const apiKey = process.env.GOOGLE_API_KEY
-      const baseUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&order=rating&q='
-      const query = msg.content.slice(3)
-      fn.apiRequest(baseUrl + query + '&key=' + apiKey)
-      .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.id.videoId))
+      const query = msg.content.slice(4).trim().replace(' ', '%20')
+      const url = baseYtUrl + query + '&key=' + apiKey
+      fn.apiRequest(url)
+      .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.items[0].id.videoId))
+    },
+    'request': (msg) => {
+      const query = msg.content.slice(4).trim().replace(' ', '%20')
+      if (query.length <= 5) return msg.reply('Please specifiy a song.')
+      console.log(query)
+      const url = baseYtUrl + query + '&key=' + apiKey
+      fn.apiRequest(url)
+      .then(info => {
+        var songUrl = 'https://www.youtube.com/watch?v=' + info.items[0].id.videoId
+        var songTitle = info.items[0].snippet.title
+        if (!queue.hasOwnProperty(msg.guild.id)) {
+          queue[msg.guild.id] = {}
+          queue[msg.guild.id].playing = false
+          queue[msg.guild.id].songs = []
+        }
+        queue[msg.guild.id].songs.push({url: songUrl, title: songTitle, requester: msg.author.username})
+        msg.reply(`Added **${songTitle}** to queue`)
+      })
     }
   }
 
