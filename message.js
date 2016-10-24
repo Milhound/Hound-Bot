@@ -370,6 +370,7 @@ exports.cmds = (msg) => {
             queue[msg.guild.id].songs = {}
             queue[msg.guild.id].playing = false
             dispatcher.end()
+            msg.member.voiceChannel.leave()
           }
         })
         dispatcher.on('end', () => {
