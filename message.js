@@ -316,7 +316,7 @@ exports.cmds = (msg) => {
       return new Promise((resolve, reject) => {
         const voiceChannel = msg.member.voiceChannel
         if (!voiceChannel || voiceChannel.type !== 'voice') return msg.reply('Unable to join voice channel')
-        voiceChannel.join().then(connection => resolve(connection).catch(err => reject(err)))
+        voiceChannel.join().then(connection => resolve(connection))
       })
     },
     'queue': (msg) => {
@@ -327,7 +327,7 @@ exports.cmds = (msg) => {
       **${msg.guild.name} Queue:**
       *${currentQueue.length} songs in queue*
 
-      ${currentQueue.slice(0, 10).join('\n     ')}
+      ${currentQueue.slice(0, 10).join('\n      ')}
       ${(currentQueue.length > 10) ? '*[Only next 10 shown]*' : ''}
     `)
     },
