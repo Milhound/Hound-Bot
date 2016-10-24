@@ -2,7 +2,7 @@ const fn = require('./functions.js')
 const yt = require('ytdl-core')
 
 const apiKey = process.env.GOOGLE_API_KEY
-const baseYtUrl = 'https://www.googleapis.com/youtube/v3/search?type=video&part=snippet&order=viewCount&q='
+const baseYtUrl = 'https://www.googleapis.com/youtube/v3/search?type=video&part=snippet&q='
 let queue = {}
 
 'use strict'
@@ -300,7 +300,7 @@ exports.cmds = (msg) => {
         }
         queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
         msg.channel.sendMessage(`Added **${info.title}** to queue.`)
-        if(queue[msg.guild.id].playing === false) commands.play(msg)
+        if (queue[msg.guild.id].playing === false) commands.play(msg)
       })
     },
     'join': (msg) => {
@@ -394,8 +394,8 @@ exports.cmds = (msg) => {
       .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.items[0].id.videoId))
     },
     'request': (msg) => {
+      if (msg.length <= 9) return msg.reply('Please specifiy a song.')
       const queryRequest = msg.content.slice(4).trim().replace(' ', '%20')
-      if (queryRequest.length <= 5) return msg.reply('Please specifiy a song.')
       const urlRequest = baseYtUrl + queryRequest + '&key=' + apiKey
       fn.apiRequest(urlRequest)
       .then(info => {
