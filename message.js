@@ -327,7 +327,7 @@ exports.cmds = (msg) => {
       **${msg.guild.name} Queue:**
       *${currentQueue.length} songs in queue*
 
-      ${currentQueue.slice(0, 5).join('\n')}
+      ${currentQueue.slice(0, 5).join('\n     ')}
       ${(currentQueue > 5) ? '*[Only next 5 shown]*' : ''}
     `)
     },
