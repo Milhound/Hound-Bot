@@ -309,7 +309,6 @@ exports.cmds = (msg) => {
         }
         queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
         msg.channel.sendMessage(`Added **${info.title}** to queue.`)
-        if (queue[msg.guild.id].playing === false) commands.play(msg)
       })
     },
     'join': (msg) => {
@@ -332,7 +331,7 @@ exports.cmds = (msg) => {
     `)
     },
     'play': (msg) => {
-      if (message.indexOf('http') !== -1) return commands.add(msg)
+      if (message.indexOf('http') !== -1) commands.add(msg)
       if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg))
       if (!msg.guild.voiceConnection) {
         var voiceChannel = msg.member.voiceChannel
