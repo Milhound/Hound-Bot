@@ -65,11 +65,11 @@ exports.getLevel = (msg) => {
 }
 function applyPerks (msg, exp) {
   return new Promise((resolve, reject) => {
-    if (exp <= 100 && !msg.guild.member(msg.author).roles.exists('id', '180510856868528128')) {
+    if (exp >= 100 && !msg.guild.member(msg.author).roles.exists('id', '180510856868528128')) {
       msg.guild.member(msg.author).addRole('180510856868528128')
       resolve(`${msg.author.username} you have achieved the rank of Member`)
     }
-    if (exp <= 10000 && !msg.guild.member(msg.author).roles.exists('id', '234345530803748874')) {
+    if (exp >= 10000 && !msg.guild.member(msg.author).roles.exists('id', '234345530803748874')) {
       msg.guild.member(msg.author).addRole('234345530803748874')
       resolve(`${msg.author.username} you have achieved the rank of VIP`)
     }
