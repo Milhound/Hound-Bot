@@ -8,6 +8,7 @@ function addUser (msg) {
     usr[msg.guild.id] = {}
     usr[msg.guild.id].users = {}
   }
+  usr[msg.guild.id].users[msg.author.id] = {}
   usr[msg.guild.id].users[msg.author.id].username = msg.author.username
   usr[msg.guild.id].users[msg.author.id].experience = 0
 }
