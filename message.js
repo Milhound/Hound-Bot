@@ -332,12 +332,12 @@ exports.cmds = (msg) => {
     `)
     },
     'play': (msg, alreadyAdded) => {
-      if (message.indexOf('http') !== -1 && alreadyAdded !== true) return setTimeout((msg) => commands.add(msg), 1000)
       if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg))
       if (!msg.guild.voiceConnection) {
         var voiceChannel = msg.member.voiceChannel
         voiceChannel.join()
       }
+      if (message.indexOf('http') !== -1 && alreadyAdded !== true) return commands.add(msg)
       if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage('No songs in queue add with !add')
       if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing')
 
