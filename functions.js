@@ -40,5 +40,7 @@ exports.addExperience = (msg) => {
   usr[msg.guild.id].users[msg.author.id].experience += exp
   fs.writeFile('./user.json', JSON.stringify(usr), (err) => {
     if (err) return console.log(err)
+    console.log('Saved File')
   })
+  console.log(`Added ${exp} to ${msg.author.username}!`)
 }
