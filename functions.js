@@ -49,12 +49,12 @@ exports.addExperience = (msg) => {
     setTimeout(() => {
       expLocked[msg.author.id] = false
     }, 15000)
-    if (msg.guild.id === '167693566267752449') applyPerks(msg, getLevel(msg)).then(response => { msg.channel.sendMessage(response) })
+    if (msg.guild.id === '167693566267752449') applyPerks(msg, Math.floor(usr[msg.guild.id].users[msg.author.id].experience / 1000)).then(response => { msg.channel.sendMessage(response) })
     console.log(`Added ${exp} to ${msg.author.username}!`)
   }
 }
 
-function getLevel (msg) {
+exports.getlevel = (msg) => {
   return new Promise((resolve, reject) => {
     if (!usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) {
       reject('No Experince Recorded')
@@ -79,4 +79,3 @@ function applyPerks (msg, level) {
     reject()
   })
 }
-export { getLevel }
