@@ -59,10 +59,16 @@ exports.getLevel = (msg) => {
     if (usr[msg.guild.id].users[msg.author.id].experience < 1000) {
       resolve(0)
     } else if (usr[msg.guild.id].users[msg.author.id].experience >= 1000) {
-      resolve(Math.floor(usr[msg.guild.id].users[msg.author.id].experience / 1000))
+      resolve(usr[msg.guild.id].users[msg.author.id].experience)
     }
   })
 }
+
+exports.addExp = (msg) => {
+  if (!usr.hasOwnProperty(msg.guild.id) || !usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) addUser(msg)
+  usr[msg.guild.id].users[msg.mentions.first().id].experience += parseInt(msg.content.split(' ')[2])
+}
+
 function applyPerks (msg, exp) {
   return new Promise((resolve, reject) => {
     if (exp >= 100 && !msg.guild.member(msg.author).roles.exists('id', '180510856868528128')) {
