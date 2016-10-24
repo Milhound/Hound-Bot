@@ -193,6 +193,14 @@ exports.cmds = (msg) => {
         fn.toggleRole(msg, '235562658877800448')
       }
     },
+    'dj': (msg) => {
+      if (msg.guild.id === '167693566267752449') {
+        fn.toggleRole(msg, '240125651007438849')
+      }
+    },
+    'music': (msg) => {
+      commands.dj(msg)
+    },
     'gamer': (msg) => {
       if (msg.guild.id === '167693566267752449') {
         fn.toggleRole(msg, '235440340981514240')
