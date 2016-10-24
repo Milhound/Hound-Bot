@@ -309,8 +309,8 @@ exports.cmds = (msg) => {
         }
         queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
         msg.channel.sendMessage(`Added **${info.title}** to queue.`)
-        if (queue[msg.guild.id].playing === false) commands.play(msg, true)
       })
+      setTimeout((queue) => { if (queue[msg.guild.id].playing === false) commands.play(msg, true) }, 1000)
     },
     'join': (msg) => {
       return new Promise((resolve, reject) => {
