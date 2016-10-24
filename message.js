@@ -323,13 +323,13 @@ exports.cmds = (msg) => {
       if (queue[msg.guild.id] === undefined) { return msg.reply('Queue is empty') }
       var currentQueue = []
       queue[msg.guild.id].songs.forEach((song, i) => { currentQueue.push(`${i + 1}. ${song.title} - Requested by: ${song.requester}`) })
-      msg.channel.sendMessage(
-        `**${msg.guild.name} Queue:**
-        *${currentQueue.length} songs in queue*
+      msg.channel.sendMessage(`
+      **${msg.guild.name} Queue:**
+      *${currentQueue.length} songs in queue*
 
-        ${currentQueue.slice(0, 5).join('\n')}
-        ${(currentQueue > 5) ? '*[Only next 5 shown]*' : ''}
-      `)
+      ${currentQueue.slice(0, 5).join('\n')}
+      ${(currentQueue > 5) ? '*[Only next 5 shown]*' : ''}
+    `)
     },
     'play': (msg) => {
       if (message.indexOf('http') !== -1) return commands.add(msg)
