@@ -55,13 +55,12 @@ exports.addExperience = (msg) => {
 
 exports.getLevel = (msg) => {
   return new Promise((resolve, reject) => {
-    if (!usr.hasOwnProperty(msg.guild.id) || !usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) addUser(msg)
     if (!usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) {
       reject('No Experince Recorded')
     }
-    if (usr.usr[msg.guild.id].users[msg.author.id] > 1000) {
+    if (usr[msg.guild.id].users[msg.author.id] > 1000) {
       resolve(0)
-    } else if (usr.usr[msg.guild.id].users[msg.author.id] <= 1000) {
+    } else if (usr[msg.guild.id].users[msg.author.id] <= 1000) {
       resolve(Math.floor(usr[msg.guild.id].users[msg.author.id] / 1000))
     }
   })
