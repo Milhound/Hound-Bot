@@ -79,4 +79,4 @@ function applyPerks (msg, level) {
     reject()
   })
 }
-exports.getLevel = (msg) => getLevel(msg)
+export { getLevel }
