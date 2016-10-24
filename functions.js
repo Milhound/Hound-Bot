@@ -51,7 +51,7 @@ exports.addExperience = (msg) => {
   }
 }
 
-exports.getlevel = (msg) => {
+exports.getLevel = (msg) => {
   return new Promise((resolve, reject) => {
     if (!usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) {
       reject('No Experince Recorded')
