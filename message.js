@@ -421,6 +421,9 @@ exports.cmds = (msg) => {
         msg.reply(`Added **${songTitle}** to queue`)
         if (queue[msg.guild.id].playing === false) commands.play(msg)
       })
+    },
+    'level': (msg) => {
+      fn.getLevel(msg).then(response => { msg.channel.sendMessage(`Level: ${response}`) })
     }
   }
 
