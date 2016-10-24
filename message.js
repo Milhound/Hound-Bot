@@ -395,7 +395,7 @@ exports.cmds = (msg) => {
     },
     'request': (msg) => {
       const queryRequest = msg.content.slice(4).trim().replace(' ', '%20')
-      if (query.length <= 5) return msg.reply('Please specifiy a song.')
+      if (queryRequest.length <= 5) return msg.reply('Please specifiy a song.')
       const urlRequest = baseYtUrl + queryRequest + '&key=' + apiKey
       fn.apiRequest(urlRequest)
       .then(info => {
@@ -408,7 +408,7 @@ exports.cmds = (msg) => {
         }
         queue[msg.guild.id].songs.push({url: songUrl, title: songTitle, requester: msg.author.username})
         msg.reply(`Added **${songTitle}** to queue`)
-        if (queuep[msg.guild.id].playing === false) commands.play(msg)
+        if (queue[msg.guild.id].playing === false) commands.play(msg)
       })
     }
   }
