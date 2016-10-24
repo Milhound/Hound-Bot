@@ -366,6 +366,11 @@ exports.cmds = (msg) => {
             dispatcher.setVolume(dispatcher.volume - 0.25)
             msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 100)}%`)
           } else if (dispatcher.volume === 0.25) msg.reply('Already playing as low as it gets.')
+          if (m.content === '!end') {
+            queue[msg.guild.id].songs = {}
+            queue[msg.guild.id].playing = false
+            dispatcher.end()
+          }
         })
         dispatcher.on('end', () => {
           collector.stop()
