@@ -29,8 +29,9 @@ exports.cmds = (msg) => {
       // If on Milhound's Server add the following commands
       if (msg.guild.id === '167693566267752449') {
         text += `
-        !gamer to add/remove Gamer role.
-        !programmer to add/remove Programmer role.
+        !gamer - add/remove Gamer role.
+        !programmer - add/remove Programmer role.
+        !dj or music - add/remove DJ role.
         
         IN BETA:
         !play <url> - Plays a song from YouTube.
@@ -193,6 +194,14 @@ exports.cmds = (msg) => {
         fn.toggleRole(msg, '235562658877800448')
       }
     },
+    'dj': (msg) => {
+      if (msg.guild.id === '167693566267752449') {
+        fn.toggleRole(msg, '240125651007438849')
+      }
+    },
+    'music': (msg) => {
+      commands.dj(msg)
+    },
     'gamer': (msg) => {
       if (msg.guild.id === '167693566267752449') {
         fn.toggleRole(msg, '235440340981514240')
@@ -314,15 +323,16 @@ exports.cmds = (msg) => {
       if (queue[msg.guild.id] === undefined) { return msg.reply('Queue is empty') }
       var currentQueue = []
       queue[msg.guild.id].songs.forEach((song, i) => { currentQueue.push(`${i + 1}. ${song.title} - Requested by: ${song.requester}`) })
-      msg.channel.sendMessage(
-        `**${msg.guild.name} Queue:**
-        *${currentQueue.length} songs in queue*
+      msg.channel.sendMessage(`
+      **${msg.guild.name} Queue:**
+      *${currentQueue.length} songs in queue*
 
-        ${currentQueue.slice(0, 5).join('\n')}
-        ${(currentQueue > 5) ? '*[Only next 5 shown]*' : ''}
-      `)
+      ${currentQueue.slice(0, 5).join('\n')}
+      ${(currentQueue > 5) ? '*[Only next 5 shown]*' : ''}
+    `)
     },
     'play': (msg) => {
+      if (message.indexOf('http') !== -1) return commands.add(msg)
       if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg))
       if (!msg.guild.voiceConnection) {
         var voiceChannel = msg.member.voiceChannel
