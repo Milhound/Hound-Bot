@@ -6,7 +6,7 @@ let queue = {}
 'use strict'
 
 exports.cmds = (msg) => {
-  if(!msg.content.startsWith('!')) return
+  if (!msg.content.startsWith('!')) return
   var message = msg.content.toLowerCase()
 
   const commands = {
@@ -382,7 +382,7 @@ exports.cmds = (msg) => {
       const baseUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&order=rating&q='
       const query = msg.content.slice(3)
       fn.apiRequest(baseUrl + query + '&key=' + apiKey)
-      .then(info => bot.reply('https://www.youtube.com/watch?v=' + info.id.videoId)
+      .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.id.videoId))
     }
   }
 
