@@ -1,5 +1,5 @@
 const superagent = require('superagent')
-const usr = require('user.json')
+const usr = require('./user.json')
 
 'use strict'
 
