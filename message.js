@@ -388,17 +388,16 @@ exports.cmds = (msg) => {
       })(queue[msg.guild.id].songs[0])
     },
     'yt': (msg) => {
-      const query = msg.content.slice(4).trim().replace(' ', '%20')
-      const url = baseYtUrl + query + '&key=' + apiKey
-      fn.apiRequest(url)
+      const queryYt = msg.content.slice(4).trim().replace(' ', '%20')
+      const urlYt = baseYtUrl + queryYt + '&key=' + apiKey
+      fn.apiRequest(urlYt)
       .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.items[0].id.videoId))
     },
     'request': (msg) => {
-      const query = msg.content.slice(4).trim().replace(' ', '%20')
+      const queryRequest = msg.content.slice(4).trim().replace(' ', '%20')
       if (query.length <= 5) return msg.reply('Please specifiy a song.')
-      console.log(query)
-      const url = baseYtUrl + query + '&key=' + apiKey
-      fn.apiRequest(url)
+      const urlRequest = baseYtUrl + queryRequest + '&key=' + apiKey
+      fn.apiRequest(urlRequest)
       .then(info => {
         var songUrl = 'https://www.youtube.com/watch?v=' + info.items[0].id.videoId
         var songTitle = info.items[0].snippet.title
