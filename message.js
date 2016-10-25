@@ -427,8 +427,6 @@ exports.cmds = (msg) => {
       fn.getLevel(msg)
       .then(response => { msg.channel.sendMessage(`Level: ${response.level} (${response.remaining}/${response.nextLevel}`) })
       .catch((err) => msg.channel.sendMessage(err))
-<<<<<<< HEAD
-=======
     },
     'addlevel': (msg) => {
       if (msg.guild.member(msg.author).hasPermission('ADMINISTRATOR')) {
@@ -448,7 +446,6 @@ exports.cmds = (msg) => {
           msg.guild.member(kickUser.id).ban()
         }
       }
->>>>>>> f022ffb8b49f4d2440e4c94c3caf0d0bdf241556
     }
   }
 
