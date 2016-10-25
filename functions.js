@@ -61,7 +61,9 @@ exports.getLevel = (msg) => {
 }
 
 exports.addExp = (msg) => {
-  usr[msg.guild.id].users[msg.mentions.users.first().id].experience += parseInt(msg.content.split(' ')[2])
+  var exp = parseInt(msg.content.split(' ')[1])
+  usr[msg.guild.id].users[msg.mentions.users.first().id].experience += exp
+  fs.writeFileSync('./user.json', JSON.stringify(usr))
 }
 
 function applyPerks (msg, exp) {
