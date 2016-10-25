@@ -7,16 +7,6 @@ var expLocked = new Map()
 
 'use strict'
 
-function addUser (msg) {
-  if (!usr.hasOwnProperty(msg.guild.id)) {
-    usr[msg.guild.id] = {}
-    usr[msg.guild.id].users = {}
-  }
-  usr[msg.guild.id].users[msg.author.id] = {}
-  usr[msg.guild.id].users[msg.author.id].username = msg.author.username
-  usr[msg.guild.id].users[msg.author.id].experience = 0
-}
-
 exports.toggleRole = (msg, role) => {
   if (msg.member.roles.has(role)) {
     msg.reply('Removed role ' + msg.guild.roles.get(role).name + '. Use !' + msg.guild.roles.get(role).name.toLowerCase() + ' to undo.')
@@ -65,18 +55,37 @@ exports.getLevel = (msg) => {
     if (!usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) {
       reject('No Experince Recorded')
     }
-    if (usr[msg.guild.id].users[msg.author.id].experience >= 0) resolve(usr[msg.guild.id].users[msg.author.id].experience)
+    if (usr[msg.guild.id].users[msg.author.id].experience >= 0) {
+      var exp = usr[msg.guild.id].users[msg.author.id].experience
+      const usrLevel = getLevelFromExp(exp)
+      resolve({level: usrLevel.level, remaining: usrLevel.exp, nextLevel: getExpFromLevel(usrLevel.level + 1)})
+    }
     reject('Unable to locate User')
   })
 }
 
 exports.addLevel = (msg) => {
-  console.log('Adding Exp')
-  var exp = 1000
   for (var expTarget of msg.mentions.users.array()) {
-    usr[msg.guild.id].users[expTarget.id].experience += exp
-    msg.channel.sendMessage(`Added 1000 exp to ${expTarget}`)
+    const usrNextLevelExp = getLevelFromExp(usr[msg.guild.id].users[expTarget.id].experience).remaining
+    const usrRemainingExp = getLevelFromExp(usr[msg.guild.id].users[expTarget.id].experience).nextLevel
+    const expToAdd = usrNextLevelExp - usrRemainingExp
+    usr[msg.guild.id].users[expTarget.id].experience += expToAdd
+    msg.channel.sendMessage(`Added ${expToAdd} to ${expTarget}`)
   }
+}
+
+function getExpFromLevel (level) {
+  return 5 * (level ** 2) + 50 * level + 100
+}
+
+function getLevelFromExp (exp) {
+  var experience = exp
+  var level = 0
+  while (experience >= getExpFromLevel(level)) {
+    experience -= getExpFromLevel(level)
+    level += 1
+  }
+  return {level: level, exp: experience}
 }
 
 function applyPerks (msg, exp) {
@@ -95,4 +104,14 @@ function applyPerks (msg, exp) {
     }
     reject('Something went wrong when applying perks')
   })
+}
+
+function addUser (msg) {
+  if (!usr.hasOwnProperty(msg.guild.id)) {
+    usr[msg.guild.id] = {}
+    usr[msg.guild.id].users = {}
+  }
+  usr[msg.guild.id].users[msg.author.id] = {}
+  usr[msg.guild.id].users[msg.author.id].username = msg.author.username
+  usr[msg.guild.id].users[msg.author.id].experience = 0
 }
