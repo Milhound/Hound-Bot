@@ -76,6 +76,5 @@ function applyPerks (msg, exp) {
       msg.guild.member(msg.author).addRole('234345530803748874')
       resolve(`${msg.author.username} you have achieved the rank of VIP`)
     }
-    reject()
   })
 }
