@@ -330,7 +330,7 @@ exports.cmds = (msg) => {
 
       ${currentQueue.slice(0, 10).join('\n      ')}
       ${(currentQueue.length > 10) ? '*[Only next 10 shown]*' : ''}
-    `)
+      `)
     },
     'play': (msg, alreadyAdded) => {
       if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg))
@@ -399,14 +399,14 @@ exports.cmds = (msg) => {
       })(queue[msg.guild.id].songs[0])
     },
     'yt': (msg) => {
-      const queryYt = msg.content.slice(4).trim().replace(' ', '%20')
+      const queryYt = msg.content.slice(3).trim().replace(' ', '%20')
       const urlYt = baseYtUrl + queryYt + '&key=' + apiKey
       fn.apiRequest(urlYt)
       .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.items[0].id.videoId))
     },
     'request': (msg) => {
       if (msg.length <= 9) return msg.reply('Please specifiy a song.')
-      const queryRequest = msg.content.slice(4).trim().replace(' ', '%20')
+      const queryRequest = msg.content.slice(8).trim().replace(' ', '%20')
       const urlRequest = baseYtUrl + queryRequest + '&key=' + apiKey
       fn.apiRequest(urlRequest)
       .then(info => {
