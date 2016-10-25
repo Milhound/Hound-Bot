@@ -354,7 +354,7 @@ exports.cmds = (msg) => {
           })
         }
         msg.channel.sendMessage(`Playing: **${song.title}** as requested by: ${song.requester}`)
-        dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, {filter: 'audioonly'}), { volume: 0.05 })
+        dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, {filter: 'audioonly'}), { volume: 0.08 })
         let collector = msg.channel.createCollector(m => m)
         collector.on('message', m => {
           if (m.content.startsWith('!pause')) {
@@ -370,11 +370,11 @@ exports.cmds = (msg) => {
             msg.channel.sendMessage(`Volume: ${dispatcher.volume * 100}%`)
           }
           if (m.content === '!volume+' && dispatcher.volume !== 0.2) {
-            dispatcher.setVolume(dispatcher.volume + 0.01)
+            dispatcher.setVolume(dispatcher.volume + 0.02)
             msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
           }
-          if (m.content === '!volume-' && dispatcher.volume !== 0.01) {
-            dispatcher.setVolume(dispatcher.volume - 0.01)
+          if (m.content === '!volume-' && dispatcher.volume !== 0.02) {
+            dispatcher.setVolume(dispatcher.volume - 0.02)
             msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
           }
           if (m.content === '!end') {
