@@ -41,7 +41,10 @@ exports.addExperience = (msg) => {
     if (!usr.hasOwnProperty(msg.guild.id) || !usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
     const exp = Math.floor(Math.random() * 10 + 11)
     usr[msg.guild.id].users[msg.author.id].experience += exp
-    fs.writeFileSync('./user.json', JSON.stringify(usr))
+    fs.writeFile('./user.json', JSON.stringify(usr), (err) => {
+      if (err) console.log(err)
+      console.log('Saved File')
+    })
     expLocked[msg.author.id] = true
     setTimeout(() => {
       expLocked[msg.author.id] = false
