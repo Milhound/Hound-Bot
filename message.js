@@ -425,7 +425,7 @@ exports.cmds = (msg) => {
     },
     'level': (msg) => {
       fn.getLevel(msg)
-      .then(response => { msg.channel.sendMessage(`Level: ${response.level} (${response.remaining}/${response.nextLevel}`) })
+      .then(response => { msg.channel.sendMessage(`Level: ${response.level} (${response.remaining}/${response.nextLevel})`) })
       .catch((err) => msg.channel.sendMessage(err))
     },
     'addlevel': (msg) => {
