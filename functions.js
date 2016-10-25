@@ -46,7 +46,7 @@ exports.addExperience = (msg) => {
     setTimeout(() => {
       expLocked[msg.author.id] = false
     }, 15000)
-    if (msg.guild.id === '167693566267752449') applyPerks(msg, usr[msg.guild.id].users[msg.author.id].experience).then(response => { msg.channel.sendMessage(response) }).catch(console.log('Did not update perk'))
+    if (msg.guild.id === '167693566267752449') applyPerks(msg, usr[msg.guild.id].users[msg.author.id].experience).then(response => { msg.channel.sendMessage(response) })
     console.log(`Added ${exp} to ${msg.author.username}!`)
   }
 }
