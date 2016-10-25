@@ -51,7 +51,11 @@ exports.addExperience = (msg) => {
     setTimeout(() => {
       expLocked[msg.author.id] = false
     }, expDelayTime)
-    if (msg.guild.id === '167693566267752449') applyPerks(msg, usr[msg.guild.id].users[msg.author.id].experience).then(response => { msg.channel.sendMessage(response) }).catch(/* Do Nothing */)
+    if (msg.guild.id === '167693566267752449') {
+      applyPerks(msg, usr[msg.guild.id].users[msg.author.id].experience)
+        .then(response => { if (response.length > 0) msg.channel.sendMessage(response) })
+        .catch(console.log)
+    }
     console.log(`Added ${exp} to ${msg.author.username}!`)
   }
 }
@@ -80,15 +84,15 @@ function applyPerks (msg, exp) {
     if (exp >= 100 && !msg.guild.member(msg.author).roles.exists('id', '180510856868528128')) {
       msg.guild.member(msg.author).addRole('180510856868528128')
       resolve(`${msg.author.username} you have achieved the rank of Member`)
-    }
-    if (exp >= 10000 && !msg.guild.member(msg.author).roles.exists('id', '234345530803748874')) {
+    } else if (exp >= 10000 && !msg.guild.member(msg.author).roles.exists('id', '234345530803748874')) {
       msg.guild.member(msg.author).addRole('234345530803748874')
       resolve(`${msg.author.username} you have achieved the rank of VIP`)
-    }
-    if (exp >= 50000 && !msg.guild.member(msg.author).roles.exists('id', '240269802411655179')) {
+    } else if (exp >= 50000 && !msg.guild.member(msg.author).roles.exists('id', '240269802411655179')) {
       msg.guild.member(msg.author).addRole('240269802411655179')
       resolve(`${msg.author.username} you have achieved the rank of Moderator`)
+    } else {
+      resolve()
     }
-    reject('No Perks Added')
+    reject('Something went wrong when applying perks')
   })
 }
