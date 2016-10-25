@@ -62,8 +62,14 @@ exports.getLevel = (msg) => {
 
 exports.addExp = (msg) => {
   var exp = 1000
-  usr[msg.guild.id].users[msg.mentions.users.first().id].experience += exp
-  fs.writeFileSync('./user.json', JSON.stringify(usr))
+  for (var expTarget of msg.mentions.users.array()) {
+    usr[msg.guild.id].users[expTarget.id].experience += exp
+    msg.channel.sendMessage(`Added 1000 exp to ${expTarget}`)
+  }
+  fs.writeFile('./user.json', JSON.stringify(usr), (err) => {
+    if (err) console.log(err)
+    console.log('File Saved')
+  })
 }
 
 function applyPerks (msg, exp) {
