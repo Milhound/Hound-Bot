@@ -432,6 +432,20 @@ exports.cmds = (msg) => {
       if (msg.guild.member(msg.author).hasPermission('ADMINISTRATOR')) {
         fn.addLevel(msg)
       }
+    },
+    'kick': (msg) => {
+      if (msg.guild.member(msg.author).hasPermission('KICK_MEMBERS')) {
+        for (var kickUser of msg.mentions.users.array()) {
+          msg.guild.member(kickUser.id).kick()
+        }
+      }
+    },
+    'ban': (msg) => {
+      if (msg.guild.member(msg.author).hasPermission('BAN_MEMBERS')) {
+        for (var kickUser of msg.mentions.users.array()) {
+          msg.guild.member(kickUser.id).ban()
+        }
+      }
     }
   }
 
