@@ -53,7 +53,7 @@ exports.addExperience = (msg) => {
     }, expDelayTime)
     if (msg.guild.id === '167693566267752449') {
       applyPerks(msg, usr[msg.guild.id].users[msg.author.id].experience)
-        .then(response => { if (response.length > 0) msg.channel.sendMessage(response) })
+        .then(response => { if (response) msg.channel.sendMessage(response) })
         .catch(console.log)
     }
     console.log(`Added ${exp} to ${msg.author.username}!`)
