@@ -46,7 +46,7 @@ exports.addExperience = (msg) => {
     setTimeout(() => {
       expLocked[msg.author.id] = false
     }, 15000)
-    if (msg.guild.id === '167693566267752449') applyPerks(msg, usr[msg.guild.id].users[msg.author.id].experience).then(response => { msg.channel.sendMessage(response) })
+    if (msg.guild.id === '167693566267752449') applyPerks(msg, usr[msg.guild.id].users[msg.author.id].experience).then(response => { msg.channel.sendMessage(response) }).catch(console.log('Did not update perk'))
     console.log(`Added ${exp} to ${msg.author.username}!`)
   }
 }
@@ -61,7 +61,7 @@ exports.getLevel = (msg) => {
 }
 
 exports.addExp = (msg) => {
-  var exp = parseInt(msg.content.split(' ')[1])
+  var exp = 1000
   usr[msg.guild.id].users[msg.mentions.users.first().id].experience += exp
   fs.writeFileSync('./user.json', JSON.stringify(usr))
 }
