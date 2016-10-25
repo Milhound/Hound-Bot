@@ -26,23 +26,24 @@ exports.cmds = (msg) => {
         !boom - Roast your fellow users
         !to_C <#> - Converts Fahrenheit to Celsius
         !to_F <#> - Converts Celsius to Fahrenheit
-        !time <TIMEZONE> - Returns current time in zone. Ex: !time CST`
-      // If on Milhound's Server add the following commands
-      if (msg.guild.id === '167693566267752449') {
-        text += `
-        !gamer - add/remove Gamer role.
-        !programmer - add/remove Programmer role.
-        !dj or music - add/remove DJ role.
-        
+        !time <TIMEZONE> - Returns current time in zone. Ex: !time CST
+        !level - Prints out your current level and experience
+        !yt - Search for YouTube video
+
         IN BETA:
         !play <url> - Plays a song from YouTube.
         !pause - Pauses song
         !resume - Resumes song
         !volume - Tells you current volume
-        !volume+ - Increases volume by 25%
-        !volume- - Reduces volume by 25%
-        !yt - Search for YouTube video
-        !request <Search Query> - Add youtube video to queue` }
+        !volume+ - Increases volume by 20%
+        !volume- - Reduces volume by 20%
+        !request <Search Query> - Add youtube video to queue`
+      // If on Milhound's Server add the following commands
+      if (msg.guild.id === '167693566267752449') {
+        text += `
+        !gamer - add/remove Gamer role.
+        !programmer - add/remove Programmer role.
+        !dj or music - add/remove DJ role.` }
       msg.channel.sendMessage(text)
     },
     'time': (msg) => {
