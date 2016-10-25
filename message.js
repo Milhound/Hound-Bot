@@ -26,23 +26,24 @@ exports.cmds = (msg) => {
         !boom - Roast your fellow users
         !to_C <#> - Converts Fahrenheit to Celsius
         !to_F <#> - Converts Celsius to Fahrenheit
-        !time <TIMEZONE> - Returns current time in zone. Ex: !time CST`
-      // If on Milhound's Server add the following commands
-      if (msg.guild.id === '167693566267752449') {
-        text += `
-        !gamer - add/remove Gamer role.
-        !programmer - add/remove Programmer role.
-        !dj or music - add/remove DJ role.
-        
+        !time <TIMEZONE> - Returns current time in zone. Ex: !time CST
+        !level - Prints out your current level and experience
+        !yt - Search for YouTube video
+
         IN BETA:
         !play <url> - Plays a song from YouTube.
         !pause - Pauses song
         !resume - Resumes song
         !volume - Tells you current volume
-        !volume+ - Increases volume by 25%
-        !volume- - Reduces volume by 25%
-        !yt - Search for YouTube video
-        !request <Search Query> - Add youtube video to queue` }
+        !volume+ - Increases volume by 20%
+        !volume- - Reduces volume by 20%
+        !request <Search Query> - Add youtube video to queue`
+      // If on Milhound's Server add the following commands
+      if (msg.guild.id === '167693566267752449') {
+        text += `
+        !gamer - add/remove Gamer role.
+        !programmer - add/remove Programmer role.
+        !dj or music - add/remove DJ role.` }
       msg.channel.sendMessage(text)
     },
     'time': (msg) => {
@@ -330,7 +331,7 @@ exports.cmds = (msg) => {
 
       ${currentQueue.slice(0, 10).join('\n      ')}
       ${(currentQueue.length > 10) ? '*[Only next 10 shown]*' : ''}
-    `)
+      `)
     },
     'play': (msg, alreadyAdded) => {
       if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg))
@@ -354,7 +355,7 @@ exports.cmds = (msg) => {
           })
         }
         msg.channel.sendMessage(`Playing: **${song.title}** as requested by: ${song.requester}`)
-        dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, {filter: 'audioonly'}), { volume: 0.08 })
+        dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, {filter: 'audioonly'}), { volume: 0.08, passes: 2 })
         let collector = msg.channel.createCollector(m => m)
         collector.on('message', m => {
           if (m.content.startsWith('!pause')) {
@@ -399,14 +400,14 @@ exports.cmds = (msg) => {
       })(queue[msg.guild.id].songs[0])
     },
     'yt': (msg) => {
-      const queryYt = msg.content.slice(4).trim().replace(' ', '%20')
+      const queryYt = msg.content.slice(3).trim().replace(' ', '%20')
       const urlYt = baseYtUrl + queryYt + '&key=' + apiKey
       fn.apiRequest(urlYt)
       .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.items[0].id.videoId))
     },
     'request': (msg) => {
       if (msg.length <= 9) return msg.reply('Please specifiy a song.')
-      const queryRequest = msg.content.slice(4).trim().replace(' ', '%20')
+      const queryRequest = msg.content.slice(8).trim().replace(' ', '%20')
       const urlRequest = baseYtUrl + queryRequest + '&key=' + apiKey
       fn.apiRequest(urlRequest)
       .then(info => {
@@ -426,6 +427,28 @@ exports.cmds = (msg) => {
       fn.getLevel(msg)
       .then(response => { msg.channel.sendMessage(`Level: ${response.level} (${response.remaining}/${response.nextLevel}`) })
       .catch((err) => msg.channel.sendMessage(err))
+<<<<<<< HEAD
+=======
+    },
+    'addlevel': (msg) => {
+      if (msg.guild.member(msg.author).hasPermission('ADMINISTRATOR')) {
+        fn.addLevel(msg)
+      }
+    },
+    'kick': (msg) => {
+      if (msg.guild.member(msg.author).hasPermission('KICK_MEMBERS')) {
+        for (var kickUser of msg.mentions.users.array()) {
+          msg.guild.member(kickUser.id).kick()
+        }
+      }
+    },
+    'ban': (msg) => {
+      if (msg.guild.member(msg.author).hasPermission('BAN_MEMBERS')) {
+        for (var kickUser of msg.mentions.users.array()) {
+          msg.guild.member(kickUser.id).ban()
+        }
+      }
+>>>>>>> f022ffb8b49f4d2440e4c94c3caf0d0bdf241556
     }
   }
 
