@@ -429,7 +429,7 @@ exports.cmds = (msg) => {
     },
     'addexp': (msg) => {
       if (msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')) {
-        fn.addExperience(msg)
+        fn.addExp(msg)
       }
     }
   }
