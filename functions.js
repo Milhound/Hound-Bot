@@ -60,7 +60,7 @@ exports.getLevel = (msg) => {
   })
 }
 
-exports.addExp = (msg) => {
+exports.addLevel = (msg) => {
   console.log('Adding Exp')
   var exp = 1000
   for (var expTarget of msg.mentions.users.array()) {

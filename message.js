@@ -427,9 +427,9 @@ exports.cmds = (msg) => {
       .then(response => { msg.channel.sendMessage(`Level: ${Math.floor(response / 1000)} Experience: ${response}`) })
       .catch((err) => msg.channel.sendMessage(err))
     },
-    'addexp': (msg) => {
+    'addlevel': (msg) => {
       if (msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')) {
-        fn.addExp(msg)
+        fn.addLevel(msg)
       }
     }
   }
