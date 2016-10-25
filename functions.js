@@ -61,7 +61,8 @@ exports.getLevel = (msg) => {
     if (!usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) {
       reject('No Experince Recorded')
     }
-    resolve(usr[msg.guild.id].users[msg.author.id].experience)
+    if (usr[msg.guild.id].users[msg.author.id].experience >= 0) resolve(usr[msg.guild.id].users[msg.author.id].experience)
+    reject('Unable to locate User')
   })
 }
 
@@ -88,5 +89,6 @@ function applyPerks (msg, exp) {
       msg.guild.member(msg.author).addRole('240269802411655179')
       resolve(`${msg.author.username} you have achieved the rank of Moderator`)
     }
+    reject('No Perks Added')
   })
 }

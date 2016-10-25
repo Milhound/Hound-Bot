@@ -428,7 +428,7 @@ exports.cmds = (msg) => {
       .catch((err) => msg.channel.sendMessage(err))
     },
     'addlevel': (msg) => {
-      if (msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')) {
+      if (msg.guild.member(msg.author).hasPermission('ADMINISTRATOR')) {
         fn.addLevel(msg)
       }
     }
