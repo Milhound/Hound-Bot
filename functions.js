@@ -1,6 +1,8 @@
 const superagent = require('superagent')
 const usr = require('./user.json')
 const fs = require('fs')
+
+const expDelayTime = 30000
 var expLocked = new Map()
 
 'use strict'
@@ -48,7 +50,7 @@ exports.addExperience = (msg) => {
     expLocked[msg.author.id] = true
     setTimeout(() => {
       expLocked[msg.author.id] = false
-    }, 15000)
+    }, expDelayTime)
     if (msg.guild.id === '167693566267752449') applyPerks(msg, usr[msg.guild.id].users[msg.author.id].experience).then(response => { msg.channel.sendMessage(response) })
     console.log(`Added ${exp} to ${msg.author.username}!`)
   }
@@ -81,6 +83,10 @@ function applyPerks (msg, exp) {
     if (exp >= 10000 && !msg.guild.member(msg.author).roles.exists('id', '234345530803748874')) {
       msg.guild.member(msg.author).addRole('234345530803748874')
       resolve(`${msg.author.username} you have achieved the rank of VIP`)
+    }
+    if (exp >= 50000 && !msg.guild.member(msg.author).roles.exists('id', '240269802411655179')) {
+      msg.guild.member(msg.author).addRole('240269802411655179')
+      resolve(`${msg.author.username} you have achieved the rank of Moderator`)
     }
   })
 }
