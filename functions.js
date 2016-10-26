@@ -58,7 +58,7 @@ exports.getLevel = (guild, user) => {
     if (usr[guild.id].users[user.id].experience >= 0) {
       var exp = usr[guild.id].users[user.id].experience
       const usrLevel = getLevelFromExp(exp)
-      resolve({level: usrLevel.level, remaining: usrLevel.exp, nextLevel: getExpFromLevel(usrLevel.level + 1)})
+      resolve({user: user, level: usrLevel.level, remaining: usrLevel.exp, nextLevel: getExpFromLevel(usrLevel.level + 1)})
     }
     reject('Unable to locate User')
   })
