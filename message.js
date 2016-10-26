@@ -177,6 +177,7 @@ exports.cmds = (msg) => {
       msg.delete
     },
     'add': (msg) => {
+      if (msg.guild.id === '167693566267752449' && msg.channel.id !== '240125330390646786') return msg.reply('All music commands must be done in #music.')
       let url = msg.content.split(' ')[1]
       yt.getInfo(url, (err, info) => {
         if (err) return msg.channel.sendMessage('Invalid URL:' + err)
@@ -198,6 +199,7 @@ exports.cmds = (msg) => {
       })
     },
     'queue': (msg) => {
+      if (msg.guild.id === '167693566267752449' && msg.channel.id !== '240125330390646786') return msg.reply('All music commands must be done in #music.')
       if (queue[msg.guild.id] === undefined) { return msg.reply('Queue is empty') }
       var currentQueue = []
       queue[msg.guild.id].songs.forEach((song, i) => { currentQueue.push(`${i + 1}. ${song.title} - Requested by: ${song.requester}`) })
@@ -210,6 +212,7 @@ exports.cmds = (msg) => {
       `)
     },
     'play': (msg, alreadyAdded) => {
+      if (msg.guild.id === '167693566267752449' && msg.channel.id !== '240125330390646786') return msg.reply('All music commands must be done in #music.')
       if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg))
       if (!msg.guild.voiceConnection) {
         var voiceChannel = msg.member.voiceChannel
@@ -282,6 +285,7 @@ exports.cmds = (msg) => {
       .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.items[0].id.videoId))
     },
     'request': (msg) => {
+      if (msg.guild.id === '167693566267752449' && msg.channel.id !== '240125330390646786') return msg.reply('All music commands must be done in #music.')
       if (msg.length <= 9) return msg.reply('Please specifiy a song.')
       const queryRequest = msg.content.slice(8).trim().replace(' ', '%20')
       const urlRequest = baseYtUrl + queryRequest + '&key=' + apiKey
