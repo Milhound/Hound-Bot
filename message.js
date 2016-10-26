@@ -431,7 +431,7 @@ exports.cmds = (msg) => {
       } else {
         for (var usrRequestedLevel of msg.mentions.users.array()) {
           fn.getLevel(msg.guild, usrRequestedLevel)
-            .then(response => { msg.channel.sendMessage(`${usrRequestedLevel} is Level: ${response.level} (${response.remaining}/${response.nextLevel})`) })
+            .then(response => { msg.channel.sendMessage(`${usrRequestedLevel.username} is Level: ${response.level} (${response.remaining}/${response.nextLevel})`) })
             .catch((err) => msg.channel.sendMessage(err))
         }
       }
