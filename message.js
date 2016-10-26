@@ -17,7 +17,7 @@ exports.cmds = (msg) => {
       var text = `List of Commands:
         !ping - Replys Pong
         !coin - Flip a coin
-        !dice (opt X) - Roll the dice (x)
+        !dice (O: X) - Roll the dice (x)
         !chuck - Chuck Norris Joke
         !toast - Prints Toast
         !slap @user - Slaps all mentioned users
