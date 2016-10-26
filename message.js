@@ -424,9 +424,17 @@ exports.cmds = (msg) => {
       })
     },
     'level': (msg) => {
-      fn.getLevel(msg)
-      .then(response => { msg.channel.sendMessage(`Level: ${response.level} (${response.remaining}/${response.nextLevel})`) })
-      .catch((err) => msg.channel.sendMessage(err))
+      if (!msg.mentions.users.first()) {
+        fn.getLevel(msg.guild, msg.author)
+          .then(response => { msg.channel.sendMessage(`Level: ${response.level} (${response.remaining}/${response.nextLevel})`) })
+          .catch((err) => msg.channel.sendMessage(err))
+      } else {
+        for (var usrRequestedLevel of msg.mentions.users.array()) {
+          fn.getLevel(msg.guild, usrRequestedLevel)
+            .then(response => { msg.channel.sendMessage(`Level: ${response.level} (${response.remaining}/${response.nextLevel})`) })
+            .catch((err) => msg.channel.sendMessage(err))
+        }
+      }
     },
     'addlevel': (msg) => {
       if (msg.guild.member(msg.author).hasPermission('ADMINISTRATOR')) {

@@ -50,13 +50,13 @@ exports.addExperience = (msg) => {
   }
 }
 
-exports.getLevel = (msg) => {
+exports.getLevel = (guild, user) => {
   return new Promise((resolve, reject) => {
-    if (!usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) {
+    if (!usr[guild.id].users.hasOwnProperty(user.id)) {
       reject('No Experince Recorded')
     }
-    if (usr[msg.guild.id].users[msg.author.id].experience >= 0) {
-      var exp = usr[msg.guild.id].users[msg.author.id].experience
+    if (usr[guild.id].users[user.id].experience >= 0) {
+      var exp = usr[guild.id].users[user.id].experience
       const usrLevel = getLevelFromExp(exp)
       resolve({level: usrLevel.level, remaining: usrLevel.exp, nextLevel: getExpFromLevel(usrLevel.level + 1)})
     }
