@@ -27,11 +27,12 @@ exports.cmds = (msg) => {
         !to_C <#> - Converts Fahrenheit to Celsius
         !to_F <#> - Converts Celsius to Fahrenheit
         !time <TIMEZONE> - Returns current time in zone. Ex: !time CST
-        !level - Prints out your current level and experience
+        !level <O: user> - Prints out your (or user) current level and experience
         !yt - Search for YouTube video
 
-        IN BETA:
+        VOICE:
         !play <url> - Plays a song from YouTube.
+        !skip - Skips current song.
         !pause - Pauses song
         !resume - Resumes song
         !volume - Tells you current volume
