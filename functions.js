@@ -206,16 +206,32 @@ exports.addLevel = (msg) => {
 }
 
 exports.leaderboard = (msg) => {
-  var users = []
-  for (var user of usr[msg.guild.id].users) {
-    users.push({[user.username]: user.experience})
-  }
-  const sortedUsers = users.sort((a, b) => {
-    if (a[Object.keys(a)[0]] < b[Object.keys(b)[0]]) return 1
-    if (a[Object.keys(a)[0]] > b[Object.keys(b)[0]]) return -1
-    return 0
+  return new Promise((resolve, reject) => {
+    var users = []
+    if (!usr.hasOwnProperty(msg.guild.id)) reject('This server has not been recorded yet.')
+    if (!usr[msg.guild.id].users) reject('No user data has been recorded yet.')
+    for (var key in usr[msg.guild.id].users) {
+      if (usr[msg.guild.id].users.hasOwnProperty(key)) {
+        console.log(`Adding ${usr[msg.guild.id].users[key].username} to leaderboard`)
+        users.push({ [usr[msg.guild.id].users[key].username]: usr[msg.guild.id].users[key].experience })
+      }
+    }
+    const sortedUsers = users.sort((a, b) => {
+      if (a[Object.keys(a)[0]] < b[Object.keys(b)[0]]) return 1
+      if (a[Object.keys(a)[0]] > b[Object.keys(b)[0]]) return -1
+      return 0
+    })
+    var rank = 1
+    var responseText = `**Leaderboard of ${msg.guild.name}**`
+    console.log(sortedUsers)
+    for (var user of sortedUsers) {
+      responseText += `\n${rank}. ${Object.keys(user)[0]}`
+      rank += 1
+    }
+    if (responseText.indexOf('1.') > 0) resolve(responseText)
+    if (users.length === 0) reject('Unable to locate Users')
+    if (users.length !== sortedUsers.length) reject('Sorting users resulted in lost users.')
   })
-  return sortedUsers
 }
 
 function getExpFromLevel (level) {

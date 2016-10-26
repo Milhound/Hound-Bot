@@ -29,6 +29,7 @@ exports.cmds = (msg) => {
         !to_F <#> - Converts Celsius to Fahrenheit
         !time <TIMEZONE> - Returns current time in zone. Ex: !time CST
         !level <O: user> - Prints out your (or user) current level and experience
+        !leaderboard - Shows the current rankings of the Server.
         !yt - Search for YouTube video
 
         **VOICE:**
@@ -322,14 +323,7 @@ exports.cmds = (msg) => {
       }
     },
     'leaderboard': (msg) => {
-      const sortedUsers = fn.leaderboard(msg)
-      var rank = 1
-      var responseText = `**Leaderboard of ${msg.guild.name}**`
-      for (var user of sortedUsers) {
-        responseText += `\n${rank}. ${Object.keys(user)[0]}`
-        rank += 1
-      }
-      msg.sendMessage(responseText)
+      fn.leaderboard(msg).then((response) => msg.channel.sendMessage(response)).catch((err) => msg.channel.sendMessage(err))
     },
     'kick': (msg) => {
       if (msg.guild.member(msg.author).hasPermission('KICK_MEMBERS')) {
