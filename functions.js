@@ -67,13 +67,9 @@ exports.getLevel = (msg) => {
 exports.addLevel = (msg) => {
   for (var expTarget of msg.mentions.users.array()) {
     const usrData = getLevelFromExp(usr[msg.guild.id].users[expTarget.id].experience)
-    console.log(usrData)
-    const usrNextLevelExp = usrData.nextLevel
-    console.log('Next Level: ' + usrNextLevelExp)
-    const usrRemainingExp = usrData.remaining
-    console.log('Remaining: ' + usrRemainingExp)
+    const usrNextLevelExp = getExpFromLevel(usrData.level)
+    const usrRemainingExp = usrData.exp
     const expToAdd = usrNextLevelExp - usrRemainingExp
-    console.log('Exp to add: ' + expToAdd)
     usr[msg.guild.id].users[expTarget.id].experience += expToAdd
     msg.channel.sendMessage(`Added ${expToAdd} to ${expTarget}`)
   }
