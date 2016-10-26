@@ -229,7 +229,7 @@ exports.leaderboard = (msg) => {
       responseText += `\n${rank}. ${Object.keys(user)[0]}`
       rank += 1
     }
-    if (users.length > 10) responseText += `\n*Only first 10 shown*`
+    if (users.length > 10) responseText += `\n\n*Only first 10 shown*`
     if (responseText.indexOf('1.') > 0) resolve(responseText)
     if (users.length === 0) reject('Unable to locate Users')
   })
