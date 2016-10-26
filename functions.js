@@ -158,6 +158,7 @@ exports.getTime = (msg) => {
 }
 
 exports.addExperience = (msg) => {
+  if (msg.author.id === '169874052675010560') return
   if (!expLocked.hasOwnProperty(msg.author.id)) expLocked[msg.author.id] = false
   if (expLocked[msg.author.id] === false) {
     if (!usr.hasOwnProperty(msg.guild.id) || !usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
@@ -220,7 +221,7 @@ exports.leaderboard = (msg) => {
       if (a[Object.keys(a)[0]] < b[Object.keys(b)[0]]) return 1
       if (a[Object.keys(a)[0]] > b[Object.keys(b)[0]]) return -1
       return 0
-    })
+    }).slice(0, 10)
     var rank = 1
     var responseText = `**Leaderboard of ${msg.guild.name}**`
     console.log(sortedUsers)
@@ -228,9 +229,9 @@ exports.leaderboard = (msg) => {
       responseText += `\n${rank}. ${Object.keys(user)[0]}`
       rank += 1
     }
+    if (users.length > 10) responseText += `\n*Only first 10 shown*`
     if (responseText.indexOf('1.') > 0) resolve(responseText)
     if (users.length === 0) reject('Unable to locate Users')
-    if (users.length !== sortedUsers.length) reject('Sorting users resulted in lost users.')
   })
 }
 
