@@ -28,7 +28,7 @@ exports.apiRequest = (url, callback) => {
 }
 
 exports.getTime = (msg) => {
-  var argsTime = msg.split(' ')
+  var argsTime = msg.content.split(' ')
   // Variable to confirm all calculations suceeded
   var goodTime = true
   var date = new Date()
