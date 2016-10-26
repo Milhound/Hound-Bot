@@ -15,9 +15,10 @@ exports.cmds = (msg) => {
   const commands = {
     'commands': (msg) => {
       var text = `List of Commands:
+        **TEXT:**
         !ping - Replys Pong
         !coin - Flip a coin
-        !dice (O: X) - Roll the dice (x)
+        !dice <O: X> - Roll the dice (x)
         !chuck - Chuck Norris Joke
         !toast - Prints Toast
         !slap @user - Slaps all mentioned users
@@ -30,7 +31,7 @@ exports.cmds = (msg) => {
         !level <O: user> - Prints out your (or user) current level and experience
         !yt - Search for YouTube video
 
-        VOICE:
+        **VOICE:**
         !play <url> - Plays a song from YouTube.
         !skip - Skips current song.
         !pause - Pauses song
