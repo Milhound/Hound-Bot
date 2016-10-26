@@ -241,7 +241,7 @@ exports.cmds = (msg) => {
             msg.channel.sendMessage('Paused').then(() => { dispatcher.pause() })
           }
           if (m.content.startsWith('!resume')) {
-            msg.channel.sendMessage('Paused').then(() => { dispatcher.resume() })
+            msg.channel.sendMessage('Resuming...').then(() => { dispatcher.resume() })
           }
           if (m.content === '!skip') {
             msg.channel.sendMessage('Skipping').then(() => { dispatcher.end() })
