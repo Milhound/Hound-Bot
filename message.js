@@ -321,6 +321,16 @@ exports.cmds = (msg) => {
         fn.addLevel(msg)
       }
     },
+    'leaderboard': (msg) => {
+      const sortedUsers = fn.leaderboard(msg)
+      var rank = 1
+      var responseText = `**Leaderboard of ${msg.guild.name}**`
+      for (var user of sortedUsers) {
+        responseText += `\n${rank}. ${Object.keys(user)[0]}`
+        rank += 1
+      }
+      msg.sendMessage(responseText)
+    },
     'kick': (msg) => {
       if (msg.guild.member(msg.author).hasPermission('KICK_MEMBERS')) {
         for (var kickUser of msg.mentions.users.array()) {

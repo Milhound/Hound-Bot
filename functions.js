@@ -205,6 +205,19 @@ exports.addLevel = (msg) => {
   }
 }
 
+exports.leaderboard = (msg) => {
+  var users = []
+  for (var user of usr[msg.guild.id].users) {
+    users.push({[user.username]: user.experience})
+  }
+  const sortedUsers = users.sort((a, b) => {
+    if (a[Object.keys(a)[0]] < b[Object.keys(b)[0]]) return 1
+    if (a[Object.keys(a)[0]] > b[Object.keys(b)[0]]) return -1
+    return 0
+  })
+  return sortedUsers
+}
+
 function getExpFromLevel (level) {
   return 5 * (Math.pow(level, 2)) + 50 * level + 100
 }
