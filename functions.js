@@ -71,7 +71,7 @@ exports.addLevel = (msg) => {
     const usrRemainingExp = usrData.exp
     const expToAdd = usrNextLevelExp - usrRemainingExp
     usr[msg.guild.id].users[expTarget.id].experience += expToAdd
-    msg.channel.sendMessage(`Added ${expToAdd} to ${expTarget}`)
+    msg.channel.sendMessage(`Added ${expToAdd} exp to ${expTarget}`)
   }
 }
 
