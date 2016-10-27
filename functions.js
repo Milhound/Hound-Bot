@@ -65,7 +65,6 @@ exports.getTime = (msg) => {
 
     // Rio de Janeiro
     case 'brt':
-    case 'wales':
       hour = hour - 3
       break
 
@@ -74,6 +73,7 @@ exports.getTime = (msg) => {
     case 'west':
     case 'cet':
     case 'london':
+    case 'wales':
       hour = hour + 1
       break
 
