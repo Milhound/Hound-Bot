@@ -1,6 +1,7 @@
 const Discord = require('discord.js')
 const bot = new Discord.Client()
 const Message = require('./message.js')
+const fn = require('./functions.js')
 
 'use strict'
 
@@ -9,6 +10,7 @@ bot.on('ready', () => {
 })
 
 bot.on('message', message => {
+  fn.initiateSave()
   console.log(message.author.username + ' - ' + message.guild.name + ' says: ' + message.content)
   Message.cmds(message)
 })

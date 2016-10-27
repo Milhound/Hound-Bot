@@ -7,6 +7,15 @@ var expLocked = new Map()
 
 'use strict'
 
+exports.initiateSave = () => {
+  setInterval(() => {
+    fs.writeFile('./user.json', JSON.stringify(usr), (err) => {
+      if (err) console.log(err)
+      console.log('Saved User.json')
+    })
+  }, 120000)
+}
+
 exports.toggleRole = (msg, role) => {
   if (msg.member.roles.has(role)) {
     msg.reply('Removed role ' + msg.guild.roles.get(role).name + '. Use !' + msg.guild.roles.get(role).name.toLowerCase() + ' to undo.')
@@ -165,7 +174,6 @@ exports.addExperience = (msg) => {
     if (!usr.hasOwnProperty(msg.guild.id) || !usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
     const exp = Math.floor(Math.random() * 10 + 11)
     usr[msg.guild.id].users[msg.author.id].experience += exp
-    fs.writeFileSync('./user.json', JSON.stringify(usr))
     expLocked[msg.author.id] = true
     setTimeout(() => {
       expLocked[msg.author.id] = false
@@ -211,7 +219,7 @@ exports.leaderboard = (msg) => {
     if (!usr[msg.guild.id].users) reject('No user data has been recorded yet.')
 
     const users = usr[msg.guild.id].users
-    
+
     // Collect Users
     var userArray = []
     for (var key in users) {
@@ -225,7 +233,7 @@ exports.leaderboard = (msg) => {
 
     // Sort Users
     const sortedUsers = userArray.sort((a, b) => { return Math.sign(b.exp - a.exp) }).slice(0, 10)
-    
+
     // Generate Report
     var rank = 1
     var responseText = `**Leaderboard of ${msg.guild.name}**`
