@@ -13,7 +13,7 @@ exports.initiateSave = () => {
       if (err) console.log(err)
       console.log('Saved User.json')
     })
-  }, 120000)
+  }, 300000)
 }
 
 exports.toggleRole = (msg, role) => {
