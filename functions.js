@@ -206,28 +206,37 @@ exports.addLevel = (msg) => {
 
 exports.leaderboard = (msg) => {
   return new Promise((resolve, reject) => {
-    var users = []
+    // Preliminary Tests
     if (!usr.hasOwnProperty(msg.guild.id)) reject('This server has not been recorded yet.')
     if (!usr[msg.guild.id].users) reject('No user data has been recorded yet.')
-    for (var key in usr[msg.guild.id].users) {
-      if (usr[msg.guild.id].users.hasOwnProperty(key)) {
-        console.log(`Adding ${usr[msg.guild.id].users[key].username} to leaderboard`)
-        users.push({ [usr[msg.guild.id].users[key].username]: usr[msg.guild.id].users[key].experience })
-      }
+
+    const users = usr[msg.guild.id].users
+    
+    // Collect Users
+    var userArray = []
+    for (var key in users) {
+      var user = users[key]
+      userArray.push({
+        id: key,
+        username: user.username,
+        exp: user.experience
+      })
     }
-    const sortedUsers = users.sort((a, b) => {
-      if (a[Object.keys(a)[0]] < b[Object.keys(b)[0]]) return 1
-      if (a[Object.keys(a)[0]] > b[Object.keys(b)[0]]) return -1
-      return 0
-    }).slice(0, 10)
+
+    // Sort Users
+    const sortedUsers = userArray.sort((a, b) => { return Math.sign(b.exp - a.exp) }).slice(0, 10)
+    
+    // Generate Report
     var rank = 1
     var responseText = `**Leaderboard of ${msg.guild.name}**`
     console.log(sortedUsers)
-    for (var user of sortedUsers) {
-      responseText += `\n${rank}. ${Object.keys(user)[0]}`
+    for (var rankedUser of sortedUsers) {
+      responseText += `\n${rank}. ${rankedUser.username} - Total Exp: ${rankedUser.exp}`
       rank += 1
     }
-    if (users.length > 10) responseText += `\n\n*Only first 10 shown*`
+    if (userArray.length > 10) responseText += `\n\n*Only first 10 shown*`
+
+    // Tests
     if (responseText.indexOf('1.') > 0) resolve(responseText)
     if (users.length === 0) reject('Unable to locate Users')
   })
