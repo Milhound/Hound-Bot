@@ -1,5 +1,5 @@
 const superagent = require('superagent')
-const request = require('request')
+const req = require('request')
 const usr = require('./user.json')
 const fs = require('fs')
 
@@ -8,15 +8,51 @@ var expLocked = new Map()
 
 'use strict'
 
-exports.request = (msg) => {
-  msg.member.voiceChannel.join()
-  var stream = request('http://stream1.ml1.t4e.dj/dublovers_high.mp3').pipe(fs.createWriteStream('./tmp/radio.tmp'))
-  stream.on('data', (chunk) => {
-    msg.guild.voiceChannel.playStream(chunk)
+function radio (msg) {
+  join(msg).then(connection => {
+    let dispatcher = connection.playStream(request('http://stream1.ml1.t4e.dj/dublovers_high.mp3'), {volume: 0.08})
+    let collector = msg.channel.createCollector(m => m)
+    collector.on('message', m => {
+      if (m.content.startsWith('!pause')) {
+        msg.channel.sendMessage('Paused').then(() => { dispatcher.pause() })
+      }
+      if (m.content.startsWith('!resume')) {
+        msg.channel.sendMessage('Resuming...').then(() => { dispatcher.resume() })
+      }
+      if (m.content === '!skip') {
+        msg.channel.sendMessage('Skipping').then(() => { dispatcher.end() })
+      }
+      if (m.content === '!volume') {
+        msg.channel.sendMessage(`Volume: ${dispatcher.volume * 100}%`)
+      }
+      if (m.content === '!volume+') {
+        dispatcher.setVolume(dispatcher.volume * 2)
+        msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
+      }
+      if (m.content === '!volume-' && dispatcher.volume !== 0.02) {
+        dispatcher.setVolume(dispatcher.volume / 2)
+        msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
+      }
+      if (m.content === '!end') {
+        dispatcher.end()
+      }
+    })
+    dispatcher.on('end', () => {
+      collector.stop()
+      msg.member.voiceChannel.leave()
+    })
   })
 }
 
-exports.initiateSave = () => {
+function join (msg) {
+  return new Promise((resolve, reject) => {
+    const voiceChannel = msg.member.voiceChannel
+    if (!voiceChannel || voiceChannel.type !== 'voice') return msg.reply('Unable to join voice channel')
+    voiceChannel.join().then(connection => resolve(connection))
+  })
+}
+
+function initiateSave () {
   setInterval(() => {
     fs.writeFile('./user.json', JSON.stringify(usr), (err) => {
       if (err) console.log(err)
@@ -25,7 +61,7 @@ exports.initiateSave = () => {
   }, 300000)
 }
 
-exports.toggleRole = (msg, role) => {
+function toggleRole (msg, role) {
   if (msg.member.roles.has(role)) {
     msg.reply('Removed role ' + msg.guild.roles.get(role).name + '. Use !' + msg.guild.roles.get(role).name.toLowerCase() + ' to undo.')
     msg.guild.member(msg.author).removeRole(role)
@@ -35,7 +71,7 @@ exports.toggleRole = (msg, role) => {
   }
 }
 
-exports.apiRequest = (url, callback) => {
+function apiRequest (url, callback) {
   return new Promise((resolve, reject) => {
     superagent.get(url)
     .end((err, res) => {
@@ -45,7 +81,7 @@ exports.apiRequest = (url, callback) => {
   })
 }
 
-exports.getTime = (msg) => {
+function getTime (msg) {
   var argsTime = msg.content.split(' ')
   // Variable to confirm all calculations suceeded
   var goodTime = true
@@ -176,7 +212,7 @@ exports.getTime = (msg) => {
   }, 500)
 }
 
-exports.addExperience = (msg) => {
+function addExperience (msg) {
   if (msg.author.id === '169874052675010560') return
   if (!expLocked.hasOwnProperty(msg.author.id)) expLocked[msg.author.id] = false
   if (expLocked[msg.author.id] === false) {
@@ -196,7 +232,7 @@ exports.addExperience = (msg) => {
   }
 }
 
-exports.getLevel = (guild, user) => {
+function getLevel (guild, user) {
   return new Promise((resolve, reject) => {
     if (!usr[guild.id].users.hasOwnProperty(user.id)) {
       reject('No Experince Recorded')
@@ -210,7 +246,7 @@ exports.getLevel = (guild, user) => {
   })
 }
 
-exports.addLevel = (msg) => {
+function addLevel (msg) {
   for (var expTarget of msg.mentions.users.array()) {
     const usrData = getLevelFromExp(usr[msg.guild.id].users[expTarget.id].experience)
     const usrNextLevelExp = getExpFromLevel(usrData.level)
@@ -221,7 +257,7 @@ exports.addLevel = (msg) => {
   }
 }
 
-exports.leaderboard = (msg) => {
+function leaderboard (msg) {
   return new Promise((resolve, reject) => {
     // Preliminary Tests
     if (!usr.hasOwnProperty(msg.guild.id)) reject('This server has not been recorded yet.')
@@ -299,4 +335,17 @@ function addUser (msg) {
   usr[msg.guild.id].users[msg.author.id] = {}
   usr[msg.guild.id].users[msg.author.id].username = msg.author.username
   usr[msg.guild.id].users[msg.author.id].experience = 0
+}
+
+module.exports = {
+  join: join,
+  initiateSave: initiateSave,
+  leaderboard: leaderboard,
+  addLevel: addLevel,
+  getLevel: getLevel,
+  radio: radio,
+  toggleRole: toggleRole,
+  apiRequest: apiRequest,
+  getTime: getTime,
+  addExperience: addExperience
 }

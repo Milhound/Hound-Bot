@@ -193,11 +193,7 @@ exports.cmds = (msg) => {
       })
     },
     'join': (msg) => {
-      return new Promise((resolve, reject) => {
-        const voiceChannel = msg.member.voiceChannel
-        if (!voiceChannel || voiceChannel.type !== 'voice') return msg.reply('Unable to join voice channel')
-        voiceChannel.join().then(connection => resolve(connection))
-      })
+      fn.join(msg)
     },
     'queue': (msg) => {
       if (msg.guild.id === '167693566267752449' && msg.channel.id !== '240125330390646786') return msg.reply('All music commands must be done in #music.')
@@ -253,12 +249,12 @@ exports.cmds = (msg) => {
           if (m.content === '!volume') {
             msg.channel.sendMessage(`Volume: ${dispatcher.volume * 100}%`)
           }
-          if (m.content === '!volume+' && dispatcher.volume !== 0.2) {
-            dispatcher.setVolume(dispatcher.volume + 0.02)
+          if (m.content === '!volume+') {
+            dispatcher.setVolume(dispatcher.volume * 2)
             msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
           }
           if (m.content === '!volume-' && dispatcher.volume !== 0.02) {
-            dispatcher.setVolume(dispatcher.volume - 0.02)
+            dispatcher.setVolume(dispatcher.volume / 2)
             msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
           }
           if (m.content === '!end') {
@@ -278,6 +274,9 @@ exports.cmds = (msg) => {
             queue[msg.guild.id].songs.shift()
             play(queue[msg.guild.id].songs[0])
           })
+        })
+        dispatcher.on('debug', (info) => {
+          console.log(info)
         })
       })(queue[msg.guild.id].songs[0])
     },
@@ -342,7 +341,7 @@ exports.cmds = (msg) => {
       }
     },
     'radio': (msg) => {
-      fn.request(msg)
+      fn.radio(msg)
     }
   }
 
