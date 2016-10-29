@@ -235,7 +235,10 @@ exports.cmds = (msg) => {
           })
         }
         msg.channel.sendMessage(`Playing: **${song.title}** as requested by: ${song.requester}`)
-        dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, {filter: 'audioonly'}), { volume: 0.08, passes: 2 })
+        dispatcher = msg.guild.voiceConnection.playStream(yt(song.url,
+          {filter: 'audioonly'}).on('error', (err) => {
+            if (err.code === 'ECONNRESET') return
+          }), { volume: 0.08, passes: 2 })
         let collector = msg.channel.createCollector(m => m)
         collector.on('message', m => {
           if (m.content.startsWith('!pause')) {
@@ -337,6 +340,9 @@ exports.cmds = (msg) => {
           msg.guild.member(kickUser.id).ban()
         }
       }
+    },
+    'radio': (msg) => {
+      fn.request(msg)
     }
   }
 

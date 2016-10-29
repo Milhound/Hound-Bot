@@ -1,4 +1,5 @@
 const superagent = require('superagent')
+const request = require('request')
 const usr = require('./user.json')
 const fs = require('fs')
 
@@ -6,6 +7,14 @@ const expDelayTime = 30000
 var expLocked = new Map()
 
 'use strict'
+
+exports.request = (msg) => {
+  msg.member.voiceChannel.join()
+  var stream = request('http://stream1.ml1.t4e.dj/dublovers_high.mp3').pipe(fs.createWriteStream('./tmp/radio.tmp'))
+  stream.on('data', (chunk) => {
+    msg.guild.voiceChannel.playStream(chunk)
+  })
+}
 
 exports.initiateSave = () => {
   setInterval(() => {
