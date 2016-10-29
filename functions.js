@@ -8,9 +8,9 @@ var expLocked = new Map()
 
 'use strict'
 
-function radio (msg) {
+function streamFromURL (msg, url) {
   join(msg).then(connection => {
-    let dispatcher = connection.playStream(req('http://stream1.ml1.t4e.dj/dublovers_high.mp3'), {volume: 0.08})
+    let dispatcher = connection.playStream(req(url), {volume: 0.08})
     let collector = msg.channel.createCollector(m => m)
     collector.on('message', m => {
       if (m.content.startsWith('!pause')) {
@@ -343,7 +343,7 @@ module.exports = {
   leaderboard: leaderboard,
   addLevel: addLevel,
   getLevel: getLevel,
-  radio: radio,
+  streamFromURL: streamFromURL,
   toggleRole: toggleRole,
   apiRequest: apiRequest,
   getTime: getTime,

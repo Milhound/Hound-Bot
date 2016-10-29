@@ -210,7 +210,7 @@ exports.cmds = (msg) => {
     },
     'play': (msg, alreadyAdded) => {
       if (msg.guild.id === '167693566267752449' && msg.channel.id !== '240125330390646786') return msg.reply('All music commands must be done in #music.')
-      if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg))
+      if (!msg.guild.voiceConnection) return fn.join(msg).then(() => commands.play(msg))
       if (!msg.guild.voiceConnection) {
         var voiceChannel = msg.member.voiceChannel
         voiceChannel.join()
@@ -341,7 +341,7 @@ exports.cmds = (msg) => {
       }
     },
     'radio': (msg) => {
-      fn.radio(msg)
+      fn.streamFromURL(msg, 'http://stream1.ml1.t4e.dj/dublovers_high.mp3')
     }
   }
 
