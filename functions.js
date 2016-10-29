@@ -10,7 +10,7 @@ var expLocked = new Map()
 
 function radio (msg) {
   join(msg).then(connection => {
-    let dispatcher = connection.playStream(request('http://stream1.ml1.t4e.dj/dublovers_high.mp3'), {volume: 0.08})
+    let dispatcher = connection.playStream(req('http://stream1.ml1.t4e.dj/dublovers_high.mp3'), {volume: 0.08})
     let collector = msg.channel.createCollector(m => m)
     collector.on('message', m => {
       if (m.content.startsWith('!pause')) {
