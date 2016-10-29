@@ -343,11 +343,9 @@ exports.cmds = (msg) => {
     'radio': (msg) => {
       fn.streamFromURL(msg, 'http://stream1.ml1.t4e.dj/dublovers_high.mp3')
     },
-    'dubstep': (msg) => {
-      fn.streamFromURL(msg, 'https://t1-1.p-cdn.com/access/?version=5&lid=1560647969&token=%2FIjhCB%2F0HipzbCXLY9073u3nH0M4BEPhEjTtIXTt8AE7hgYweFV7tjHzjiUJbMisqOcvkRQLGc0Yn2GMWQdR9NSGmzdn8%2BDgL9BxclvvTRb696gwcT3xnYS4vu8e%2FFXLUNa%2BTYBeeAe%2BtE24aLqcpbu2Oa8fP2dFoeJELT6LdoZmZGy4H%2BZ6zWKjuGYuwaKKQ1wNhlkGQF1Hz1qgmCL1Uvlo2QGukoiF8Mj0T9a6C08mOmHuXjEHkiPBSkm1OOreOjMuxnw88XLvnSPn0ABgWMz4jpc8PAr%2F9ANoYTxjQwLrgEQ9ffvm1wK67v4IMbz7myNBDIEreYA%3D&lo=33')
-    },
     'test': (msg) => {
-      fn.streamFromURL(msg, 'http://mux.mtl.djfmradio.com/djfm')
+      if (msg.content.split(' ')[1]) var url = msg.content.split(' ')[1]
+      fn.streamFromURL(msg, url)
     }
   }
 
