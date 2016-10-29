@@ -41,7 +41,11 @@ function streamFromURL (msg, url) {
       collector.stop()
       msg.member.voiceChannel.leave()
     })
-  })
+    dispatcher.on('error', (err) => {
+      msg.channel.sendMessage('Stream dispatcher encountered an error.')
+      console.log(err)
+    })
+  }).catch(msg.channel.sendMessage('Voice Connection encountered an error.'))
 }
 
 function join (msg) {
