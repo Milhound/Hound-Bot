@@ -5,3 +5,4 @@ Extras/
 Test/
 user.json
 ./data/user.json
+./data/backup.json
