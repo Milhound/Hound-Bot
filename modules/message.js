@@ -37,9 +37,11 @@ exports.cmds = (msg) => {
         !pause - Pauses song
         !resume - Resumes song
         !volume - Tells you current volume
-        !volume+ - Increases volume by 20%
-        !volume- - Reduces volume by 20%
-        !request <Search Query> - Add youtube video to queue`
+        !volume+ - Increases volume by 2x
+        !volume- - Reduces volume by 2x
+        !request <Search Query> - Add youtube video to queue
+        !radio - plays dub radio
+        !weeb - Plays weeabo radio`
       // If on Milhound's Server add the following commands
       if (msg.guild.id === Config.guilds.milhound.id) {
         text += `
@@ -49,7 +51,7 @@ exports.cmds = (msg) => {
       msg.channel.sendMessage(text)
     },
     'time': (msg) => {
-      Cmds.getTime(msg)
+      Cmds.getTime(msg).then(response => msg.reply(response)).catch(err => msg.reply(err))
     },
     'mute': (msg) => {
       Admin.mute(msg)
