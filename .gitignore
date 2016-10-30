@@ -4,3 +4,4 @@ node_modules/
 Extras/
 Test/
 user.json
+./data/user.json
