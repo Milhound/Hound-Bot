@@ -1,7 +1,9 @@
-const Fn = require('./functions.js')
 const req = require('request')
-const Config = require('../data/config.json')
 const yt = require('ytdl-core')
+
+const Fn = require('./functions.js')
+const Config = require('../data/config.json')
+
 
 let apiKey
 if (Config.yt.key) { apiKey = Config.yt.key } else { apiKey = process.env.GOOGLE_API_KEY }
