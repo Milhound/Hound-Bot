@@ -1,0 +1,8 @@
+{
+  "token": null,
+  "prefix": "!",
+  "yt": {
+    "url": "https://www.googleapis.com/youtube/v3/search?type=video&part=snippet&q=",
+    "key": null
+  }
+}

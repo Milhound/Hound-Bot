@@ -1,18 +1,19 @@
 const Discord = require('discord.js')
 const bot = new Discord.Client()
-const Message = require('./message.js')
-const fn = require('./functions.js')
 
-'use strict'
+const Message = require('./modules/message.js')
+const Fn = require('./modules/functions.js')
+const Config = require('./data/config.json')
 
 bot.on('ready', () => {
   console.log('Bot is Online')
 })
 
 bot.on('message', message => {
-  fn.initiateSave()
+  if (!message.content.startsWith(Config.prefix)) return
   console.log(message.author.username + ' - ' + message.guild.name + ' says: ' + message.content)
   Message.cmds(message)
+  Fn.initiateSave()
 })
 
 bot.on('disconnected', () => {

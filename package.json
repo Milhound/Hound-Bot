@@ -1,12 +1,12 @@
 {
   "name": "hound-bot",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "main": "bot.js",
   "scripts": {
     "start": "node app.js",
     "clear": "npm cache clear"
   },
-  "author": "Daniel MIlholland <https://www.milhound.com> (Daniel@gailwindslog.com)",
+  "author": "Daniel Milholland <https://www.milhound.com> (Daniel@gailwindslog.com)",
   "description": "Hound Bot for Discordapp, created using Discord.js.",
   "keywords": [
     "Discord",
