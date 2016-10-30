@@ -180,7 +180,7 @@ exports.cmds = (msg) => {
       .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.items[0].id.videoId))
     },
     'request': (msg) => {
-      if (msg.guild.id === Config.guilds.milhound.id && msg.channel.id !== Config.guilds.milhound.id) return msg.reply('All music commands must be done in #music.')
+      if (msg.guild.id === Config.guilds.milhound.id && msg.channel.id !== Config.guilds.milhound.channels.music) return msg.reply('All music commands must be done in #music.')
       if (msg.length <= 9) return msg.reply('Please specifiy a song.')
       Voice.request(msg)
     },

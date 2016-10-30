@@ -1,4 +1,4 @@
-const Config = require('./data/config.json')
+const Config = require('../data/config.json')
 const Usr = require('../data/user.json')
 const expDelayTime = 30000
 var expLocked = new Map()
