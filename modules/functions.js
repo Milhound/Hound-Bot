@@ -1,7 +1,7 @@
 const superagent = require('superagent')
-const usr = require('../data/user.json')
 const fs = require('fs')
 
+const Usr = require('../data/user.json')
 const Timezone = require('../data/timezone.json')
 
 module.exports = {
@@ -54,7 +54,7 @@ module.exports = {
   },
   'initiateSave': () => {
     setInterval(() => {
-      fs.writeFile('./user.json', JSON.stringify(usr), (err) => {
+      fs.writeFile('./user.json', JSON.stringify(Usr), (err) => {
         if (err) console.log(err)
         console.log('Saved User.json')
       })
