@@ -4,5 +4,5 @@ node_modules/
 Extras/
 Test/
 user.json
-./data/user.json
-./data/backup.json
+data/user.json
+data/backup.json
