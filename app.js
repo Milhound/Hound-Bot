@@ -7,13 +7,13 @@ const Config = require('./data/config.json')
 
 bot.on('ready', () => {
   console.log('Bot is Online')
+  Fn.initiateSave()
 })
 
 bot.on('message', message => {
   if (!message.content.startsWith(Config.prefix)) return
   console.log(message.author.username + ' - ' + message.guild.name + ' says: ' + message.content)
   Message.cmds(message)
-  Fn.initiateSave()
 })
 
 bot.on('disconnected', () => {
