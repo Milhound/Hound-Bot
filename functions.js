@@ -45,7 +45,7 @@ function streamFromURL (msg, url) {
       msg.channel.sendMessage('Stream dispatcher encountered an error.')
       console.log(err)
     })
-  }).catch(msg.channel.sendMessage('Voice Connection encountered an error.'))
+  }).catch(console.log)
 }
 
 function join (msg) {

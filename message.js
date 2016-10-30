@@ -343,13 +343,13 @@ exports.cmds = (msg) => {
     'radio': (msg) => {
       fn.streamFromURL(msg, 'http://stream1.ml1.t4e.dj/dublovers_high.mp3')
     },
+    'weeb': (msg) => {
+      fn.streamFromURL(msg, 'http://shinsen-radio.org:8000/shinsen-radio.128.mp3')
+    },
     'test': (msg) => {
       if (msg.content.split(' ')[1]) var url = msg.content.split(' ')[1]
       if (url.indexOf('http') === -1) return
       fn.streamFromURL(msg, url)
-    },
-    'weeb': (msg) => {
-      fn.streamFromURL(msg, 'http://shinsen-radio.org:8000/shinsen-radio.128.mp3')
     }
   }
 
