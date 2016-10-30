@@ -1,6 +1,7 @@
+const Config = require('./data/config.json')
+const Usr = require('../data/user.json')
 const expDelayTime = 30000
 var expLocked = new Map()
-const Usr = require('../data/user.json')
 
 module.exports = {
   'level': (msg) => {
@@ -29,7 +30,7 @@ module.exports = {
     }
   },
   'addExperience': (msg) => {
-    if (msg.author.id === '169874052675010560') return // Do not give Hound Bot Experience
+    if (msg.author.id === Config.id) return // Do not give Hound Bot Experience
     if (!expLocked.hasOwnProperty(msg.author.id)) expLocked[msg.author.id] = false
     if (expLocked[msg.author.id] === false) {
       if (!Usr.hasOwnProperty(msg.guild.id) || !Usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
@@ -39,7 +40,7 @@ module.exports = {
       setTimeout(() => {
         expLocked[msg.author.id] = false
       }, expDelayTime)
-      if (msg.guild.id === '167693566267752449') {
+      if (msg.guild.id === Config.guilds.milhound.id) {
         applyPerks(msg, Usr[msg.guild.id].users[msg.author.id].experience)
           .then(response => { if (response) msg.channel.sendMessage(response) })
           .catch(console.log)
@@ -116,14 +117,14 @@ function getLevelFromExp (exp) {
 }
 function applyPerks (msg, exp) {
   return new Promise((resolve, reject) => {
-    if (exp >= 100 && !msg.guild.member(msg.author).roles.exists('id', '180510856868528128')) {
-      msg.guild.member(msg.author).addRole('180510856868528128')
+    if (exp >= 100 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.id)) {
+      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.member)
       resolve(`${msg.author.username} you have achieved the rank of Member`)
-    } else if (exp >= 10000 && !msg.guild.member(msg.author).roles.exists('id', '234345530803748874')) {
-      msg.guild.member(msg.author).addRole('234345530803748874')
+    } else if (exp >= 10000 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.id)) {
+      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.vip)
       resolve(`${msg.author.username} you have achieved the rank of VIP`)
-    } else if (exp >= 50000 && !msg.guild.member(msg.author).roles.exists('id', '240269802411655179')) {
-      msg.guild.member(msg.author).addRole('240269802411655179')
+    } else if (exp >= 50000 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.id)) {
+      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.moderator)
       resolve(`${msg.author.username} you have achieved the rank of Moderator`)
     } else {
       resolve()

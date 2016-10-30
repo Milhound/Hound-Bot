@@ -1,8 +1,26 @@
 {
+  "id": "169874052675010560",
   "token": null,
   "prefix": "!",
   "yt": {
     "url": "https://www.googleapis.com/youtube/v3/search?type=video&part=snippet&q=",
     "key": null
-  }
+  },
+  "guilds": {
+    "milhound": {
+      "id": "167693566267752449",
+      "name": "Milhound's Server",
+      "channels": {
+        "music": "240125330390646786"
+      },
+      "roles": {
+        "programmer": "235562658877800448",
+        "music": "240125651007438849",
+        "gamer": "235440340981514240",
+        "member": "180510856868528128",
+        "vip": "234345530803748874",
+        "moderator": "240269802411655179"
+      }
+    }
+  }  
 }

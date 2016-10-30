@@ -153,8 +153,7 @@ function play (msg, alreadyAdded) {
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
       }
       if (m.content === '!end') {
-        queue[msg.guild.id].songs = {}
-        queue[msg.guild.id].playing = false
+        queue[msg.guild.id].songs = []
         dispatcher.end()
       }
     })
@@ -167,7 +166,6 @@ function play (msg, alreadyAdded) {
       return msg.channel.sendMessage('Error: ' + err).then(() => {
         collector.stop()
         queue[msg.guild.id].songs.shift()
-        play(queue[msg.guild.id].songs[0])
       })
     })
     dispatcher.on('debug', (info) => {

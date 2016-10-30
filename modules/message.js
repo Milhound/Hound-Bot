@@ -41,7 +41,7 @@ exports.cmds = (msg) => {
         !volume- - Reduces volume by 20%
         !request <Search Query> - Add youtube video to queue`
       // If on Milhound's Server add the following commands
-      if (msg.guild.id === '167693566267752449') {
+      if (msg.guild.id === Config.guilds.milhound.id) {
         text += `
         !gamer - add/remove Gamer role.
         !programmer - add/remove Programmer role.
@@ -58,21 +58,21 @@ exports.cmds = (msg) => {
       Admin.unmute(msg)
     },
     'programmer': (msg) => {
-      if (msg.guild.id === '167693566267752449') {
-        User.toggleRole(msg, '235562658877800448')
+      if (msg.guild.id === Config.guilds.milhound.id) {
+        User.toggleRole(msg, Config.guilds.milhound.roles.programmer)
       }
     },
     'dj': (msg) => {
-      if (msg.guild.id === '167693566267752449') {
-        User.toggleRole(msg, '240125651007438849')
+      if (msg.guild.id === Config.guilds.milhound.id) {
+        User.toggleRole(msg, Config.guilds.roles.music)
       }
     },
     'music': (msg) => {
       commands.dj(msg)
     },
     'gamer': (msg) => {
-      if (msg.guild.id === '167693566267752449') {
-        User.toggleRole(msg, '235440340981514240')
+      if (msg.guild.id === Config.guilds.milhound.id) {
+        User.toggleRole(msg, Config.guilds.milhound.roles.gamer)
       }
     },
     'ping': (msg) => {
@@ -159,18 +159,18 @@ exports.cmds = (msg) => {
       msg.delete
     },
     'add': (msg) => {
-      if (msg.guild.id === '167693566267752449' && msg.channel.id !== '240125330390646786') return msg.reply('All music commands must be done in #music.')
+      if (msg.guild.id === Config.guilds.milhound.id && msg.channel.id !== Config.guilds.milhound.channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.add(msg)
     },
     'join': (msg) => {
       Voice.join(msg)
     },
     'queue': (msg) => {
-      if (msg.guild.id === '167693566267752449' && msg.channel.id !== '240125330390646786') return msg.reply('All music commands must be done in #music.')
+      if (msg.guild.id === Config.guild.milhound.id && msg.channel.id !== Config.guild.milhound.roles.music) return msg.reply('All music commands must be done in #music.')
       Voice.queue(msg)
     },
     'play': (msg, alreadyAdded) => {
-      if (msg.guild.id === '167693566267752449' && msg.channel.id !== '240125330390646786') return msg.reply('All music commands must be done in #music.')
+      if (msg.guild.id === Config.guilds.milhound.id && msg.channel.id !== Config.guilds.milhound.channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.play(msg, alreadyAdded)
     },
     'yt': (msg) => {
@@ -180,7 +180,7 @@ exports.cmds = (msg) => {
       .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.items[0].id.videoId))
     },
     'request': (msg) => {
-      if (msg.guild.id === '167693566267752449' && msg.channel.id !== '240125330390646786') return msg.reply('All music commands must be done in #music.')
+      if (msg.guild.id === Config.guilds.milhound.id && msg.channel.id !== Config.guilds.milhound.id) return msg.reply('All music commands must be done in #music.')
       if (msg.length <= 9) return msg.reply('Please specifiy a song.')
       Voice.request(msg)
     },
