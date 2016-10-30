@@ -90,7 +90,7 @@ exports.cmds = (msg) => {
       if (argsDice[1] !== undefined) {
         msg.channel.sendMessage(Math.floor(Math.random() * parseInt(argsDice[1]) + 1))
       } else {
-        msg.channel.sendFile('./img/dice' + Math.floor((Math.random() * 6) + 1) + '.png')
+        msg.channel.sendFile('./data/img/dice' + Math.floor((Math.random() * 6) + 1) + '.png')
       }
     },
     'slap': (msg) => {
@@ -135,7 +135,7 @@ exports.cmds = (msg) => {
     },
     'boom': (msg) => {
       var x = Math.floor(Math.random() * 5 + 1)
-      msg.channel.sendFile('./img/boom' + x + '.jpeg')
+      msg.channel.sendFile('./data/img/boom' + x + '.jpeg')
     },
     'chuck': (msg) => {
       Cmds.apiRequest('https://api.chucknorris.io/jokes/random')
