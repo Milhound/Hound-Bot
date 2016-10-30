@@ -1,7 +1,7 @@
 const Admin = require('./admin.js')
 const Cmds = require('./functions.js')
 const User = require('./user.js')
-const Voice = require('./Voice.js')
+const Voice = require('./voice.js')
 const Config = require('../data/config.json')
 
 let apiKey
