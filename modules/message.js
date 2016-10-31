@@ -209,6 +209,9 @@ exports.cmds = (msg) => {
     'weeb': (msg) => {
       Voice.streamFromURL(msg, 'http://shinsen-radio.org:8000/shinsen-radio.128.mp3')
     },
+    'mix': (msg) => {
+      Voice.streamFromURL(msg, 'http://14963.live.streamtheworld.com/KHMXFMAAC?streamtheworld_user=1&SRC=CBS&DIST=CBS&TGT=cbslocalplayer&demographic=false')
+    },
     'test': (msg) => {
       if (msg.content.split(' ')[1]) var url = msg.content.split(' ')[1]
       if (url.indexOf('http') === -1) return
