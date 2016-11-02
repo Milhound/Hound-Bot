@@ -29,7 +29,14 @@ exports.cmds = (msg) => {
         !time <TIMEZONE> - Returns current time in zone. Ex: !time CST
         !level <O: user> - Prints out your (or user) current level and experience
         !leaderboard - Shows the current rankings of the Server.
-        !yt - Search for YouTube video
+        !yt - Search for YouTube video`
+        // If on Milhound's Server add the following commands
+      if (msg.guild.id === Config.guilds.milhound.id) {
+        text += `
+        !gamer - add/remove Gamer role.
+        !programmer - add/remove Programmer role.
+        !dj or music - add/remove DJ role.` }
+      text += `
 
         **VOICE:**
         !play <url> - Plays a song from YouTube.
@@ -42,12 +49,6 @@ exports.cmds = (msg) => {
         !request <Search Query> - Add youtube video to queue
         !radio - plays dub radio
         !weeb - Plays weeabo radio`
-      // If on Milhound's Server add the following commands
-      if (msg.guild.id === Config.guilds.milhound.id) {
-        text += `
-        !gamer - add/remove Gamer role.
-        !programmer - add/remove Programmer role.
-        !dj or music - add/remove DJ role.` }
       msg.channel.sendMessage(text)
     },
     'time': (msg) => {
@@ -207,6 +208,9 @@ exports.cmds = (msg) => {
     },
     'weeb': (msg) => {
       Voice.streamFromURL(msg, 'http://shinsen-radio.org:8000/shinsen-radio.128.mp3')
+    },
+    'mix': (msg) => {
+      Voice.streamFromURL(msg, 'http://14963.live.streamtheworld.com/KHMXFMAAC?streamtheworld_user=1&SRC=CBS&DIST=CBS&TGT=cbslocalplayer&demographic=false')
     },
     'test': (msg) => {
       if (msg.content.split(' ')[1]) var url = msg.content.split(' ')[1]
