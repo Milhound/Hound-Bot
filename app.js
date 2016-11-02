@@ -11,6 +11,8 @@ bot.on('ready', () => {
 })
 
 bot.on('message', message => {
+  console.log('Request ban: ' + message.guild.roles.find('name', 'Request BAN'))
+  console.log('Skip ban: ' + message.guild.roles.find('name', 'Skip BAN'))
   if (!message.content.startsWith(Config.prefix)) return
   console.log(message.author.username + ' - ' + message.guild.name + ' says: ' + message.content)
   Message.cmds(message)

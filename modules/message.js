@@ -164,14 +164,12 @@ exports.cmds = (msg) => {
       if (msg.guild.id === Config.guilds.milhound.id && msg.channel.id !== Config.guilds.milhound.channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.add(msg)
     },
-    'join': (msg) => {
-      Voice.join(msg)
-    },
     'queue': (msg) => {
-      if (msg.guild.id === Config.guild.milhound.id && msg.channel.id !== Config.guild.milhound.roles.music) return msg.reply('All music commands must be done in #music.')
+      if (msg.guild.id === Config.guilds.milhound.id && msg.channel.id !== Config.guilds.milhound.roles.music) return msg.reply('All music commands must be done in #music.')
       Voice.queue(msg)
     },
     'play': (msg, alreadyAdded) => {
+      if (msg.member.roles.exists('id', Config.guilds.milhound.roles.requestBAN)) return
       if (msg.guild.id === Config.guilds.milhound.id && msg.channel.id !== Config.guilds.milhound.channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.play(msg, alreadyAdded)
     },
@@ -182,6 +180,7 @@ exports.cmds = (msg) => {
       .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.items[0].id.videoId))
     },
     'request': (msg) => {
+      if (msg.member.roles.exists('id', Config.guilds.milhound.roles.requestBAN)) return
       if (msg.guild.id === Config.guilds.milhound.id && msg.channel.id !== Config.guilds.milhound.channels.music) return msg.reply('All music commands must be done in #music.')
       if (msg.length <= 9) return msg.reply('Please specifiy a song.')
       Voice.request(msg)

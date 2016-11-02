@@ -25,6 +25,7 @@ module.exports = {
           msg.channel.sendMessage('Resuming...').then(() => { dispatcher.resume() })
         }
         if (m.content === '!skip') {
+          if (msg.member.roles.exists('id', Config.guilds.milhound.roles.skipBAN)) return
           msg.channel.sendMessage('Skipping').then(() => { dispatcher.end() })
         }
         if (m.content === '!volume') {
@@ -48,6 +49,8 @@ module.exports = {
       })
       dispatcher.on('error', (err) => {
         msg.channel.sendMessage('Stream dispatcher encountered an error.')
+        collector.stop()
+        msg.member.voiceChannel.leave()
         console.log(err)
       })
     }).catch(console.log)
