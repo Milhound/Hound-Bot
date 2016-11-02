@@ -166,7 +166,7 @@ exports.cmds = (msg) => {
       Voice.add(msg)
     },
     'queue': (msg) => {
-      if (msg.guild.id === Config.guilds.milhound.id && msg.channel.id !== Config.guilds.milhound.roles.music) return msg.reply('All music commands must be done in #music.')
+      if (msg.guild.id === Config.guilds.milhound.id && msg.channel.id !== Config.guilds.milhound.channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.queue(msg)
     },
     'play': (msg, alreadyAdded) => {
