@@ -63,7 +63,7 @@ module.exports = {
     **${msg.guild.name} Queue:**
     *${currentQueue.length} songs in queue*
 
-    ${currentQueue.slice(0, 10).join('\n      ')}
+    ${currentQueue.slice(0, 10).join('\n     ')}
     ${(currentQueue.length > 10) ? '*[Only next 10 shown]*' : ''}
     `)
   },
