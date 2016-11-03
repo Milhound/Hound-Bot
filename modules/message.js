@@ -221,6 +221,6 @@ exports.cmds = (msg) => {
   }
 
   if (commands.hasOwnProperty(msg.content.slice(1).split(' ')[0])) {
-    commands[msg.content.slice(1).split(' ')[0]](msg)
+    commands[msg.content.toLowerCase().slice(1).split(' ')[0]](msg)
   }
 }
