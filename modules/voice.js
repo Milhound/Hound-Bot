@@ -125,7 +125,6 @@ function play (msg, alreadyAdded) {
     if (song === undefined) {
       return msg.channel.sendMessage('Queue is empty').then(() => {
         queue[msg.guild.id].playing = false
-        msg.member.voiceChannel.leave()
       })
     }
     msg.channel.sendMessage(`Playing: **${song.title}** as requested by: ${song.requester}`)
