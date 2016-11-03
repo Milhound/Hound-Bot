@@ -45,18 +45,16 @@ module.exports = {
       })
       dispatcher.on('end', () => {
         collector.stop()
-        msg.member.voiceChannel.leave()
       })
       dispatcher.on('error', (err) => {
         msg.channel.sendMessage('Stream dispatcher encountered an error.')
         collector.stop()
-        msg.member.voiceChannel.leave()
         console.log(err)
       })
     }).catch(console.log)
   },
   'queue': (msg) => {
-    if (queue[msg.guild.id] === undefined) { return msg.reply('Queue is empty') }
+    if (typeof queue[msg.guild.id] === 'undefined') { return msg.reply('Queue is empty') }
     var currentQueue = []
     queue[msg.guild.id].songs.forEach((song, i) => { currentQueue.push(`${i + 1}. ${song.title} - Requested by: ${song.requester}`) })
     msg.channel.sendMessage(`
@@ -116,7 +114,7 @@ function play (msg, alreadyAdded) {
     voiceChannel.join()
   }
   if (msg.content.indexOf('http') !== -1 && alreadyAdded !== true) return add(msg)
-  if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage('No songs in queue add with !add')
+  if (typeof queue[msg.guild.id] === 'undefined') return msg.channel.sendMessage('No songs in queue add with !add')
   if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing')
 
   let dispatcher
