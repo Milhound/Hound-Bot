@@ -14,7 +14,7 @@ bot.on('message', message => {
   if (!message.content.startsWith(Config.prefix)) return
   console.log(message.author.username + ' - ' + message.guild.name + ' says: ' + message.content)
   Message.cmds(message)
-  if (message.content === '!reboot' && message.guild.member(message.author).hasPermission('ADMINISTRATOR')) bot.destroy()
+  if (message.content.toLowerCase() === '!reboot' && message.guild.member(message.author).hasPermission('ADMINISTRATOR')) bot.destroy()
 })
 
 bot.on('disconnected', () => {
