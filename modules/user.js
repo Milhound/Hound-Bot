@@ -117,13 +117,13 @@ function getLevelFromExp (exp) {
 }
 function applyPerks (msg, exp) {
   return new Promise((resolve, reject) => {
-    if (exp >= 155 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.id)) {
+    if (exp >= 155 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.roles.member)) {
       msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.member)
       resolve(`${msg.author.username} you have achieved the rank of Member`)
-    } else if (exp >= 1975 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.id)) {
+    } else if (exp >= 1975 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.roles.vip)) {
       msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.vip)
       resolve(`${msg.author.username} you have achieved the rank of VIP`)
-    } else if (exp >= 15100 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.id)) {
+    } else if (exp >= 15100 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.roles.moderator)) {
       msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.moderator)
       resolve(`${msg.author.username} you have achieved the rank of Moderator`)
     } else {
