@@ -3,6 +3,7 @@ const bot = new Discord.Client()
 
 const Message = require('./modules/message.js')
 const Fn = require('./modules/functions.js')
+const User = require('./modules/user.js')
 const Config = require('./data/config.json')
 
 bot.on('ready', () => {
@@ -11,8 +12,8 @@ bot.on('ready', () => {
 })
 
 bot.on('message', message => {
+  User.addExperience(message)
   if (!message.content.startsWith(Config.prefix)) return
-  console.log(message.author.username + ' - ' + message.guild.name + ' says: ' + message.content)
   Message.cmds(message)
   if (message.content.toLowerCase() === '!reboot' && message.guild.member(message.author).hasPermission('ADMINISTRATOR')) bot.destroy()
 })
