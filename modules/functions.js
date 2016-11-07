@@ -24,7 +24,7 @@ module.exports = {
         hour += Timezone[argsTime[1]]
       } else if (argsTime[1].toLowerCase() === 'gmt' || argsTime[1].toLowerCase() === 'utc') {
         if (argsTime[2] !== undefined) {
-          let modifier = argsTime[2]
+          let modifier = argsTime[2].toLowerCase()
           // Grab the + or - from properly formated command
           if (modifier.slice(0, 1) === '-') {
             hour = hour - parseInt(modifier.slice(1))
