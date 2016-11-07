@@ -140,7 +140,6 @@ function play (msg, alreadyAdded) {
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
       }
       if (m.content === '!end') {
-
         dispatcher.end()
         collector.stop()
         queue[msg.guild.id].songs = []
