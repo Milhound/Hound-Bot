@@ -18,7 +18,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       let argsTime = msg.content.split(' ')
       let date = new Date()
-      let hour = date.getUTCHours()
+      let hour = date.getUTCHours() - 1
 
       if (Timezone.hasOwnProperty(argsTime[1])) {
         hour += Timezone[argsTime[1]]
