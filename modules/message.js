@@ -67,7 +67,7 @@ exports.cmds = (msg) => {
     },
     'dj': (msg) => {
       if (msg.guild.id === Config.guilds.milhound.id) {
-        User.toggleRole(msg, Config.guilds.roles.music)
+        User.toggleRole(msg, Config.guilds.milhound.roles.music)
       }
     },
     'music': (msg) => {
