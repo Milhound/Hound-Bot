@@ -18,19 +18,6 @@ module.exports = {
       let dispatcher = connection.playStream(req(url), {volume: 0.08})
       let collector = msg.channel.createCollector(m => m)
       collector.on('message', m => {
-        if (m.content.startsWith('!pause')) {
-          msg.channel.sendMessage('Paused').then(() => { dispatcher.pause() })
-        }
-        if (m.content.startsWith('!resume')) {
-          msg.channel.sendMessage('Resuming...').then(() => { dispatcher.resume() })
-        }
-        if (m.content === '!skip') {
-          if (msg.member.roles.exists('id', Config.guilds.milhound.roles.skipBAN)) return
-          msg.channel.sendMessage('Skipping').then(() => { dispatcher.end() })
-        }
-        if (m.content === '!volume') {
-          msg.channel.sendMessage(`Volume: ${dispatcher.volume * 100}%`)
-        }
         if (m.content === '!volume+') {
           dispatcher.setVolume(dispatcher.volume * 2)
           msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
@@ -47,8 +34,9 @@ module.exports = {
         collector.stop()
       })
       dispatcher.on('error', (err) => {
-        msg.channel.sendMessage('Stream dispatcher encountered an error.')
+        dispatcher.end()
         collector.stop()
+        msg.channel.sendMessage('Stream encountered an error.')
         console.log(err)
       })
     }).catch(console.log)
@@ -143,9 +131,6 @@ function play (msg, alreadyAdded) {
       if (m.content === '!skip') {
         msg.channel.sendMessage('Skipping').then(() => { dispatcher.end() })
       }
-      if (m.content === '!volume') {
-        msg.channel.sendMessage(`Volume: ${dispatcher.volume * 100}%`)
-      }
       if (m.content === '!volume+') {
         dispatcher.setVolume(dispatcher.volume * 2)
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
@@ -155,23 +140,23 @@ function play (msg, alreadyAdded) {
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
       }
       if (m.content === '!end') {
-        queue[msg.guild.id].songs = []
+
         dispatcher.end()
+        collector.stop()
+        queue[msg.guild.id].songs = []
       }
     })
     dispatcher.on('end', () => {
+      dispatcher.end()
       collector.stop()
       queue[msg.guild.id].songs.shift()
       play(queue[msg.guild.id].songs[0])
     })
     dispatcher.on('error', (err) => {
-      return msg.channel.sendMessage('Error: ' + err).then(() => {
-        collector.stop()
-        queue[msg.guild.id].songs.shift()
-      })
-    })
-    dispatcher.on('debug', (info) => {
-      console.log(info)
+      dispatcher.end()
+      collector.stop()
+      msg.channel.sendMessage('Error: unable to play audio')
+      console.log(err)
     })
   })(queue[msg.guild.id].songs[0])
 }
