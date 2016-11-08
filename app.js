@@ -2,13 +2,13 @@ const Discord = require('discord.js')
 const bot = new Discord.Client()
 
 const Message = require('./modules/message.js')
-const Fn = require('./modules/functions.js')
+const Usr = require('./modules/user.js')
 const User = require('./modules/user.js')
 const Config = require('./data/config.json')
 
 bot.on('ready', () => {
   console.log('Bot is Online')
-  Fn.initiateSave()
+  Usr.initiateSave()
 })
 
 bot.on('message', message => {

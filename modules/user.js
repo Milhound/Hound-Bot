@@ -1,3 +1,4 @@
+const fs = require('fs')
 const Config = require('../data/config.json')
 const Usr = require('../data/user.json')
 const expDelayTime = 30000
@@ -5,6 +6,7 @@ var expLocked = new Map()
 var dailyExp = new Map()
 
 module.exports = {
+  initiateSave: initiateSave,
   'level': (msg) => {
     if (!msg.mentions.users.first()) {
       getLevel(msg.guild, msg.author)
@@ -88,6 +90,15 @@ module.exports = {
     if (modExp > 0) Usr[msg.guild.id].users[target].experience = modExp
     else msg.reply('Could not modify exp')
   }
+}
+
+function initiateSave () {
+  setInterval(() => {
+    fs.writeFile('./user.json', JSON.stringify(Usr), (err) => {
+      if (err) console.log(err)
+      console.log('Saved User.json')
+    })
+  }, 300000)
 }
 
 function getUsers (msg) {
