@@ -79,6 +79,13 @@ module.exports = {
       if (responseText.indexOf('1.') > 0) resolve(responseText)
       if (getUsers(msg).length === 0) reject('Unable to locate Users')
     })
+  },
+  'modifyExp': (msg) => {
+    const modExp = msg.content.split(' ')[1]
+    if (!modExp) return msg.reply('Incorrect syntax')
+    if (!msg.mentions.users.first()) return msg.reply('No user given')
+    const target = msg.mentions.users.first().id
+    Usr[msg.guild.id].users[target].experience += modExp
   }
 }
 

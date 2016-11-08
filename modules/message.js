@@ -191,6 +191,11 @@ exports.cmds = (msg) => {
         User.addLevel(msg)
       }
     },
+    'exp': (msg) => {
+      if (msg.guild.member(msg.author).hasPermission('ADMINISTRATOR')) {
+        User.modifyExp(msg)
+      }
+    },
     'leaderboard': (msg) => {
       User.leaderboard(msg).then((response) => msg.channel.sendMessage(response)).catch((err) => msg.channel.sendMessage(err))
     },
