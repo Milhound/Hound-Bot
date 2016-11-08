@@ -9,7 +9,7 @@ if (Config.yt.key) { apiKey = Config.yt.key } else { apiKey = process.env.GOOGLE
 const baseYtUrl = Config.yt.url
 
 exports.cmds = (msg) => {
-  console.log(msg.author.username + ' - ' + msg.guild.name + ' says: ' + msg.content)
+  console.log(msg.author.username + ' - ' + msg.guild.name + ' used command: ' + msg.content.slice(0))
   const commands = {
     'commands': (msg) => {
       var text = `List of Commands:
