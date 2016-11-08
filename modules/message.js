@@ -25,6 +25,7 @@ exports.cmds = (msg) => {
         !boom - Roast your fellow users
         !to_C <#> - Converts Fahrenheit to Celsius
         !to_F <#> - Converts Celsius to Fahrenheit
+        !to_K <Cel> - Converts Celsius to Kelvin
         !time <TIMEZONE> - Returns current time in zone. Ex: !time CST
         !level <O: user> - Prints out your (or user) current level and experience
         !leaderboard - Shows the current rankings of the Server.
@@ -115,22 +116,18 @@ exports.cmds = (msg) => {
       }
     },
     'to_f': (msg) => {
-      var argsF = msg.content.split(' ')
-      if (argsF[1] && !argsF[2]) {
-        var fromC = argsF[1]
-        // Round to whole number
-        var toF = (fromC * 1.8 + 32).toFixed(0)
-        msg.reply(toF)
-      }
+      var C = msg.content.split(' ')[1]
+      var toF = (C * 1.8 + 32).toFixed(0)
+      msg.reply(toF)
     },
     'to_c': (msg) => {
-      var argsC = msg.content.split(' ')
-      if (argsC[1] && !argsC[2]) {
-        var fromF = argsC[1]
-        // Round to whole number
-        var toC = ((fromF - 32) * (5 / 9)).toFixed(0)
-        msg.reply(toC)
-      }
+      var F = msg.content.split(' ')[1]
+      var toC = ((F - 32) * (5 / 9)).toFixed(0)
+      msg.reply(toC)
+    },
+    'to_k': (msg) => {
+      var argsK = msg.content.split(' ')[1]
+      msg.reply(argsK + 273.15)
     },
     'wipe': (msg) => {
       Admin.wipe(msg)
