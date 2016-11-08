@@ -97,12 +97,8 @@ function add (msg) {
 
 function play (msg, alreadyAdded) {
   if (!msg.guild.voiceConnection) return join(msg).then(() => play(msg))
-  if (!msg.guild.voiceConnection) {
-    var voiceChannel = msg.member.voiceChannel
-    voiceChannel.join()
-  }
   if (msg.content.indexOf('http') !== -1 && alreadyAdded !== true) return add(msg)
-  if (typeof queue[msg.guild.id] === 'undefined') return msg.channel.sendMessage('No songs in queue add with !add')
+  if (typeof queue[msg.guild.id] === 'undefined') return msg.channel.sendMessage('No songs in queue add with !add or !request')
   if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing')
 
   let dispatcher
@@ -141,19 +137,16 @@ function play (msg, alreadyAdded) {
       }
       if (m.content === '!end') {
         dispatcher.end()
-        collector.stop()
         queue[msg.guild.id].songs = []
       }
     })
     dispatcher.on('end', () => {
-      dispatcher.end()
       collector.stop()
       queue[msg.guild.id].songs.shift()
       play(queue[msg.guild.id].songs[0])
     })
     dispatcher.on('error', (err) => {
       dispatcher.end()
-      collector.stop()
       msg.channel.sendMessage('Error: unable to play audio')
       console.log(err)
     })
