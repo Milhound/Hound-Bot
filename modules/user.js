@@ -83,8 +83,8 @@ module.exports = {
     })
   },
   'modifyExp': (msg) => {
-    const modExp = msg.content.split(' ')[1]
-    if (!modExp) return msg.reply('Incorrect syntax')
+    const modExp = parseInt(msg.content.split(' ')[1])
+    if (!modExp || isNaN(modExp)) return msg.reply('Incorrect syntax')
     if (!msg.mentions.users.first()) return msg.reply('No user given')
     const target = msg.mentions.users.first().id
     if (modExp > 0) Usr[msg.guild.id].users[target].experience = modExp
