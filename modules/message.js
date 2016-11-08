@@ -126,8 +126,8 @@ exports.cmds = (msg) => {
       msg.reply(toC)
     },
     'to_k': (msg) => {
-      var argsK = msg.content.split(' ')[1]
-      msg.reply(argsK + 273.15)
+      var K = parseInt(msg.content.split(' ')[1]) + 273.15
+      msg.reply(K)
     },
     'wipe': (msg) => {
       Admin.wipe(msg)
