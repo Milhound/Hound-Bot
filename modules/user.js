@@ -2,6 +2,7 @@ const Config = require('../data/config.json')
 const Usr = require('../data/user.json')
 const expDelayTime = 30000
 var expLocked = new Map()
+var dailyExp = new Map()
 
 module.exports = {
   'level': (msg) => {
@@ -32,11 +33,15 @@ module.exports = {
   'addExperience': (msg) => {
     if (msg.author.id === Config.id) return // Do not give Hound Bot Experience
     if (!expLocked.hasOwnProperty(msg.author.id)) expLocked[msg.author.id] = false
-    if (expLocked[msg.author.id] === false) {
+    if (!dailyExp.hasOwnProperty(msg.author.id)) dailyExp[msg.author.id] = 0
+    if (expLocked[msg.author.id] === false && dailyExp[msg.author.id] < 1000) {
       if (!Usr.hasOwnProperty(msg.guild.id) || !Usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
       const exp = Math.floor(Math.random() * 10 + 11)
+      dailyExp[msg.author.id] += exp
       Usr[msg.guild.id].users[msg.author.id].experience += exp
       expLocked[msg.author.id] = true
+      // Reconfirm user username is up to date.
+      Usr[msg.guild.id].users[msg.author.id].username = msg.author.username
       setTimeout(() => {
         expLocked[msg.author.id] = false
       }, expDelayTime)
