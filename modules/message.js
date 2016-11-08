@@ -9,7 +9,6 @@ if (Config.yt.key) { apiKey = Config.yt.key } else { apiKey = process.env.GOOGLE
 const baseYtUrl = Config.yt.url
 
 exports.cmds = (msg) => {
-  console.log(msg.author.username + ' - ' + msg.guild.name + ' used command: ' + msg.content.slice(0))
   const commands = {
     'commands': (msg) => {
       var text = `List of Commands:
@@ -222,6 +221,7 @@ exports.cmds = (msg) => {
   }
 
   if (commands.hasOwnProperty(msg.content.toLowerCase().slice(1).split(' ')[0])) {
+    console.log(msg.author.username + ' - ' + msg.guild.name + ' used command: ' + msg.content.slice(0))
     commands[msg.content.toLowerCase().slice(1).split(' ')[0]](msg)
   }
 }
