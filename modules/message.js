@@ -115,7 +115,7 @@ exports.cmds = (msg) => {
       }
     },
     'to_f': (msg) => {
-      var argsF = msg.split(' ')
+      var argsF = msg.content.split(' ')
       if (argsF[1] && !argsF[2]) {
         var fromC = argsF[1]
         // Round to whole number
