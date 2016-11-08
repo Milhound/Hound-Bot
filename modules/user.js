@@ -85,7 +85,8 @@ module.exports = {
     if (!modExp) return msg.reply('Incorrect syntax')
     if (!msg.mentions.users.first()) return msg.reply('No user given')
     const target = msg.mentions.users.first().id
-    Usr[msg.guild.id].users[target].experience += modExp
+    if (modExp > 0) Usr[msg.guild.id].users[target].experience = modExp
+    else msg.reply('Could not modify exp')
   }
 }
 
