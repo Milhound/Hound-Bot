@@ -15,6 +15,7 @@ module.exports = {
   play: play,
   'streamFromURL': (msg, url) => {
     join(msg).then(connection => {
+      setInterval(() => { if (connection.channel.members.size === 0) dispatcher.end() }, 300000)
       let dispatcher = connection.playStream(req(url), {volume: 0.08})
       let collector = msg.channel.createCollector(m => m)
       collector.on('message', m => {
@@ -26,11 +27,12 @@ module.exports = {
           dispatcher.setVolume(dispatcher.volume / 2)
           msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         }
-        if (m.content === '!end') {
+        if (m.content === '!end' || m.content.startsWith('!play') || m.content.startsWith('!request') || m.content.startsWith('!add')) {
           dispatcher.end()
         }
       })
       dispatcher.on('end', () => {
+        connection.channel.leave()
         collector.stop()
       })
       dispatcher.on('error', (err) => {
@@ -102,6 +104,7 @@ function play (msg, alreadyAdded) {
   if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing')
 
   let dispatcher
+  let connection = msg.guild.voiceConnection
 
   queue[msg.guild.id].playing = true;
 
@@ -112,7 +115,7 @@ function play (msg, alreadyAdded) {
       })
     }
     msg.channel.sendMessage(`Playing: **${song.title}** as requested by: ${song.requester}`)
-    dispatcher = msg.guild.voiceConnection.playStream(yt(song.url,
+    dispatcher = connection.playStream(yt(song.url,
       {filter: 'audioonly'}).on('error', (err) => {
         if (err.code === 'ECONNRESET') return
       }), { volume: 0.08, passes: 2 })
@@ -142,6 +145,7 @@ function play (msg, alreadyAdded) {
     })
     dispatcher.on('end', () => {
       collector.stop()
+      connection.channel.leave()
       queue[msg.guild.id].songs.shift()
       play(queue[msg.guild.id].songs[0])
     })
