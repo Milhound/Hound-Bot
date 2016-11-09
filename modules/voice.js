@@ -105,7 +105,7 @@ function play (msg, alreadyAdded) {
 
   let dispatcher
   let connection = msg.guild.voiceConnection
-
+  setInterval(() => { if (connection.channel.members.size === 0) dispatcher.end() }, 300000)
   queue[msg.guild.id].playing = true;
 
   (function play (song) {
