@@ -7,6 +7,7 @@ var dailyExp = new Map()
 
 module.exports = {
   initiateSave: initiateSave,
+  dailyExpWipe: dailyExpWipe,
   'level': (msg) => {
     if (!msg.mentions.users.first()) {
       getLevel(msg.guild, msg.author)
@@ -100,7 +101,9 @@ function initiateSave () {
     })
   }, 300000)
 }
-
+function dailyExpWipe () {
+  setInterval(() => { dailyExp = new Map() }, 86400000)
+}
 function getUsers (msg) {
   const users = Usr[msg.guild.id].users
   var userArray = []
@@ -142,17 +145,18 @@ function getLevelFromExp (exp) {
 function applyPerks (msg, exp) {
   return new Promise((resolve, reject) => {
     if (exp >= 155 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.roles.member)) {
-      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.member)
-      resolve(`${msg.author.username} you have achieved the rank of Member`)
+      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.member).then(() => {
+        resolve(`${msg.author.username} you have achieved the rank of Member`)
+      })
     } else if (exp >= 1975 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.roles.vip)) {
-      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.vip)
-      resolve(`${msg.author.username} you have achieved the rank of VIP`)
+      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.vip).then(() => {
+        resolve(`${msg.author.username} you have achieved the rank of VIP`)
+      })
     } else if (exp >= 15100 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.roles.moderator)) {
-      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.moderator)
-      resolve(`${msg.author.username} you have achieved the rank of Moderator`)
-    } else {
-      resolve()
-    }
+      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.moderator).then(() => {
+        resolve(`${msg.author.username} you have achieved the rank of Moderator`)
+      })
+    } else if (exp > 0) { resolve() }
     reject('Something went wrong when applying perks')
   })
 }

@@ -3,16 +3,16 @@ const bot = new Discord.Client()
 
 const Message = require('./modules/message.js')
 const Usr = require('./modules/user.js')
-const User = require('./modules/user.js')
 const Config = require('./data/config.json')
 
 bot.on('ready', () => {
   console.log('Bot is Online')
   Usr.initiateSave()
+  Usr.dailyExpWipe()
 })
 
 bot.on('message', message => {
-  User.addExperience(message)
+  Usr.addExperience(message)
   if (!message.content.startsWith(Config.prefix)) return
   Message.cmds(message)
   if (message.content.toLowerCase() === '!reboot' && message.guild.member(message.author).hasPermission('ADMINISTRATOR')) bot.destroy()
