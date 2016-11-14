@@ -23,7 +23,9 @@ bot.on('disconnected', () => {
 
 process.on('unhandledRejection', err => {
   if (err.sender === 'Forbidden') console.log('Bot cannot talk in this channel.')
-  console.error('Uncaught Promise Error: \n' + err.stack)
+  console.log('Error just the variable: ' + err)
+  console.log('Error as string: ' + err.toString())
+  //console.error('Uncaught Promise Error: \n' + err.stack)
 })
 
 bot.login(process.env.HOUND_BOT_TOKEN)
