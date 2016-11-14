@@ -22,7 +22,7 @@ bot.on('disconnected', () => {
 })
 
 process.on('unhandledRejection', err => {
-  if (err.toString().indexOf('Forbidden') > 0) console.log('Bot cannot talk in this channel.')
+  if (err.toString().indexOf('Forbidden') > 0) return console.log('Bot cannot talk in this channel.')
   console.error('Uncaught Promise Error: \n' + err.stack)
 })
 
