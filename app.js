@@ -22,6 +22,7 @@ bot.on('disconnected', () => {
 })
 
 process.on('unhandledRejection', err => {
+  if (err.name === 'Forbidden') console.log('Bot cannot talk in this channel.')
   console.error('Uncaught Promise Error: \n' + err.stack)
 })
 
