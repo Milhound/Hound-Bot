@@ -8,7 +8,6 @@ const Config = require('./data/config.json')
 bot.on('ready', () => {
   console.log('Bot is Online')
   Usr.initiateSave()
-  Usr.dailyExpWipe()
 })
 
 bot.on('message', message => {

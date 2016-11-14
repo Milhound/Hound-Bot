@@ -3,11 +3,9 @@ const Config = require('../data/config.json')
 var Usr = require('../data/user.json')
 const expDelayTime = 30000
 var expLocked = new Map()
-var dailyExp = new Map()
 
 module.exports = {
   initiateSave: initiateSave,
-  dailyExpWipe: dailyExpWipe,
   'level': (msg) => {
     if (!msg.mentions.users.first()) {
       getLevel(msg.guild, msg.author)
@@ -36,11 +34,9 @@ module.exports = {
   'addExperience': (msg) => {
     if (msg.author.id === Config.id) return // Do not give Hound Bot Experience
     if (!expLocked.hasOwnProperty(msg.author.id)) expLocked[msg.author.id] = false
-    if (!dailyExp.hasOwnProperty(msg.author.id)) dailyExp[msg.author.id] = 0
-    if (expLocked[msg.author.id] === false && dailyExp[msg.author.id] < 1000) {
+    if (expLocked[msg.author.id] === false) {
       if (!Usr.hasOwnProperty(msg.guild.id) || !Usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
       const exp = Math.floor(Math.random() * 10 + 11)
-      dailyExp[msg.author.id] += exp
       Usr[msg.guild.id].users[msg.author.id].experience += exp
       expLocked[msg.author.id] = true
       // Reconfirm user username is up to date.
@@ -101,9 +97,6 @@ function initiateSave () {
     })
   }, 300000)
 }
-function dailyExpWipe () {
-  setInterval(() => { dailyExp = new Map() }, 86400000)
-}
 function getUsers (msg) {
   const users = Usr[msg.guild.id].users
   var userArray = []
@@ -145,17 +138,14 @@ function getLevelFromExp (exp) {
 function applyPerks (msg, exp) {
   return new Promise((resolve, reject) => {
     if (exp >= 155 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.roles.member)) {
-      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.member).then(() => {
-        resolve(`${msg.author.username} you have achieved the rank of Member`)
-      })
+      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.member)
+      resolve(`${msg.author.username} you have achieved the rank of Member`)
     } else if (exp >= 1975 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.roles.vip)) {
-      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.vip).then(() => {
-        resolve(`${msg.author.username} you have achieved the rank of VIP`)
-      })
+      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.vip)
+      resolve(`${msg.author.username} you have achieved the rank of VIP`)
     } else if (exp >= 15100 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds.milhound.roles.moderator)) {
-      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.moderator).then(() => {
-        resolve(`${msg.author.username} you have achieved the rank of Moderator`)
-      })
+      msg.guild.member(msg.author).addRole(Config.guilds.milhound.roles.moderator)
+      resolve(`${msg.author.username} you have achieved the rank of Moderator`)
     } else if (exp > 0) { resolve() }
     reject('Something went wrong when applying perks')
   })
