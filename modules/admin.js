@@ -18,7 +18,7 @@ module.exports = {
   'wipe': (msg) => {
     if (msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')) {
       var argsWipe = msg.content.split(' ')
-      if (argsWipe[1] !== undefined && argsWipe[1] !== ' ' && argsWipe[1] <= 50) {
+      if (argsWipe[1] !== undefined && !isNaN(parseInt(argsWipe[1])) && argsWipe[1] <= 50) {
         var messages = msg.channel.fetchMessages({limit: (parseInt(argsWipe[1]) + 1)})
         messages.then(messages => { msg.channel.bulkDelete(messages) })
       } else if (argsWipe[1] > 50 || argsWipe[1] === ' ') {
