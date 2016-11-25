@@ -91,7 +91,7 @@ module.exports = {
 
 function initiateSave () {
   setInterval(() => {
-    fs.writeFile('./user.json', JSON.stringify(Usr), (err) => {
+    fs.writeFile('../data/user.json', JSON.stringify(Usr), (err) => {
       if (err) console.log(err)
       console.log('Saved User.json')
     })
