@@ -218,7 +218,7 @@ exports.cmds = (msg) => {
       if (url.indexOf('http') === -1) return
       Voice.streamFromURL(msg, url)
     },
-    'setVolume': (msg) => {
+    'setvolume': (msg) => {
       Voice.setServerVolume(msg)
     }
   }
