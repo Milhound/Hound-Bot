@@ -9,6 +9,7 @@ let apiKey
 if (Config.yt.key) { apiKey = Config.yt.key } else { apiKey = process.env.GOOGLE_API_KEY }
 const baseYtUrl = Config.yt.url
 let queue = {}
+let preferredServerVolume = {}
 
 module.exports = {
   add: add,
@@ -16,14 +17,15 @@ module.exports = {
   'streamFromURL': (msg, url) => {
     join(msg).then(connection => {
       setInterval(() => { if (connection.channel.members.size === 0) dispatcher.end() }, 300000)
-      let dispatcher = connection.playStream(req(url), {volume: 0.08})
+      let dispatcher = connection.playStream(req(url))
+      if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.80)
       let collector = msg.channel.createCollector(m => m)
       collector.on('message', m => {
         if (m.content === '!volume+') {
           dispatcher.setVolume(dispatcher.volume * 2)
           msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         }
-        if (m.content === '!volume-' && dispatcher.volume !== 0.02) {
+        if (m.content === '!volume-') {
           dispatcher.setVolume(dispatcher.volume / 2)
           msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         }
@@ -71,6 +73,15 @@ module.exports = {
       msg.reply(`Added **${songTitle}** to queue`)
       if (queue[msg.guild.id].playing === false) play(msg)
     })
+  },
+  'setServerVolume': (msg) => {
+    if (msg.guild.member(msg.author).hasPermission('MANAGE_CHANNELS')) {
+      const preferredVolume = parseInt(msg.content.slice(9)) / 100
+      if (!isNaN(preferredVolume)) {
+        preferredVolume[msg.guild.id] = preferredVolume
+        msg.channel.sendMessage(`Preferred server volume set to: ${preferredVolume * 100}%`)
+      }
+    }
   }
 }
 
@@ -118,7 +129,8 @@ function play (msg, alreadyAdded) {
     dispatcher = connection.playStream(yt(song.url,
       {filter: 'audioonly'}).on('error', (err) => {
         if (err.code === 'ECONNRESET') return
-      }), { volume: 0.08, passes: 2 })
+      }), { passes: 2 })
+    if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.02)
     let collector = msg.channel.createCollector(m => m)
     collector.on('message', m => {
       if (m.content.startsWith('!pause')) {
@@ -134,7 +146,7 @@ function play (msg, alreadyAdded) {
         dispatcher.setVolume(dispatcher.volume * 2)
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
       }
-      if (m.content === '!volume-' && dispatcher.volume !== 0.02) {
+      if (m.content === '!volume-') {
         dispatcher.setVolume(dispatcher.volume / 2)
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
       }
