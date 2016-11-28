@@ -217,6 +217,9 @@ exports.cmds = (msg) => {
       if (msg.content.split(' ')[1]) var url = msg.content.split(' ')[1]
       if (url.indexOf('http') === -1) return
       Voice.streamFromURL(msg, url)
+    },
+    'setVolume': (msg) => {
+      Voice.setServerVolume(msg)
     }
   }
 
