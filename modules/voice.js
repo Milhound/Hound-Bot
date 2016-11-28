@@ -76,7 +76,7 @@ module.exports = {
   },
   'setServerVolume': (msg) => {
     if (msg.guild.member(msg.author).hasPermission('MANAGE_CHANNELS')) {
-      const preferredVolume = parseInt(msg.content.slice(9)) / 100
+      const preferredVolume = parseInt(msg.content.slice(11, 14).trim()) / 100
       if (!isNaN(preferredVolume)) {
         preferredVolume[msg.guild.id] = preferredVolume
         msg.channel.sendMessage(`Preferred server volume set to: ${preferredVolume * 100}%`)
