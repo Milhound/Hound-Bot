@@ -18,18 +18,22 @@ module.exports = {
     join(msg).then(connection => {
       setInterval(() => { if (connection.channel.members.size === 0) dispatcher.end() }, 300000)
       let dispatcher = connection.playStream(req(url))
-      if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.80)
+      if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.08)
       let collector = msg.channel.createCollector(m => m)
       collector.on('message', m => {
         if (m.content === '!volume+') {
+          dispatcher.setVolume(dispatcher.volume + 0.25)
+          msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
+        } else if (m.content === '!volume++') {
           dispatcher.setVolume(dispatcher.volume * 2)
           msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
-        }
-        if (m.content === '!volume-') {
+        } else if (m.content === '!volume-') {
+          dispatcher.setVolume(dispatcher.volume - 0.25)
+          msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
+        } else if (m.content === '!volume--') {
           dispatcher.setVolume(dispatcher.volume / 2)
           msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
-        }
-        if (m.content === '!end' || m.content.startsWith('!play') || m.content.startsWith('!request') || m.content.startsWith('!add')) {
+        } else if (m.content === '!end' || m.content.startsWith('!play') || m.content.startsWith('!request') || m.content.startsWith('!add')) {
           dispatcher.end()
         }
       })
@@ -78,7 +82,7 @@ module.exports = {
     const preferredVolume = parseInt(msg.content.slice(11, 14).trim()) / 1000
     console.log(msg.content.slice(11, 14))
     if (!isNaN(preferredVolume)) {
-      preferredVolume[msg.guild.id] = preferredVolume
+      preferredServerVolume[msg.guild.id] = preferredVolume
       msg.channel.sendMessage(`Preferred server volume set to: ${preferredVolume * 1000}%`)
     }
   }
@@ -129,29 +133,29 @@ function play (msg, alreadyAdded) {
       {filter: 'audioonly'}).on('error', (err) => {
         if (err.code === 'ECONNRESET') return
       }), { passes: 2 })
-    if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.02)
+    if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.1)
     let collector = msg.channel.createCollector(m => m)
     collector.on('message', m => {
       if (m.content.startsWith('!pause')) {
         msg.channel.sendMessage('Paused').then(() => { dispatcher.pause() })
-      }
-      if (m.content.startsWith('!resume')) {
+      } else if (m.content.startsWith('!resume')) {
         msg.channel.sendMessage('Resuming...').then(() => { dispatcher.resume() })
-      }
-      if (m.content === '!skip') {
+      } else if (m.content === '!skip') {
         msg.channel.sendMessage('Skipping').then(() => { dispatcher.end() })
-      }
-      if (m.content === '!volume+') {
+      } else if (m.content === '!volume+') {
+        dispatcher.setVolume(dispatcher.volume + 0.25)
+        msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
+      } else if (m.content === '!volume++') {
         dispatcher.setVolume(dispatcher.volume * 2)
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
-      }
-      if (m.content === '!volume-') {
+      } else if (m.content === '!volume-') {
+        dispatcher.setVolume(dispatcher.volume - 0.25)
+        msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
+      } else if (m.content === '!volume--') {
         dispatcher.setVolume(dispatcher.volume / 2)
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
-      }
-      if (m.content === '!end') {
+      } else if (m.content === '!end') {
         dispatcher.end()
-        queue[msg.guild.id].songs = []
       }
     })
     dispatcher.on('end', () => {
