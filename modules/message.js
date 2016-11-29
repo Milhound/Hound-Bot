@@ -42,12 +42,15 @@ exports.cmds = (msg) => {
         !skip - Skips current song.
         !pause - Pauses song
         !resume - Resumes song
-        !volume+ - Increases volume by 2x
-        !volume- - Reduces volume by 2x
+        !volume+ - Increases volume by 25%
+        !volume++ - Increases volume by 2x
+        !volume- - Reduces volume by 25%
+        !volume-- - Reduces volume by 2x
         !request <Search Query> - Add youtube video to queue
         !radio - plays dub radio
         !weeb - Plays weeabo radio
-        !mix - Plays mix radio`
+        !mix - Plays mix radio
+        !setVolume - Sets preferred server volume`
       msg.channel.sendMessage(text)
     },
     'time': (msg) => {
