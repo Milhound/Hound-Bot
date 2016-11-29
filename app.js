@@ -11,18 +11,11 @@ bot.on('ready', () => {
 })
 
 bot.on('guildMemberAdd', member => {
-  // Log user
-  if (member.guild.id === Config.guilds.milhound.id) {
-    member.guild.channels.find('id', Config.guilds.milhound.channels.mod).sendMessage(`${member.user.username} has joined the Server.`)
-  } else if (Config.guilds.hasOwnProperty(member.guild.id) && Config.guilds[member.guild.id].hasOwnProperty('channels') && Config.guilds[member.guild.id].channels.hasOwnProperty('log')) {
-    member.guild.channels.find('id', Config.guilds[member.guild.id].channels.log).sendMessage(`${member.user.username} has joined the Server.`)
-  }
-
-  // Send welcome message
-  if (member.guild.id === Config.guilds.milhound.id) {
-    return member.sendMessage(Config.guilds['milhound'].welcome)
-  } else if (Config.guilds.hasOwnProperty(member.guild.id) && Config.guilds[member.guild.id].hasOwnProperty('welcome')) {
-    member.sendMessage(Config.guilds[member.guild.id].welcome)
+  if (member.guild.id === Config.guilds.milhound.id || Config.guilds.hasOwnProperty(member.guild.id)) {
+    // Log user
+    Usr.logUser(member)
+    // Send welcome message
+    if (Config.guilds.hasOwnProperty(member.guild.id) && Config.guilds[member.guild.id].greet === true) Usr.welcomeMessage(member)
   }
 })
 

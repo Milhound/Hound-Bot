@@ -31,7 +31,7 @@ module.exports = {
   'kick': (msg) => {
     if (msg.guild.member(msg.author).hasPermission('KICK_MEMBERS')) {
       for (var kickUser of msg.mentions.users.array()) {
-        msg.guild.channels.find('id', Config.guilds.milhound.channels.mod).sendMessage(`${msg.author} has kicked: ${msg.guild.member(kickUser.id)}`)
+        msg.guild.channels.find('id', Config.guilds.milhound.channels.log).sendMessage(`${msg.author} has kicked: ${msg.guild.member(kickUser.id)}`)
         msg.guild.member(kickUser.id).kick()
       }
     }
@@ -39,7 +39,7 @@ module.exports = {
   'ban': (msg) => {
     if (msg.guild.member(msg.author).hasPermission('BAN_MEMBERS')) {
       for (var banUser of msg.mentions.users.array()) {
-        msg.guild.channels.find('id', Config.guilds.milhound.channels.mod).sendMessage(`${msg.author} has banned: ${msg.guild.member(banUser.id)}`)
+        msg.guild.channels.find('id', Config.guilds.milhound.channels.log).sendMessage(`${msg.author} has banned: ${msg.guild.member(banUser.id)}`)
         msg.guild.member(banUser.id).ban()
       }
     }

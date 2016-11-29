@@ -6,6 +6,8 @@ var expLocked = new Map()
 
 module.exports = {
   initiateSave: initiateSave,
+  logUser: logUser,
+  welcomeMessage: welcomeMessage,
   'level': (msg) => {
     if (!msg.mentions.users.first()) {
       getLevel(msg.guild, msg.author)
@@ -158,4 +160,20 @@ function addUser (msg) {
   Usr[msg.guild.id].users[msg.author.id] = {}
   Usr[msg.guild.id].users[msg.author.id].username = msg.author.username
   Usr[msg.guild.id].users[msg.author.id].experience = 0
+}
+
+function logUser (member) {
+  if (member.guild.id === Config.guilds.milhound.id) {
+    member.guild.channels.find('id', Config.guilds.milhound.channels.log).sendMessage(`${member.user.username} has joined the Server.`)
+  } else if (Config.guilds.hasOwnProperty(member.guild.id) && Config.guilds[member.guild.id].hasOwnProperty('channels') && Config.guilds[member.guild.id].channels.hasOwnProperty('log')) {
+    member.guild.channels.find('id', Config.guilds[member.guild.id].channels.log).sendMessage(`${member.user.username} has joined the Server.`)
+  }
+}
+
+function welcomeMessage (member) {
+  if (member.guild.id === Config.guilds.milhound.id) {
+    return member.sendMessage(Config.guilds['milhound'].welcome)
+  } else if (Config.guilds[member.guild.id].hasOwnProperty('welcome')) {
+    member.sendMessage(Config.guilds[member.guild.id].welcome)
+  }
 }
