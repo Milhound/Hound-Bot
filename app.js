@@ -11,11 +11,11 @@ bot.on('ready', () => {
 })
 
 bot.on('guildMemberAdd', member => {
-  if (member.guild.id === Config.guilds.milhound.id || Config.guilds.hasOwnProperty(member.guild.id)) {
+  if (Config.guilds.hasOwnProperty(member.guild.id)) {
     // Log user
     Usr.logUser(member)
     // Send welcome message
-    if (Config.guilds.hasOwnProperty(member.guild.id) && Config.guilds[member.guild.id].greet === true) Usr.welcomeMessage(member)
+    Usr.welcomeMessage(member)
   }
 })
 
