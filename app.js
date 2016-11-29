@@ -11,26 +11,19 @@ bot.on('ready', () => {
 })
 
 bot.on('guildMemberAdd', member => {
-  if (member.guild.id !== Config.guilds.milhound.id) return
-  member.guild.channels.find('id', Config.guilds.milhound.channels.mod).sendMessage(`${member.user.username} has joined the Server.`)
-  const newMemberMilhound = `\
-Welcome to Milhound's Server:
-Programmer? _Please use the !programmer command._
-Gammer? _Please use the !gammer command._
-Listen to music? _Please use the !dj command to request songs._
+  // Log user
+  if (member.guild.id === Config.guilds.milhound.id) {
+    member.guild.channels.find('id', Config.guilds.milhound.channels.mod).sendMessage(`${member.user.username} has joined the Server.`)
+  } else if (Config.guilds.hasOwnProperty(member.guild.id) && Config.guilds[member.guild.id].hasOwnProperty('channels') && Config.guilds[member.guild.id].channels.hasOwnProperty('log')) {
+    member.guild.channels.find('id', Config.guilds[member.guild.id].channels.log).sendMessage(`${member.user.username} has joined the Server.`)
+  }
 
-**RULES:**
-1. All chat must be Safe for Work (SFW).
-2. Profanity is to be kept at a minimum. Abuse may result in ban
-3. All messages must comply with Discord Terms
-4. No Spam
-5. No Advertisements (Including other server invites)
-6. Trolling is allowed
-7. No unapproved bot invitations
-
-All updates to Hound Bot and the server are located in #update-log. Be sure to check pinned messages.
-`
-  member.sendMessage(newMemberMilhound)
+  // Send welcome message
+  if (member.guild.id === Config.guilds.milhound.id) {
+    return member.sendMessage(Config.guilds['milhound'].welcome)
+  } else if (Config.guilds.hasOwnProperty(member.guild.id) && Config.guilds[member.guild.id].hasOwnProperty('welcome')) {
+    member.sendMessage(Config.guilds[member.guild.id].welcome)
+  }
 })
 
 bot.on('message', message => {
