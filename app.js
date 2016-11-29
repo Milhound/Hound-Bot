@@ -19,6 +19,12 @@ bot.on('guildMemberAdd', member => {
   }
 })
 
+bot.on('guildMemberRemove', member => {
+  if (Config.guilds.hasOwnProperty(member.guild.id)) {
+    Usr.logUserLeave(member)
+  }
+})
+
 bot.on('message', message => {
   Usr.addExperience(message)
   if (!message.content.startsWith(Config.prefix)) return
