@@ -22,13 +22,13 @@ module.exports = {
       let collector = msg.channel.createCollector(m => m)
       collector.on('message', m => {
         if (m.content === '!volume+') {
-          dispatcher.setVolume(dispatcher.volume + 0.25)
+          dispatcher.setVolume(dispatcher.volume + (dispatcher.volume / 4))
           msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         } else if (m.content === '!volume++') {
           dispatcher.setVolume(dispatcher.volume * 2)
           msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         } else if (m.content === '!volume-') {
-          dispatcher.setVolume(dispatcher.volume - 0.25)
+          dispatcher.setVolume(dispatcher.volume - (dispatcher.volume / 4))
           msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         } else if (m.content === '!volume--') {
           dispatcher.setVolume(dispatcher.volume / 2)
@@ -143,13 +143,13 @@ function play (msg, alreadyAdded) {
       } else if (m.content === '!skip') {
         msg.channel.sendMessage('Skipping').then(() => { dispatcher.end() })
       } else if (m.content === '!volume+') {
-        dispatcher.setVolume(dispatcher.volume + 0.25)
+        dispatcher.setVolume(dispatcher.volume + (dispatcher.volume / 4))
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
       } else if (m.content === '!volume++') {
         dispatcher.setVolume(dispatcher.volume * 2)
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
       } else if (m.content === '!volume-') {
-        dispatcher.setVolume(dispatcher.volume - 0.25)
+        dispatcher.setVolume(dispatcher.volume - (dispatcher.volume / 4))
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
       } else if (m.content === '!volume--') {
         dispatcher.setVolume(dispatcher.volume / 2)
