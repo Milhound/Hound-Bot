@@ -220,6 +220,9 @@ exports.cmds = (msg) => {
     },
     'setvolume': (msg) => {
       Voice.setServerVolume(msg)
+    },
+    'channel': (msg) => {
+      Admin.channelInfo(msg)
     }
   }
 
