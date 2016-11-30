@@ -12,7 +12,7 @@ module.exports = {
       })
     })
   },
-  'getTime': (msg) => {
+  'getTime': msg => {
     return new Promise((resolve, reject) => {
       let argsTime = msg.content.split(' ')
       let date = new Date()
@@ -49,5 +49,8 @@ module.exports = {
       }
       resolve(hour + ':' + minutes)
     })
+  },
+  'deleteCommand': msg => {
+    msg.delete(800)
   }
 }

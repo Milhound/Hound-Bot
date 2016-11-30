@@ -1,5 +1,5 @@
 const Admin = require('./admin.js')
-const Cmds = require('./functions.js')
+const Fn = require('./functions.js')
 const User = require('./user.js')
 const Voice = require('./voice.js')
 const Config = require('../data/config.json')
@@ -54,13 +54,12 @@ exports.cmds = (msg) => {
       msg.channel.sendMessage(text)
     },
     'time': (msg) => {
-      Cmds.getTime(msg).then(response => msg.reply(response)).catch(err => msg.reply(err))
+      Fn.getTime(msg).then(response => msg.reply(response)).catch(err => msg.reply(err))
     },
     'mute': (msg) => {
       Admin.mute(msg)
     },
     'unmute': (msg) => {
-      Admin.unmute(msg)
     },
     'programmer': (msg) => {
       if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
@@ -107,12 +106,12 @@ exports.cmds = (msg) => {
       }
     },
     'cat': (msg) => {
-      Cmds.apiRequest('http://random.cat/meow').then(response => msg.channel.sendMessage(response.file))
+      Fn.apiRequest('http://random.cat/meow').then(response => msg.channel.sendMessage(response.file))
     },
     'insult': (msg) => {
       if (msg.mentions.users.array().length >= 0) {
         for (var insultTarget of msg.mentions.users.array()) {
-          Cmds.apiRequest('https://quandyfactory.com/insult/json')
+          Fn.apiRequest('https://quandyfactory.com/insult/json')
           .then(response => msg.channel.sendMessage(insultTarget + ' ' + response.insult))
         }
       }
@@ -139,7 +138,7 @@ exports.cmds = (msg) => {
       msg.channel.sendFile('./data/img/boom' + x + '.jpeg')
     },
     'chuck': (msg) => {
-      Cmds.apiRequest('https://api.chucknorris.io/jokes/random')
+      Fn.apiRequest('https://api.chucknorris.io/jokes/random')
         .then(response => msg.channel.sendMessage(response.value))
     },
     'toast': (msg) => {
@@ -177,7 +176,7 @@ exports.cmds = (msg) => {
     'yt': (msg) => {
       const queryYt = msg.content.slice(3).trim().replace(' ', '%20')
       const urlYt = baseYtUrl + queryYt + '&key=' + apiKey
-      Cmds.apiRequest(urlYt)
+      Fn.apiRequest(urlYt)
       .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.items[0].id.videoId))
     },
     'request': (msg) => {
@@ -209,20 +208,25 @@ exports.cmds = (msg) => {
       Admin.ban(msg)
     },
     'radio': (msg) => {
+      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.streamFromURL(msg, 'http://stream1.ml1.t4e.dj/dublovers_high.mp3')
     },
     'weeb': (msg) => {
+      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.streamFromURL(msg, 'http://shinsen-radio.org:8000/shinsen-radio.128.mp3')
     },
     'mix': (msg) => {
+      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.streamFromURL(msg, 'http://14963.live.streamtheworld.com/KHMXFMAAC?streamtheworld_user=1&SRC=CBS&DIST=CBS&TGT=cbslocalplayer&demographic=false')
     },
     'test': (msg) => {
+      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       if (msg.content.split(' ')[1]) var url = msg.content.split(' ')[1]
       if (url.indexOf('http') === -1) return
       Voice.streamFromURL(msg, url)
     },
     'setvolume': (msg) => {
+      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.setServerVolume(msg)
     },
     'channel': (msg) => {
@@ -233,5 +237,6 @@ exports.cmds = (msg) => {
   if (commands.hasOwnProperty(msg.content.toLowerCase().slice(1).split(' ')[0])) {
     console.log(msg.author.username + ' - ' + msg.guild.name + ' used command: ' + msg.content.slice(0))
     commands[msg.content.toLowerCase().slice(1).split(' ')[0]](msg)
+    Fn.deleteCommand(msg)
   }
 }
