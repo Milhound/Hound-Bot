@@ -30,7 +30,7 @@ exports.cmds = (msg) => {
         !leaderboard - Shows the current rankings of the Server.
         !yt - Search for YouTube video`
         // If on Milhound's Server add the following commands
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
+      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].hasOwnProperty('name') && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
         text += `
         !gamer - add/remove Gamer role.
         !programmer - add/remove Programmer role.
@@ -62,12 +62,12 @@ exports.cmds = (msg) => {
     'unmute': (msg) => {
     },
     'programmer': (msg) => {
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
+      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].hasOwnProperty('name') && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
         User.toggleRole(msg, Config.guilds[msg.guild.id].roles.programmer)
       }
     },
     'dj': (msg) => {
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
+      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].hasOwnProperty('name') && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
         User.toggleRole(msg, Config.guilds[msg.guild.id].roles.music)
       }
     },
@@ -75,7 +75,7 @@ exports.cmds = (msg) => {
       commands.dj(msg)
     },
     'gamer': (msg) => {
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
+      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].hasOwnProperty('name') && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
         User.toggleRole(msg, Config.guilds[msg.guild.id].roles.gamer)
       }
     },
@@ -159,18 +159,12 @@ exports.cmds = (msg) => {
       msg.delete
     },
     'add': (msg) => {
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && msg.member.roles.exists('id', Config.guilds[msg.guild.id].roles.requestBAN)) return msg.delete(1000)
-      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.add(msg)
     },
     'queue': (msg) => {
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && msg.member.roles.exists('id', Config.guilds[msg.guild.id].roles.requestBAN)) return msg.delete(1000)
-      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.queue(msg)
     },
     'play': (msg, alreadyAdded) => {
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && msg.member.roles.exists('id', Config.guilds[msg.guild.id].roles.requestBAN)) return msg.delete(1000)
-      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.play(msg, alreadyAdded)
     },
     'yt': (msg) => {
@@ -180,8 +174,6 @@ exports.cmds = (msg) => {
       .then(info => msg.reply('https://www.youtube.com/watch?v=' + info.items[0].id.videoId))
     },
     'request': (msg) => {
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && msg.member.roles.exists('id', Config.guilds[msg.guild.id].roles.requestBAN)) return msg.delete(1000)
-      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       if (msg.length <= 9) return msg.reply('Please specifiy a song.')
       Voice.request(msg)
     },
@@ -208,25 +200,20 @@ exports.cmds = (msg) => {
       Admin.ban(msg)
     },
     'radio': (msg) => {
-      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.streamFromURL(msg, 'http://stream1.ml1.t4e.dj/dublovers_high.mp3')
     },
     'weeb': (msg) => {
-      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.streamFromURL(msg, 'http://shinsen-radio.org:8000/shinsen-radio.128.mp3')
     },
     'mix': (msg) => {
-      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.streamFromURL(msg, 'http://14963.live.streamtheworld.com/KHMXFMAAC?streamtheworld_user=1&SRC=CBS&DIST=CBS&TGT=cbslocalplayer&demographic=false')
     },
     'test': (msg) => {
-      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       if (msg.content.split(' ')[1]) var url = msg.content.split(' ')[1]
       if (url.indexOf('http') === -1) return
       Voice.streamFromURL(msg, url)
     },
     'setvolume': (msg) => {
-      if (Config.guilds[msg.guild.id].name === 'Milhound\'s Server' && msg.channel.id !== Config.guilds[msg.guild.id].channels.music) return msg.reply('All music commands must be done in #music.')
       Voice.setServerVolume(msg)
     },
     'channel': (msg) => {
