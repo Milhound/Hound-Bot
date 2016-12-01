@@ -126,6 +126,7 @@ function play (msg, alreadyAdded) {
     if (song === undefined) {
       return msg.channel.sendMessage('Queue is empty').then(() => {
         queue[msg.guild.id].playing = false
+        connection.leave()
       })
     }
     msg.channel.sendMessage(`Playing: **${song.title}** as requested by: ${song.requester}`)
@@ -155,12 +156,12 @@ function play (msg, alreadyAdded) {
         dispatcher.setVolume(dispatcher.volume / 2)
         msg.channel.sendMessage(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
       } else if (m.content === '!end') {
+        queue[msg.guild.id].songs = {}
         dispatcher.end()
       }
     })
     dispatcher.on('end', () => {
       collector.stop()
-      connection.channel.leave()
       queue[msg.guild.id].songs.shift()
       play(queue[msg.guild.id].songs[0])
     })
