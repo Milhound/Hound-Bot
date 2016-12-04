@@ -35,7 +35,7 @@ module.exports = {
     }
   },
   'addExperience': (msg) => {
-    if (msg.author.id === Config.id) return // Do not give Hound Bot Experience
+    if (msg.author.bot) return // Do not give Bots experience
     if (!expLocked.hasOwnProperty(msg.author.id)) expLocked[msg.author.id] = false
     if (expLocked[msg.author.id] === false) {
       if (!Usr.hasOwnProperty(msg.guild.id) || !Usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
@@ -47,7 +47,7 @@ module.exports = {
       setTimeout(() => {
         expLocked[msg.author.id] = false
       }, expDelayTime)
-      if (Config.guilds.hasOwnProperty(msg.guild.id)) {
+      if (Config.server.id === msg.guild.id) {
         applyPerks(msg, Usr[msg.guild.id].users[msg.author.id].experience)
           .then(response => { if (response) msg.channel.sendMessage(response) })
           .catch(console.log)
@@ -87,8 +87,7 @@ module.exports = {
     if (!modExp || isNaN(modExp)) return msg.reply('Incorrect syntax')
     if (!msg.mentions.users.first()) return msg.reply('No user given')
     const target = msg.mentions.users.first().id
-    if (modExp > 0) Usr[msg.guild.id].users[target].experience = modExp
-    else msg.reply('Could not modify exp')
+    Usr[msg.guild.id].users[target].experience = modExp
   }
 }
 
@@ -96,7 +95,7 @@ function initiateSave () {
   setInterval(() => {
     fs.writeFile('./data/user.json', JSON.stringify(Usr), (err) => {
       if (err) console.log(err)
-      console.log('Saved User.json')
+      console.log('Saved user.json')
     })
   }, 300000)
 }
@@ -140,15 +139,15 @@ function getLevelFromExp (exp) {
 }
 function applyPerks (msg, exp) {
   return new Promise((resolve, reject) => {
-    if (Config.guilds[msg.guild.id].hasOwnProperty('roles')) {
-      if (exp >= 155 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds[msg.guild.id].roles.member) && Config.guilds[msg.guild.id].roles.hasOwnProperty('member')) {
-        msg.guild.member(msg.author).addRole(Config.guilds[msg.guild.id].roles.member)
+    if (Config.server.id === msg.guild.id) {
+      if (exp >= 155 && !msg.guild.member(msg.author).roles.exists('id', Config.server.roles.member)) {
+        msg.guild.member(msg.author).addRole(Config.server.roles.member)
         resolve(`${msg.author.username} you have achieved the rank of Member`)
-      } else if (exp >= 1975 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds[msg.guild.id].roles.vip) && Config.guilds[msg.guild.id].roles.hasOwnProperty('vip')) {
-        msg.guild.member(msg.author).addRole(Config.guilds[msg.guild.id].roles.vip)
+      } else if (exp >= 1975 && !msg.guild.member(msg.author).roles.exists('id', Config.server.roles.vip)) {
+        msg.guild.member(msg.author).addRole(Config.server.roles.vip)
         resolve(`${msg.author.username} you have achieved the rank of VIP`)
-      } else if (exp >= 15100 && !msg.guild.member(msg.author).roles.exists('id', Config.guilds[msg.guild.id].roles.moderator) && Config.guilds[msg.guild.id].roles.hasOwnProperty('moderator')) {
-        msg.guild.member(msg.author).addRole(Config.guilds[msg.guild.id].roles.moderator)
+      } else if (exp >= 15100 && !msg.guild.member(msg.author).roles.exists('id', Config.server.roles.moderator)) {
+        msg.guild.member(msg.author).addRole(Config.server.roles.moderator)
         resolve(`${msg.author.username} you have achieved the rank of Moderator`)
       } else if (exp > 0) { resolve() }
       reject('Something went wrong when applying perks')
@@ -166,19 +165,15 @@ function addUser (msg) {
 }
 
 function logUser (member) {
-  if (Config.guilds[member.guild.id].hasOwnProperty('channels') && Config.guilds[member.guild.id].channels.hasOwnProperty('log')) {
-    member.guild.channels.find('id', Config.guilds[member.guild.id].channels.log).sendMessage(`${member.user.username} has joined the Server.`)
-  }
+  member.guild.channels.find('id', Config.server.channels.log).sendMessage(`${member.user.username} has joined the Server.`)
 }
 
 function logUserLeave (member) {
-  if (Config.guilds[member.guild.id].hasOwnProperty('channels') && Config.guilds[member.guild.id].channels.hasOwnProperty('log')) {
-    member.guild.channels.find('id', Config.guilds[member.guild.id].channels.log).sendMessage(`${member.user.username} has left the Server.`)
-  }
+  member.guild.channels.find('id', Config.server.channels.log).sendMessage(`${member.user.username} has left the Server.`)
 }
 
 function welcomeMessage (member) {
-  if (Config.guilds[member.guild.id].hasOwnProperty('welcome') && Config.guilds[member.guild.id].greet === true) {
-    member.sendMessage(Config.guilds[member.guild.id].welcome)
+  if (Config.server.greet === true) {
+    member.sendMessage(Config.server.welcome)
   }
 }

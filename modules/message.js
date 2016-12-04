@@ -3,6 +3,7 @@ const Fn = require('./functions.js')
 const User = require('./user.js')
 const Voice = require('./voice.js')
 const Config = require('../data/config.json')
+const Guild = require('./guild.js')
 
 let apiKey
 if (Config.yt.key) { apiKey = Config.yt.key } else { apiKey = process.env.GOOGLE_API_KEY }
@@ -30,7 +31,7 @@ exports.cmds = (msg) => {
         !leaderboard - Shows the current rankings of the Server.
         !yt - Search for YouTube video`
         // If on Milhound's Server add the following commands
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].hasOwnProperty('name') && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
+      if (Config.server.id === msg.guild.id) {
         text += `
         !gamer - add/remove Gamer role.
         !programmer - add/remove Programmer role.
@@ -62,21 +63,21 @@ exports.cmds = (msg) => {
     'unmute': (msg) => {
     },
     'programmer': (msg) => {
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].hasOwnProperty('name') && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
-        User.toggleRole(msg, Config.guilds[msg.guild.id].roles.programmer)
+      if (Config.server.id === msg.guild.id) {
+        User.toggleRole(msg, Config.server.roles.programmer)
       }
     },
     'dj': (msg) => {
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].hasOwnProperty('name') && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
-        User.toggleRole(msg, Config.guilds[msg.guild.id].roles.music)
+      if (Config.server.id === msg.guild.id) {
+        User.toggleRole(msg, Config.server.roles.music)
       }
     },
     'music': (msg) => {
       commands.dj(msg)
     },
     'gamer': (msg) => {
-      if (Config.guilds.hasOwnProperty(msg.guild.id) && Config.guilds[msg.guild.id].hasOwnProperty('name') && Config.guilds[msg.guild.id].name === 'Milhound\'s Server') {
-        User.toggleRole(msg, Config.guilds[msg.guild.id].roles.gamer)
+      if (Config.server.id === msg.guild.id) {
+        User.toggleRole(msg, Config.server.roles.gamer)
       }
     },
     'ping': (msg) => {
@@ -218,6 +219,15 @@ exports.cmds = (msg) => {
     },
     'channel': (msg) => {
       Admin.channelInfo(msg)
+    },
+    'addguild': (msg) => {
+      Guild.addServer(msg)
+    },
+    'welcome': (msg) => {
+      Guild.setWelcome(msg)
+    },
+    'greet': (msg) => {
+      Guild.toggleGreet(msg)
     }
   }
 

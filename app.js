@@ -1,17 +1,18 @@
 const Discord = require('discord.js')
 const bot = new Discord.Client()
-
 const Message = require('./modules/message.js')
 const Usr = require('./modules/user.js')
+const Guild = require('./modules/guild.js')
 const Config = require('./data/config.json')
 
 bot.on('ready', () => {
   console.log('Bot is Online')
   Usr.initiateSave()
+  Guild.initGuildSave()
 })
 
 bot.on('guildMemberAdd', member => {
-  if (Config.guilds.hasOwnProperty(member.guild.id)) {
+  if (Config.server.id === member.guild.id) {
     // Log user
     Usr.logUser(member)
     // Send welcome message
@@ -20,7 +21,7 @@ bot.on('guildMemberAdd', member => {
 })
 
 bot.on('guildMemberRemove', member => {
-  if (Config.guilds.hasOwnProperty(member.guild.id)) {
+  if (Config.server.id === member.guild.id) {
     Usr.logUserLeave(member)
   }
 })
@@ -29,7 +30,6 @@ bot.on('message', message => {
   Usr.addExperience(message)
   if (!message.content.startsWith(Config.prefix)) return
   Message.cmds(message)
-  if (message.content.toLowerCase() === '!reboot' && message.guild.member(message.author).hasPermission('ADMINISTRATOR')) bot.destroy()
 })
 
 bot.on('disconnected', () => {

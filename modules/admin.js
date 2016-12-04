@@ -31,8 +31,8 @@ module.exports = {
   'kick': (msg) => {
     if (msg.guild.member(msg.author).hasPermission('KICK_MEMBERS')) {
       for (var kickUser of msg.mentions.users.array()) {
-        if (Config.guilds[msg.guild.id].hasOwnProperty('channels') && Config.guilds[msg.guild.id].channels.hasOwnProperty('log')) {
-          msg.guild.channels.find('id', Config.guilds[msg.guild.id].channels.log).sendMessage(`${msg.author} has kicked: ${msg.guild.member(kickUser.id)}`)
+        if (Config.server.id === msg.guild.id) {
+          msg.guild.channels.find('id', Config.sever.channels.log).sendMessage(`${msg.author} has kicked: ${msg.guild.member(kickUser.id)}`)
         }
         msg.guild.member(kickUser.id).kick()
       }
@@ -41,8 +41,8 @@ module.exports = {
   'ban': (msg) => {
     if (msg.guild.member(msg.author).hasPermission('BAN_MEMBERS')) {
       for (var banUser of msg.mentions.users.array()) {
-        if (Config.guilds[msg.guild.id].hasOwnProperty('channels') && Config.guilds[msg.guild.id].channels.hasOwnProperty('log')) {
-          msg.guild.channels.find('id', Config.guilds[msg.guild.id].channels.log).sendMessage(`${msg.author} has banned: ${msg.guild.member(banUser.id)}`)
+        if (Config.server.id === msg.guild.id) {
+          msg.guild.channels.find('id', Config.server.channels.log).sendMessage(`${msg.author} has banned: ${msg.guild.member(banUser.id)}`)
         }
         msg.guild.member(banUser.id).ban()
       }
