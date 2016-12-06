@@ -17,10 +17,7 @@ module.exports = {
     } else {
       for (var usrRequestedLevel of msg.mentions.users.array()) {
         getLevel(msg.guild, usrRequestedLevel)
-          .then(response => {
-            msg.channel.sendMessage(
-              `${response.user.username} is Level: ${response.level} (${response.remaining}/${response.nextLevel})`
-            ) })
+          .then(response => { msg.channel.sendMessage(`${response.user.username} is Level: ${response.level} (${response.remaining}/${response.nextLevel})`) })
           .catch((err) => msg.channel.sendMessage(err))
       }
     }
@@ -163,15 +160,12 @@ function addUser (msg) {
   Usr[msg.guild.id].users[msg.author.id].username = msg.author.username
   Usr[msg.guild.id].users[msg.author.id].experience = 0
 }
-
 function logUser (member) {
   member.guild.channels.find('id', Config.server.channels.log).sendMessage(`${member.user.username} has joined the Server.`)
 }
-
 function logUserLeave (member) {
   member.guild.channels.find('id', Config.server.channels.log).sendMessage(`${member.user.username} has left the Server.`)
 }
-
 function welcomeMessage (member) {
   if (Config.server.greet === true) {
     member.sendMessage(Config.server.welcome)

@@ -234,6 +234,6 @@ exports.cmds = (msg) => {
   if (commands.hasOwnProperty(msg.content.toLowerCase().slice(1).split(' ')[0])) {
     console.log(msg.author.username + ' - ' + msg.guild.name + ' used command: ' + msg.content.slice(0))
     commands[msg.content.toLowerCase().slice(1).split(' ')[0]](msg)
-    Fn.deleteCommand(msg)
+    if (!msg.content.startsWith('!wipe')) Fn.deleteCommand(msg)
   }
 }

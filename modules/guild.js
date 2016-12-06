@@ -9,6 +9,7 @@ module.exports = {
     Guilds[msg.guild.id].ownerID = msg.guild.ownerID
     Guilds[msg.guild.id].greet = false
     Guilds[msg.guild.id].welcome = ''
+    Guilds[msg.guild.id].volume = 100
     Guilds[msg.guild.id].roles = {}
     for (let role of msg.guild.roles.array()) {
       Guilds[msg.guild.id].roles[role.name] = {}
