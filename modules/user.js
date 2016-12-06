@@ -32,7 +32,7 @@ module.exports = {
     }
   },
   'addExperience': (msg) => {
-    if (msg.author.bot) return // Do not give Bots experience
+    if (msg.author.bot || msg.channel.type === 'dm') return // Do not give Bots experience
     if (!expLocked.hasOwnProperty(msg.author.id)) expLocked[msg.author.id] = false
     if (expLocked[msg.author.id] === false) {
       if (!Usr.hasOwnProperty(msg.guild.id) || !Usr[msg.guild.id].users.hasOwnProperty(msg.author.id)) return addUser(msg)
