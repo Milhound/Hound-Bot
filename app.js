@@ -27,6 +27,7 @@ bot.on('guildMemberRemove', member => {
 })
 
 bot.on('message', message => {
+  if (message.channel.type === 'dm' && message.author.id !== Config.id) return message.reply('I currently cannot communicate via DM. Please use !commands in a regular server channel.')
   Usr.addExperience(message)
   if (!message.content.startsWith(Config.prefix)) return
   Message.cmds(message)
