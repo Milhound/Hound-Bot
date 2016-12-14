@@ -1,6 +1,5 @@
 const req = require('request')
 const yt = require('ytdl-core')
-
 const Fn = require('./functions.js')
 const Config = require('../data/config.json')
 

@@ -32,7 +32,7 @@ module.exports = {
     if (msg.guild.member(msg.author).hasPermission('KICK_MEMBERS')) {
       for (var kickUser of msg.mentions.users.array()) {
         if (Config.server.id === msg.guild.id) {
-          msg.guild.channels.find('id', Config.sever.channels.log).sendMessage(`${msg.author} has kicked: ${msg.guild.member(kickUser.id)}`)
+          msg.guild.channels.find('id', Config.server.channels.log).sendMessage(`${msg.author} has kicked: ${msg.guild.member(kickUser.id)}`)
         }
         msg.guild.member(kickUser.id).kick()
       }
