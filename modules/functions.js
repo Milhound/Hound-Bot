@@ -51,6 +51,6 @@ module.exports = {
     })
   },
   'deleteCommand': msg => {
-    msg.delete(800)
+    msg.delete(1200)
   }
 }
