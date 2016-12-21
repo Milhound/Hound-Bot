@@ -19,8 +19,8 @@ module.exports = {
       let date = new Date()
       let hour = date.getUTCHours() - 1
 
-      if (Timezone.hasOwnProperty(argsTime[1])) {
-        hour += Timezone[argsTime[1]]
+      if (Timezone.hasOwnProperty(argsTime[1].toLowerCase())) {
+        hour += Timezone[argsTime[1].toLowerCase()]
       } else if (argsTime[1].toLowerCase() === 'gmt' || argsTime[1].toLowerCase() === 'utc') {
         if (argsTime[2] !== undefined) {
           let modifier = argsTime[2].toLowerCase()
