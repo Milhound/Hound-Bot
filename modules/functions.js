@@ -15,6 +15,7 @@ module.exports = {
   'getTime': msg => {
     return new Promise((resolve, reject) => {
       let argsTime = msg.content.split(' ')
+      if (argsTime.length !== 2) reject('Usage: !time [timezone]')
       let date = new Date()
       let hour = date.getUTCHours() - 1
 
@@ -47,7 +48,7 @@ module.exports = {
       if (minutes < 10) {
         minutes = '0' + minutes
       }
-      resolve(hour + ':' + minutes)
+      resolve('It is currently **' + hour + ':' + minutes + '** in **' + argsTime[1] + '**')
     })
   },
   'deleteCommand': msg => {
