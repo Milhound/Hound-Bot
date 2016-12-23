@@ -228,6 +228,9 @@ exports.cmds = (msg) => {
     },
     'greet': (msg) => {
       Guild.toggleGreet(msg)
+    },
+    'ud': (msg) => {
+      Fn.apiRequest('http://api.urbandictionary.com/v0/define?term='+msg.split('ud ')[1]).then(response => msg.channel.sendMessage(Fn.formatUDString(response, msg.split('ud ')[1])))
     }
   }
 
