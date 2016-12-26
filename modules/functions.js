@@ -55,6 +55,6 @@ module.exports = {
     msg.delete(1200)
   },
   'formatUDString' : (res, word) => {
-    return '```word: '+ word +'\ndefintion: '+res.list[0].definition+'```'
+    return '```Word: '+ word +'\nDefintion: '+res.list[0].definition+'```'
   }
 }
