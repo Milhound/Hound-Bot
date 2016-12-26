@@ -8,7 +8,6 @@ module.exports = {
       console.log(url)
       superagent.get(url)
       .end((err, res) => {
-        if (err.toString().indexOf('Bad Request') > 0) return reject('Invalid url/request.')
         if (err) return reject(err)
         return resolve(res.body)
       })
