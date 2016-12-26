@@ -7,6 +7,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       superagent.get(url)
       .end((err, res) => {
+        if (err.toString().indexOf('Bad Request') > 0) return reject('Invalid url/request.')
         if (err) return reject(err)
         return resolve(res.body)
       })
