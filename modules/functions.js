@@ -56,6 +56,12 @@ module.exports = {
     msg.delete(1200)
   },
   'formatUDString' : (res, word) => {
-    return '```Word: '+ word +'\nDefintion: '+res.list[0].definition+'```'
+    var response = '```Word: ' + word +'\nDefintion: ' + res.list[0].definition.slice(0,1000)
+    if (res.list[0].definition.length > 1000) {
+      response += '...\nSee more @ ubandictionary.com```'
+    } else {
+      response += '```'
+    }
+    return response
   }
 }
