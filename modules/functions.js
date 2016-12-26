@@ -3,7 +3,7 @@ const superagent = require('superagent')
 const Timezone = require('../data/timezone.json')
 
 module.exports = {
-  'apiRequest': (url, callback) => {
+  'apiRequest': (url) => {
     return new Promise((resolve, reject) => {
       superagent.get(url)
       .end((err, res) => {

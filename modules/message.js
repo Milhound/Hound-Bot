@@ -231,7 +231,6 @@ exports.cmds = (msg) => {
     },
     'ud': (msg) => {
       var wordToDefine = msg.content.slice(3).trim().replace(' ', '%20')
-      console.log(wordToDefine + " Original " + msg.content.slice(3))
       Fn.apiRequest('http://api.urbandictionary.com/v0/define?term=' + wordToDefine)
         .then(response => msg.channel.sendMessage(Fn.formatUDString(response, wordToDefine)))
     }
