@@ -35,7 +35,8 @@ exports.cmds = (msg) => {
         text += `
         !gamer - add/remove Gamer role.
         !programmer - add/remove Programmer role.
-        !dj or music - add/remove DJ role.` }
+        !dj or music - add/remove DJ role.`
+      }
       text += `
 
         **VOICE:**
