@@ -55,6 +55,9 @@ exports.cmds = (msg) => {
         !setVolume - Sets preferred server volume`
       msg.channel.sendMessage(text)
     },
+    'help': (msg) => {
+      commands.commands(msg)
+    },
     'time': (msg) => {
       Fn.getTime(msg).then(response => msg.reply(response)).catch(err => msg.reply(err))
     },
