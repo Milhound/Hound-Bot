@@ -29,13 +29,14 @@ exports.cmds = (msg) => {
         !time <TIMEZONE> - Returns current time in zone. Ex: !time CST
         !level <O: user> - Prints out your (or user) current level and experience
         !leaderboard - Shows the current rankings of the Server.
-        !yt - Search for YouTube video`
+        !yt - Search for YouTube video
+        !ud <word> - Urban dictonary defintition`
         // If on Milhound's Server add the following commands
       if (Config.server.id === msg.guild.id) {
         text += `
         !gamer - add/remove Gamer role.
         !programmer - add/remove Programmer role.
-        !dj or music - add/remove DJ role.`
+        !dj or music - add/remove DJ/Music role.`
       }
       text += `
 
@@ -134,6 +135,22 @@ exports.cmds = (msg) => {
     'to_k': (msg) => {
       var K = parseInt(msg.content.split(' ')[1]) + 273.15
       msg.reply(K)
+    },
+    'to_kg': (msg) => {
+      var lbs = parseInt(msg.content.split(' ')[1])
+      msg.reply(lbs * 0.4536)
+    },
+    'to_lbs': (msg) => {
+      var kgs = parseInt(msg.content.split(' ')[1])
+      msg.reply(kgs / 0.4536)
+    },
+    'to_in': (msg) => {
+      var cm = parseFloat(msg.content.split(' ')[1])
+      msg.reply((cm * 0.3937).toFixed(0))
+    },
+    'to_cm': (msg) => {
+      var inch = parseFloat(msg.content.split(' ')[1])
+      msg.reply((inch / 0.3937).toFixed(0))
     },
     'wipe': (msg) => {
       Admin.wipe(msg)
