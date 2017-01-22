@@ -9,8 +9,8 @@
   "server": {
     "id": "167693566267752449",
     "name": "Milhound's Server",
-    "greet": true,
-    "welcome": "Welcome to Milhound's Server:\nProgrammer? _Please use the !programmer command._\nGamer? _Please use the !gamer command._\nListen to music? _Please use the !dj command to request songs._\n\n**RULES:**\n1. All chat must be Safe for Work (SFW).\n2. Profanity is to be kept at a minimum. Abuse may result in ban\n3. All messages must comply with Discord Terms\n4. No Spam\n5. No Advertisements (Including other server invites)\n6. Trolling is allowed\n7. No unapproved bot invitations\n\nAll updates to Hound Bot and the server are located in #update-log. Be sure to check pinned messages.",
+    "greet": false,
+    "welcome": "",
     "channels": {
       "music": "240125330390646786",
       "log": "253191667291652107"

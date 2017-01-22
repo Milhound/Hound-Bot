@@ -30,15 +30,7 @@ exports.cmds = (msg) => {
         !level <O: user> - Prints out your (or user) current level and experience
         !leaderboard - Shows the current rankings of the Server.
         !yt - Search for YouTube video
-        !ud <word> - Urban dictonary defintition`
-        // If on Milhound's Server add the following commands
-      if (Config.server.id === msg.guild.id) {
-        text += `
-        !gamer - add/remove Gamer role.
-        !programmer - add/remove Programmer role.
-        !dj or music - add/remove DJ/Music role.`
-      }
-      text += `
+        !ud <word> - Urban dictonary defintition
 
         **VOICE:**
         !play <url> - Plays a song from YouTube.
@@ -66,24 +58,6 @@ exports.cmds = (msg) => {
       Admin.mute(msg)
     },
     'unmute': (msg) => {
-    },
-    'programmer': (msg) => {
-      if (Config.server.id === msg.guild.id) {
-        User.toggleRole(msg, Config.server.roles.programmer)
-      }
-    },
-    'dj': (msg) => {
-      if (Config.server.id === msg.guild.id) {
-        User.toggleRole(msg, Config.server.roles.music)
-      }
-    },
-    'music': (msg) => {
-      commands.dj(msg)
-    },
-    'gamer': (msg) => {
-      if (Config.server.id === msg.guild.id) {
-        User.toggleRole(msg, Config.server.roles.gamer)
-      }
     },
     'ping': (msg) => {
       msg.channel.sendMessage('Pong!')
