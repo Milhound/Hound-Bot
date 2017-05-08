@@ -199,7 +199,7 @@ exports.cmds = (msg) => {
       Voice.streamFromURL(msg, 'http://stream1.ml1.t4e.dj/dublovers_high.mp3')
     },
     'weeb': (msg) => {
-      Voice.streamFromURL(msg, 'http://shinsen-radio.org:8000/shinsen-radio.128.mp3')
+      Voice.streamFromURL(msg, 'http://shinsen-radio.org:8000/shinsen-radio.128.ogg')
     },
     'mix': (msg) => {
       Voice.streamFromURL(msg, 'http://14963.live.streamtheworld.com/KHMXFMAAC?streamtheworld_user=1&SRC=CBS&DIST=CBS&TGT=cbslocalplayer&demographic=false')
