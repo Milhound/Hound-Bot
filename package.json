@@ -1,6 +1,6 @@
 {
   "name": "hound-bot",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "main": "bot.js",
   "scripts": {
     "start": "node app.js",
@@ -17,7 +17,7 @@
   ],
   "license": "LGPL-3.0",
   "dependencies": {
-    "discord.js": "^10.0.0",
-    "ytdl-core": "^0.7.19"
+    "discord.js": "^11.1.0",
+    "ytdl-core": "^0.14.0"
   }
 }

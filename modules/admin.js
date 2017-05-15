@@ -32,7 +32,7 @@ module.exports = {
     if (msg.guild.member(msg.author).hasPermission('KICK_MEMBERS')) {
       for (var kickUser of msg.mentions.users.array()) {
         if (Config.server.id === msg.guild.id) {
-          msg.guild.channels.find('id', Config.server.channels.log).sendMessage(`${msg.author} has kicked: ${msg.guild.member(kickUser.id)}`)
+          msg.guild.channels.find('id', Config.server.channels.log).send(`${msg.author} has kicked: ${msg.guild.member(kickUser.id)}`)
         }
         msg.guild.member(kickUser.id).kick()
       }
@@ -42,7 +42,7 @@ module.exports = {
     if (msg.guild.member(msg.author).hasPermission('BAN_MEMBERS')) {
       for (var banUser of msg.mentions.users.array()) {
         if (Config.server.id === msg.guild.id) {
-          msg.guild.channels.find('id', Config.server.channels.log).sendMessage(`${msg.author} has banned: ${msg.guild.member(banUser.id)}`)
+          msg.guild.channels.find('id', Config.server.channels.log).send(`${msg.author} has banned: ${msg.guild.member(banUser.id)}`)
         }
         msg.guild.member(banUser.id).ban()
       }
@@ -51,7 +51,7 @@ module.exports = {
   'channelInfo': (msg) => {
     if (msg.guild.member(msg.author).hasPermission('MANAGE_MESSAGES')) {
       var channel = msg.mentions.channels.first()
-      msg.author.sendMessage(channel.id)
+      msg.author.send(channel.id)
     }
   }
 }

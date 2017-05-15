@@ -46,7 +46,7 @@ exports.cmds = (msg) => {
         !weeb - Plays weeabo radio
         !mix - Plays mix radio
         !setVolume - Sets preferred server volume`
-      msg.channel.sendMessage(text)
+      msg.channel.send(text)
     },
     'help': (msg) => {
       commands.commands(msg)
@@ -60,19 +60,19 @@ exports.cmds = (msg) => {
     'unmute': (msg) => {
     },
     'ping': (msg) => {
-      msg.channel.sendMessage('Pong!')
+      msg.channel.send('Pong!')
     },
     'coin': (msg) => {
       if (Math.floor(Math.random() * 2 + 1) === 1) {
-        msg.channel.sendMessage('Heads')
+        msg.channel.send('Heads')
       } else {
-        msg.channel.sendMessage('Tails')
+        msg.channel.send('Tails')
       }
     },
     'dice': (msg) => {
       var argsDice = msg.content.split(' ')
       if (argsDice[1] !== undefined) {
-        msg.channel.sendMessage(Math.floor(Math.random() * parseInt(argsDice[1]) + 1))
+        msg.channel.send(Math.floor(Math.random() * parseInt(argsDice[1]) + 1))
       } else {
         msg.channel.sendFile('./data/img/dice' + Math.floor((Math.random() * 6) + 1) + '.png')
       }
@@ -80,19 +80,19 @@ exports.cmds = (msg) => {
     'slap': (msg) => {
       if (msg.mentions.users.array().length >= 0) {
         for (var slapTarget of msg.mentions.users.array()) {
-          msg.channel.sendMessage(slapTarget + ' You\'ve been SLAPPED!')
+          msg.channel.send(slapTarget + ' You\'ve been SLAPPED!')
         }
         msg.delete
       }
     },
     'cat': (msg) => {
-      Fn.apiRequest('http://random.cat/meow').then(response => msg.channel.sendMessage(response.file))
+      Fn.apiRequest('http://random.cat/meow').then(response => msg.channel.send(response.file))
     },
     'insult': (msg) => {
       if (msg.mentions.users.array().length >= 0) {
         for (var insultTarget of msg.mentions.users.array()) {
           Fn.apiRequest('https://quandyfactory.com/insult/json')
-          .then(response => msg.channel.sendMessage(insultTarget + ' ' + response.insult))
+          .then(response => msg.channel.send(insultTarget + ' ' + response.insult))
         }
       }
     },
@@ -135,10 +135,10 @@ exports.cmds = (msg) => {
     },
     'chuck': (msg) => {
       Fn.apiRequest('https://api.chucknorris.io/jokes/random')
-        .then(response => msg.channel.sendMessage(response.value))
+        .then(response => msg.channel.send(response.value))
     },
     'toast': (msg) => {
-      msg.channel.sendMessage(`\`\`\`
+      msg.channel.send(`\`\`\`
         Toast!
               ______
          ____((     )_
@@ -187,7 +187,7 @@ exports.cmds = (msg) => {
       }
     },
     'leaderboard': (msg) => {
-      User.leaderboard(msg).then((response) => msg.channel.sendMessage(response)).catch((err) => msg.channel.sendMessage(err))
+      User.leaderboard(msg).then((response) => msg.channel.send(response)).catch((err) => msg.channel.send(err))
     },
     'kick': (msg) => {
       Admin.kick(msg)
@@ -228,7 +228,7 @@ exports.cmds = (msg) => {
       var wordToDefine = msg.content.slice(3).trim().replace(' ', '%20')
       const udURL = 'http://api.urbandictionary.com/v0/define?term=' + wordToDefine
       Fn.apiRequest(udURL)
-        .then(response => msg.channel.sendMessage(Fn.formatUDString(response, wordToDefine, udURL)))
+        .then(response => msg.channel.send(Fn.formatUDString(response, wordToDefine, udURL)))
     }
   }
 

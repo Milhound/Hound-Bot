@@ -12,13 +12,13 @@ module.exports = {
   'level': (msg) => {
     if (!msg.mentions.users.first()) {
       getLevel(msg.guild, msg.author)
-        .then(response => { msg.channel.sendMessage(`Level: ${response.level} (${response.remaining}/${response.nextLevel})`) })
-        .catch((err) => msg.channel.sendMessage(err))
+        .then(response => { msg.channel.send(`Level: ${response.level} (${response.remaining}/${response.nextLevel})`) })
+        .catch((err) => msg.channel.send(err))
     } else {
       for (var usrRequestedLevel of msg.mentions.users.array()) {
         getLevel(msg.guild, usrRequestedLevel)
-          .then(response => { msg.channel.sendMessage(`${response.user.username} is Level: ${response.level} (${response.remaining}/${response.nextLevel})`) })
-          .catch((err) => msg.channel.sendMessage(err))
+          .then(response => { msg.channel.send(`${response.user.username} is Level: ${response.level} (${response.remaining}/${response.nextLevel})`) })
+          .catch((err) => msg.channel.send(err))
       }
     }
   },
@@ -46,7 +46,7 @@ module.exports = {
       }, expDelayTime)
       if (Config.server.id === msg.guild.id) {
         applyPerks(msg, Usr[msg.guild.id].users[msg.author.id].experience)
-          .then(response => { if (response) msg.channel.sendMessage(response) })
+          .then(response => { if (response) msg.channel.send(response) })
           .catch(console.log)
       }
       console.log(`Added ${exp} to ${msg.author.username}!`)
@@ -59,7 +59,7 @@ module.exports = {
       const usrRemainingExp = usrData.exp
       const expToAdd = usrNextLevelExp - usrRemainingExp
       Usr[msg.guild.id].users[expTarget.id].experience += expToAdd
-      msg.channel.sendMessage(`Added ${expToAdd} exp to ${expTarget}`)
+      msg.channel.send(`Added ${expToAdd} exp to ${expTarget}`)
     }
   },
   'leaderboard': (msg) => {
@@ -161,13 +161,13 @@ function addUser (msg) {
   Usr[msg.guild.id].users[msg.author.id].experience = 0
 }
 function logUser (member) {
-  member.guild.channels.find('id', Config.server.channels.log).sendMessage(`${member.user.username} has joined the Server.`)
+  member.guild.channels.find('id', Config.server.channels.log).send(`${member.user.username} has joined the Server.`)
 }
 function logUserLeave (member) {
-  member.guild.channels.find('id', Config.server.channels.log).sendMessage(`${member.user.username} has left the Server.`)
+  member.guild.channels.find('id', Config.server.channels.log).send(`${member.user.username} has left the Server.`)
 }
 function welcomeMessage (member) {
   if (Config.server.greet === true) {
-    member.sendMessage(Config.server.welcome)
+    member.send(Config.server.welcome)
   }
 }
