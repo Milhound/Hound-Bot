@@ -164,9 +164,8 @@ function play (msg, alreadyAdded) {
     })
     dispatcher.on('end', () => {
       collector.stop()
-      if (queue[msg.guild.id].songs.length > 1) {
-        queue[msg.guild.id].songs.shift()
-      }
+      var guildSongs = queue[msg.guild.id].songs
+      guildSongs.shift()
       play(queue[msg.guild.id].songs[0])
     })
     dispatcher.on('error', (err) => {
