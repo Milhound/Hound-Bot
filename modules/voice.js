@@ -70,10 +70,9 @@ module.exports = {
         queue[msg.guild.id] = {}
         queue[msg.guild.id].playing = false
         queue[msg.guild.id].songs = []
-        queue[msg.guild.id].songs.push({url: songUrl, title: songTitle, requester: msg.author.username})
-      } else {
-        queue[msg.guild.id].songs.push({url: songUrl, title: songTitle, requester: msg.author.username})
       }
+      if (!queue[msg.guild.id].songs.isArray()) { queue[msg.guild.id].songs = [] }
+      queue[msg.guild.id].songs.push({url: songUrl, title: songTitle, requester: msg.author.username})
       msg.reply(`Added **${songTitle}** to queue`)
       if (queue[msg.guild.id].playing === false) play(msg)
     })
