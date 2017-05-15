@@ -56,7 +56,7 @@ module.exports = {
     msg.delete(1200)
   },
   'formatUDString': (res, word, url) => {
-    var response = '```Word: ' + word +'\nDefintion: ' + res.list[0].definition.slice(0,1000).trim()
+    var response = '```Word: ' + word + '\nDefintion: ' + res.list[0].definition.slice(0, 1000).trim()
     if (res.list[0].definition.length > 1000) {
       response += '...```\n Full definition @ ' + url
     } else {

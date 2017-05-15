@@ -3,7 +3,6 @@ const yt = require('ytdl-core')
 const Fn = require('./functions.js')
 const Config = require('../data/config.json')
 
-
 let apiKey
 if (Config.yt.key) { apiKey = Config.yt.key } else { apiKey = process.env.GOOGLE_API_KEY }
 const baseYtUrl = Config.yt.url
@@ -71,8 +70,10 @@ module.exports = {
         queue[msg.guild.id] = {}
         queue[msg.guild.id].playing = false
         queue[msg.guild.id].songs = []
+        queue[msg.guild.id].songs.push({url: songUrl, title: songTitle, requester: msg.author.username})
+      } else {
+        queue[msg.guild.id].songs.push({url: songUrl, title: songTitle, requester: msg.author.username})
       }
-      queue[msg.guild.id].songs.push({url: songUrl, title: songTitle, requester: msg.author.username})
       msg.reply(`Added **${songTitle}** to queue`)
       if (queue[msg.guild.id].playing === false) play(msg)
     })
@@ -103,8 +104,10 @@ function add (msg) {
       queue[msg.guild.id] = {}
       queue[msg.guild.id].playing = false
       queue[msg.guild.id].songs = []
+      queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
+    } else {
+      queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
     }
-    queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
     msg.channel.send(`Added **${info.title}** to queue.`)
     if (queue[msg.guild.id].playing === false) play(msg, true)
   })
