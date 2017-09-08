@@ -18,7 +18,7 @@ module.exports = {
       let argsTime = msg.content.split(' ')
       if (argsTime.length !== 2) reject('Usage: !time [timezone]')
       let date = new Date()
-      let hour = date.getUTCHours() - 1
+      let hour = date.getUTCHours()
 
       if (Timezone.hasOwnProperty(argsTime[1].toLowerCase())) {
         hour += Timezone[argsTime[1].toLowerCase()]
