@@ -165,7 +165,7 @@ function play (msg, alreadyAdded) {
     dispatcher.on('end', () => {
       collector.stop()
       var guildSongs = queue[msg.guild.id].songs
-      guildSongs.shift()
+      setTimeout( () => guildSongs.shift(), 500 )
       play(queue[msg.guild.id].songs[0])
     })
     dispatcher.on('error', (err) => {
