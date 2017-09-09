@@ -20,7 +20,7 @@ bot.on('guildMemberAdd', member => {
   }
   if (member.guild.id === '149632998055215105') {
     console.log('New user joined TGC')
-    const channel = member.guild.channels.find('id', '160062431236849665')
+    const channel = member.guild.channels.find('id', '149632998055215105')
     if (!channel) console.log('Channel not found!')
     channel.send(`Welcome to TGC ${member}!`)
   }
