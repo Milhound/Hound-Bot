@@ -19,8 +19,8 @@ bot.on('guildMemberAdd', member => {
     Usr.welcomeMessage(member)
   }
   if (member.guild.id === 149632998055215105) {
-    const channel = member.guild.channels.find('id', 160062431236849665)
-    if (!channel) return
+    const channel = member.guild.channels.find('id', '160062431236849665')
+    if (!channel) console.log('Channel not found!')
     channel.send(`Welcome to TGC ${member}!`)
   }
 })
