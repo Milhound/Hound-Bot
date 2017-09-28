@@ -137,7 +137,7 @@ function play (msg, song) {
     } else if (m.content.startsWith('!resume')) {
       msg.channel.send('Resuming...').then(() => { dispatcher.resume() })
     } else if (m.content === '!skip') {
-      msg.channel.send('Skipping').then(() => { dispatcher.end(msg) })
+      msg.channel.send('Skipping').then((msg) => { dispatcher.end(msg) })
     } else if (m.content === '!volume+') {
       dispatcher.setVolume(dispatcher.volume + (dispatcher.volume / 4))
       msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
