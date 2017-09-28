@@ -155,9 +155,9 @@ function play (msg, song) {
       dispatcher.end()
     }
   })
-    dispatcher.on('end', () => {
+    dispatcher.on('end', (msg) => {
       collector.stop()
-      play(queue[msg.guild.id].songs.shift())
+      play(msg, queue[msg.guild.id].songs.shift())
     })
     dispatcher.on('error', (err) => {
       dispatcher.end()
