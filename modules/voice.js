@@ -137,7 +137,7 @@ function play (msg, song) {
     } else if (m.content.startsWith('!resume')) {
       msg.channel.send('Resuming...').then(() => { dispatcher.resume() })
     } else if (m.content === '!skip') {
-      msg.channel.send('Skipping').then(() => { dispatcher.end() })
+      msg.channel.send('Skipping').then(() => { dispatcher.end(msg) })
     } else if (m.content === '!volume+') {
       dispatcher.setVolume(dispatcher.volume + (dispatcher.volume / 4))
       msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
@@ -152,7 +152,7 @@ function play (msg, song) {
       msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
     } else if (m.content === '!end') {
       queue[msg.guild.id].songs = {}
-      dispatcher.end()
+      dispatcher.end(msg)
     }
   })
     dispatcher.on('end', (msg) => {
@@ -160,7 +160,6 @@ function play (msg, song) {
       play(msg, queue[msg.guild.id].songs.shift())
     })
     dispatcher.on('error', (err) => {
-      dispatcher.end()
       msg.channel.send('Error: unable to play audio')
       console.log(err)
     })
