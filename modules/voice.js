@@ -157,7 +157,8 @@ function play (msg, song) {
   })
     dispatcher.on('end', (msg) => {
       collector.stop()
-      play(msg, queue[msg.guild.id].songs.shift())
+      var song = queue[msg.guild.id].songs.shift()
+      play(msg, song)
     })
     dispatcher.on('error', (err) => {
       msg.channel.send('Error: unable to play audio')
