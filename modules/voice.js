@@ -114,13 +114,13 @@ function add (msg) {
 }
 
 function play (msg, song) {
+  if (!msg.guild.voiceConnection) return join(msg).then(() => play(msg, song))
   if (song === undefined) {
-    return msg.channel.send('Queue is empty').then(() => {
+    return msg.channel.send('Queue is empty').then((connection) => {
       queue[msg.guild.id].playing = false
       connection.channel.leave()
     })
   }
-  if (!msg.guild.voiceConnection) return join(msg).then(() => play(msg, song))
   let dispatcher
   let connection = msg.guild.voiceConnection
   queue[msg.guild.id].playing = true;
