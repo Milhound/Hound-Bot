@@ -114,14 +114,10 @@ function add (msg) {
 }
 
 function play (msg, song) {
-  if (!msg.guild.voiceConnection) return join(msg).then(() => play(msg, song))
-  if (song === undefined) {
-    return msg.channel.send('Queue is empty').then(() => {
-      queue[msg.guild.id].playing = false
-      connection.channel.leave()
-    })
-  }
-  queue[msg.guild.id].songs.shift()
+  if (!msg.guild.voiceConnection) return join(msg).then(() => {
+    play(msg, song)
+    queue[msg.guild.id].songs.shift();
+  })
   let dispatcher
   let connection = msg.guild.voiceConnection
   queue[msg.guild.id].playing = true;
@@ -157,11 +153,11 @@ function play (msg, song) {
     }
   })
     dispatcher.on('end', () => {
-      collector.stop()
       var song = queue[msg.guild.id].songs.shift()
       if (song === undefined) {
         return msg.channel.send('Queue is empty').then(() => {
           queue[msg.guild.id].playing = false
+          collector.stop()
           connection.channel.leave()
         })
       }
