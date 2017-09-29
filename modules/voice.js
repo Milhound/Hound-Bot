@@ -70,8 +70,8 @@ module.exports = {
         queue[msg.guild.id].playing = false
         queue[msg.guild.id].songs = []
       }
-      var guildSongs = queue[msg.guild.id].songs
-      guildSongs.push({url: songUrl, title: songTitle, requester: msg.author.username})
+      if (typeof queue[msg.guild.id].songs !== 'object') queue[msg.guild.id].songs = {}
+      queue[msg.guild.id].songs.push({url: songUrl, title: songTitle, requester: msg.author.username})
       msg.reply(`Added **${songTitle}** to queue`)
       if (queue[msg.guild.id].playing === false) play(msg)
     })
@@ -112,22 +112,9 @@ function add (msg) {
   })
 }
 
-function play (msg) {
-  if (!msg.guild.voiceConnection) return join(msg).then(() => { play(msg)})
-  let dispatcher
-  let connection = msg.guild.voiceConnection
-  queue[msg.guild.id].playing = true;
-  var song = queue[msg.guild.id].songs[0]
-  setTimeout( () => {
-    queue[msg.guild.id].songs.shift()
-  }, 1000)
-  dispatcher = connection.playStream(yt(song.url,
-    {filter: 'audioonly'}).on('error', (err) => {
-      if (err.code === 'ECONNRESET') return
-    }), { passes: 2 })
-  if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.1)
+function getSongFunctions(msg, dispatcher) {
+  // Create message collector for song
   let collector = msg.channel.createCollector(m => m)
-  msg.channel.send(`Playing: **${song.title}** as requested by: ${song.requester}`)
   collector.on('collect', m => {
     if (m.content.startsWith('!pause')) {
       msg.channel.send('Paused').then(() => { dispatcher.pause() })
@@ -152,19 +139,44 @@ function play (msg) {
       dispatcher.end()
     }
   })
-    dispatcher.on('end', () => {
-      collector.stop()      
-      if (queue[msg.guild.id].songs[0]) { play(msg) } else {
-        return msg.channel.send('Queue is empty').then(() => {
-          queue[msg.guild.id].playing = false
-          connection.channel.leave()
-        })
-      }
-      
-    })
-    dispatcher.on('error', (err) => {
-      msg.channel.send('Error: unable to play audio')
-      console.log(err)
-    })
+  return collector
+}
+
+function play (msg) {
+  // Connect if not connected
+  if (!msg.guild.voiceConnection) return join(msg).then(() => play(msg))
+  let connection = msg.guild.voiceConnection
+  queue[msg.guild.id].playing = true;
+
+  // Grab current song
+  var song = queue[msg.guild.id].songs[0]
+  queue[msg.guild.id].songs.shift()
+
+  // Play song
+  let dispatcher = connection.playStream(yt(song.url,
+    {filter: 'audioonly'}).on('error', (err) => {
+      if (err.code === 'ECONNRESET') return
+    }), { passes: 2 })
+  msg.channel.send(`Playing: **${song.title}** as requested by: ${song.requester}`)
+
+  if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.1)
+  let collector = getSongFunctions(msg, dispatcher)
+
+  // On Song End
+  dispatcher.on('end', () => {
+    collector.stop()
+    // Check if next song in que exists
+    if (queue[msg.guild.id].songs[0]) { play(msg) } else {
+      return msg.channel.send('Queue is empty').then(() => {
+        queue[msg.guild.id].playing = false
+        connection.channel.leave()
+      })
+    }
+  })
+
+  dispatcher.on('error', (err) => {
+    msg.channel.send('Error: unable to play audio')
+    console.log(err)
+  })
 }
 
