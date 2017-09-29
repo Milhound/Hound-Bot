@@ -120,8 +120,8 @@ function play (msg) {
   var song = queue[msg.guild.id].songs[0]
   setTimeout( () => {
     queue[msg.guild.id].songs.shift()
-    msg.channel.send(`Playing: **${song.title}** as requested by: ${song.requester}`, 1000)
-  })
+    msg.channel.send(`Playing: **${song.title}** as requested by: ${song.requester}`)
+  }, 1000)
   dispatcher = connection.playStream(yt(song.url,
     {filter: 'audioonly'}).on('error', (err) => {
       if (err.code === 'ECONNRESET') return
