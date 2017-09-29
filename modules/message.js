@@ -160,9 +160,6 @@ exports.cmds = (msg) => {
     'queue': (msg) => {
       Voice.queue(msg)
     },
-    'play': (msg, alreadyAdded) => {
-      Voice.play(msg, alreadyAdded)
-    },
     'yt': (msg) => {
       const queryYt = msg.content.slice(3).trim().replace(' ', '%20')
       const urlYt = baseYtUrl + queryYt + '&key=' + apiKey

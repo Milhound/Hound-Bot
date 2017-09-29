@@ -11,7 +11,6 @@ let preferredServerVolume = {}
 
 module.exports = {
   add: add,
-  play: play,
   'streamFromURL': (msg, url) => {
     join(msg).then(connection => {
       setInterval(() => { if (connection.channel.members.size === 0) dispatcher.end() }, 300000)
