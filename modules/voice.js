@@ -149,15 +149,15 @@ function play (msg, song) {
       msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
     } else if (m.content === '!end') {
       queue[msg.guild.id].songs = {}
-      dispatcher.end(msg)
+      dispatcher.end()
     }
   })
     dispatcher.on('end', () => {
+      collector.stop()      
       var song = queue[msg.guild.id].songs.shift()
       if (song === undefined) {
         return msg.channel.send('Queue is empty').then(() => {
           queue[msg.guild.id].playing = false
-          collector.stop()
           connection.channel.leave()
         })
       }
