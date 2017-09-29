@@ -118,12 +118,14 @@ function play (msg) {
   let connection = msg.guild.voiceConnection
   queue[msg.guild.id].playing = true;
   var song = queue[msg.guild.id].songs[0]
-  msg.channel.send(`Playing: **${song.title}** as requested by: ${song.requester}`)
+  setTimeout( () => {
+    queue[msg.guild.id].songs.shift()
+    msg.channel.send(`Playing: **${song.title}** as requested by: ${song.requester}`, 1000)
+  
   dispatcher = connection.playStream(yt(song.url,
     {filter: 'audioonly'}).on('error', (err) => {
       if (err.code === 'ECONNRESET') return
     }), { passes: 2 })
-  setTimeout( () => queue[msg.guild.id].songs.shift(), 1000)
   if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.1)
   let collector = msg.channel.createCollector(m => m)
   collector.on('collect', m => {
