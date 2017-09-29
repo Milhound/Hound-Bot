@@ -120,7 +120,6 @@ function play (msg) {
   var song = queue[msg.guild.id].songs[0]
   setTimeout( () => {
     queue[msg.guild.id].songs.shift()
-    msg.channel.send(`Playing: **${song.title}** as requested by: ${song.requester}`)
   }, 1000)
   dispatcher = connection.playStream(yt(song.url,
     {filter: 'audioonly'}).on('error', (err) => {
@@ -128,6 +127,7 @@ function play (msg) {
     }), { passes: 2 })
   if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.1)
   let collector = msg.channel.createCollector(m => m)
+  msg.channel.send(`Playing: **${song.title}** as requested by: ${song.requester}`)
   collector.on('collect', m => {
     if (m.content.startsWith('!pause')) {
       msg.channel.send('Paused').then(() => { dispatcher.pause() })
