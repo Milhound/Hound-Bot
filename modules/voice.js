@@ -114,8 +114,62 @@ function add (msg) {
 
 function play (msg, song) {
   if (!msg.guild.voiceConnection) return join(msg).then(() => {
+    function play (msg, song) {
+      if (!msg.guild.voiceConnection) return join(msg).then(() => {
+        play(msg, song)
+      })
+      let dispatcher
+      let connection = msg.guild.voiceConnection
+      queue[msg.guild.id].playing = true;
+      msg.channel.send(`Playing: **${song.title}** as requested by: ${song.requester}`)
+      dispatcher = connection.playStream(yt(song.url,
+        {filter: 'audioonly'}).on('error', (err) => {
+          if (err.code === 'ECONNRESET') return
+        }), { passes: 2 })
+      queue[msg.guild.id].songs.shift()
+      if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.1)
+      let collector = msg.channel.createCollector(m => m)
+      collector.on('collect', m => {
+        if (m.content.startsWith('!pause')) {
+          msg.channel.send('Paused').then(() => { dispatcher.pause() })
+        } else if (m.content.startsWith('!resume')) {
+          msg.channel.send('Resuming...').then(() => { dispatcher.resume() })
+        } else if (m.content === '!skip') {
+          msg.channel.send('Skipping').then((msg) => { dispatcher.end() })
+        } else if (m.content === '!volume+') {
+          dispatcher.setVolume(dispatcher.volume + (dispatcher.volume / 4))
+          msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
+        } else if (m.content === '!volume++') {
+          dispatcher.setVolume(dispatcher.volume * 2)
+          msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
+        } else if (m.content === '!volume-') {
+          dispatcher.setVolume(dispatcher.volume - (dispatcher.volume / 4))
+          msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
+        } else if (m.content === '!volume--') {
+          dispatcher.setVolume(dispatcher.volume / 2)
+          msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
+        } else if (m.content === '!end') {
+          queue[msg.guild.id].songs = {}
+          dispatcher.end()
+        }
+      })
+        dispatcher.on('end', () => {
+          collector.stop()      
+          if (queue[msg.guild.id].songs[0]) {
+            play(msg, queue[msg.guild.id].songs[0])
+          } else {
+            return msg.channel.send('Queue is empty').then(() => {
+              queue[msg.guild.id].playing = false
+              connection.channel.leave()
+            })
+          }
+        })
+        dispatcher.on('error', (err) => {
+          msg.channel.send('Error: unable to play audio')
+          console.log(err)
+        })
+    }
     play(msg, song)
-    queue[msg.guild.id].songs.shift();
   })
   let dispatcher
   let connection = msg.guild.voiceConnection
@@ -153,14 +207,14 @@ function play (msg, song) {
   })
     dispatcher.on('end', () => {
       collector.stop()      
-      var song = queue[msg.guild.id].songs.shift()
-      if (song === undefined) {
+      var nextSong = queue[msg.guild.id].songs.shift()
+      if (nextSong === undefined) {
         return msg.channel.send('Queue is empty').then(() => {
           queue[msg.guild.id].playing = false
           connection.channel.leave()
         })
       }
-      play(msg, song)
+      play(msg, nextSong)
     })
     dispatcher.on('error', (err) => {
       msg.channel.send('Error: unable to play audio')
