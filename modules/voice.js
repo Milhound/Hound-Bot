@@ -104,8 +104,8 @@ function add (msg) {
       queue[msg.guild.id].songs = []
       queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
     }
-    var guildSongs = queue[msg.guild.id].songs
-    guildSongs.push({url: url, title: info.title, requester: msg.author.username})
+    if (typeof queue[msg.guild.id].songs !== 'object') queue[msg.guild.id].songs = {}
+    queue[msg.guild.id].songs.push({url: url, title: info.title, requester: msg.author.username})
 
     msg.channel.send(`Added **${info.title}** to queue.`)
     if (queue[msg.guild.id].playing === false) play(msg)
