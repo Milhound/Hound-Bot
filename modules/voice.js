@@ -150,8 +150,7 @@ function play (msg) {
 
   // Grab current song
   var song = queue[msg.guild.id].songs[0]
-  queue[msg.guild.id].songs.shift()
-
+  
   // Play song
   let dispatcher = connection.playStream(yt(song.url,
     {filter: 'audioonly'}).on('error', (err) => {
@@ -164,6 +163,7 @@ function play (msg) {
   // When playing notify users of song name and requestor.
   dispatcher.on('start', () => {
     msg.channel.send(`Playing **${song.title}** as requested by **${song.requester}**.`)
+    queue[msg.guild.id].songs.shift()
   })
 
   // On Song End
