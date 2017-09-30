@@ -163,7 +163,7 @@ function play (msg) {
 
   // When playing notify users of song name and requestor.
   dispatcher.on('start', () => {
-    msg.send(`Playing **${song.title}** as requested by **${song.requester}**.`)
+    msg.channel.send(`Playing **${song.title}** as requested by **${song.requester}**.`)
   })
 
   // On Song End
