@@ -157,10 +157,14 @@ function play (msg) {
     {filter: 'audioonly'}).on('error', (err) => {
       if (err.code === 'ECONNRESET') return
     }), { passes: 2 })
-  msg.channel.send(`Playing: **${song.title}** as requested by: ${song.requester}`)
 
   if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.1)
   let collector = getSongFunctions(msg, dispatcher)
+
+  // When playing notify users of song name and requestor.
+  dispatcher.on('start', () => {
+    msg.send(`Playing **${song.title}** as requested by **${song.requester}**.`)
+  })
 
   // On Song End
   dispatcher.on('end', () => {
