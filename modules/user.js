@@ -143,9 +143,6 @@ function applyPerks (msg, exp) {
       } else if (exp >= 1975 && !msg.guild.member(msg.author).roles.exists('id', Config.server.roles.vip)) {
         msg.guild.member(msg.author).addRole(Config.server.roles.vip)
         resolve(`${msg.author.username} you have achieved the rank of VIP`)
-      } else if (exp >= 15100 && !msg.guild.member(msg.author).roles.exists('id', Config.server.roles.moderator)) {
-        msg.guild.member(msg.author).addRole(Config.server.roles.moderator)
-        resolve(`${msg.author.username} you have achieved the rank of Moderator`)
       } else if (exp > 0) { resolve() }
       reject('Something went wrong when applying perks')
     } else resolve()
