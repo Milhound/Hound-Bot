@@ -1,12 +1,12 @@
 {
   "name": "hound-bot",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "main": "bot.js",
   "scripts": {
     "start": "node app.js",
     "clear": "npm cache clear"
   },
-  "author": "Daniel Milholland <https://www.milhound.com> (Daniel@gailwindslog.com)",
+  "author": "Daniel Milholland - http://milhound.com <Milhound@icloud.com>",
   "description": "Hound Bot for Discordapp, created using Discord.js.",
   "keywords": [
     "Discord",
@@ -17,7 +17,10 @@
   ],
   "license": "LGPL-3.0",
   "dependencies": {
-    "discord.js": "^11.1.0",
-    "ytdl-core": "^0.14.0"
+    "discord.js": "^11.2.x",
+    "node-opus": "^0.2.x",
+    "request": "2.83.0",
+    "superagent": "^3.6.x",
+    "ytdl-core": "^0.18.1"
   }
 }
