@@ -135,7 +135,7 @@ function getSongFunctions(msg, dispatcher) {
       dispatcher.setVolume(dispatcher.volume / 2)
       msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
     } else if (m.content === '!end') {
-      queue[msg.guild.id].songs = {}
+      queue[msg.guild.id].songs = []
       dispatcher.end()
     }
   })

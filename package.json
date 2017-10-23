@@ -1,10 +1,11 @@
 {
   "name": "hound-bot",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "main": "bot.js",
   "scripts": {
     "start": "node app.js",
-    "clear": "npm cache clear"
+    "clear": "npm cache clear",
+    "test": "node_modules/.bin/mocha -w"
   },
   "author": "Daniel Milholland - http://milhound.com <Milhound@icloud.com>",
   "description": "Hound Bot for Discordapp, created using Discord.js.",
@@ -22,5 +23,10 @@
     "request": "2.83.0",
     "superagent": "^3.6.x",
     "ytdl-core": "^0.18.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "sinon": "^4.0.1"
   }
 }
