@@ -16,7 +16,7 @@
     "Node",
     "Music"
   ],
-  "license": "LGPL-3.0",
+  "license": "CC-BY",
   "dependencies": {
     "discord.js": "^11.2.x",
     "node-opus": "^0.2.x",
