@@ -35,22 +35,25 @@ module.exports = {
       let collector = msg.channel.createCollector(m => m)
       collector.on('collect', m => {
         if (m.content === '!volume+') {
+          m.delete(1200)
           dispatcher.setVolume(dispatcher.volume + (dispatcher.volume / 4))
           msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         } else if (m.content === '!volume++') {
+          m.delete(1200)
           dispatcher.setVolume(dispatcher.volume * 2)
           msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         } else if (m.content === '!volume-') {
+          m.delete(1200)
           dispatcher.setVolume(dispatcher.volume - (dispatcher.volume / 4))
           msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         } else if (m.content === '!volume--') {
+          m.delete(1200)
           dispatcher.setVolume(dispatcher.volume / 2)
           msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         } else if (m.content === '!end' || m.content.startsWith('!play') || m.content.startsWith('!request') || m.content.startsWith('!add')) {
           m.channel.messages.find('id', embedId).delete().then(console.log("Deleted embed")).catch(console.error)
           dispatcher.end()
         }
-        m.delete(1200)
       })
       dispatcher.on('end', () => {
         connection.channel.leave()
@@ -135,28 +138,34 @@ function getSongFunctions(msg, dispatcher) {
   let collector = msg.channel.createCollector(m => m)
   collector.on('collect', m => {
     if (m.content.startsWith('!pause')) {
+      m.delete(1200)
       msg.channel.send('Paused').then(() => { dispatcher.pause() })
     } else if (m.content.startsWith('!resume')) {
+      m.delete(1200)
       msg.channel.send('Resuming...').then(() => { dispatcher.resume() })
     } else if (m.content === '!skip') {
+      m.delete(1200)
       msg.channel.send('Skipping').then((msg) => { dispatcher.end() })
     } else if (m.content === '!volume+') {
+      m.delete(1200)
       dispatcher.setVolume(dispatcher.volume + (dispatcher.volume / 4))
       msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
     } else if (m.content === '!volume++') {
+      m.delete(1200)
       dispatcher.setVolume(dispatcher.volume * 2)
       msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
     } else if (m.content === '!volume-') {
+      m.delete(1200)
       dispatcher.setVolume(dispatcher.volume - (dispatcher.volume / 4))
       msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
     } else if (m.content === '!volume--') {
+      m.delete(1200)
       dispatcher.setVolume(dispatcher.volume / 2)
       msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
     } else if (m.content === '!end') {
       queue[msg.guild.id].songs = []
       dispatcher.end()
     }
-    m.delete(1200)
   })
   return collector
 }
