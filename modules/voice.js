@@ -26,7 +26,7 @@ module.exports = {
           },
           author: {
             name: msg.author.username,
-            icon_url: msg.author.defaultAvatarURL
+            icon_url: msg.author.displayAvatarURL
           }
         }
       }).then(message => embedId = message.id)
