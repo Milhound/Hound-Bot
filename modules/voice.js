@@ -15,7 +15,7 @@ module.exports = {
     join(msg).then(connection => {
       setInterval(() => { if (connection.channel.members.size === 0) dispatcher.end() }, 300000)
       var embedId
-      msg.send({
+      msg.channel.send({
         "embed": {
           "title": "Playing " + url,
           "description": "Playing radio use !end to stop playing.",
