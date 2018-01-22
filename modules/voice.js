@@ -14,6 +14,23 @@ module.exports = {
   'streamFromURL': (msg, url) => {
     join(msg).then(connection => {
       setInterval(() => { if (connection.channel.members.size === 0) dispatcher.end() }, 300000)
+      embedId
+      msg.send({
+        "embed": {
+          "title": "Playing " + url,
+          "description": "Playing radio use !end to stop playing.",
+          "url": url,
+          "color": 14473566,
+          "timestamp": msg.createdTimestamp,
+          "thumbnail": {
+            "url": "http://icons.iconarchive.com/icons/webalys/kameleon.pics/512/Radio-4-icon.png"
+          },
+          "author": {
+            "name": msg.author.username,
+            "icon_url": msg.author.defaultAvatarURL
+          }
+        }
+      }).then(message => embedId = message.id)
       let dispatcher = connection.playStream(req(url))
       if (preferredServerVolume.hasOwnProperty(msg.guild.id)) dispatcher.setVolume(preferredServerVolume[msg.guild.id]); else dispatcher.setVolume(0.08)
       let collector = msg.channel.createCollector(m => m)
@@ -31,8 +48,10 @@ module.exports = {
           dispatcher.setVolume(dispatcher.volume / 2)
           msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         } else if (m.content === '!end' || m.content.startsWith('!play') || m.content.startsWith('!request') || m.content.startsWith('!add')) {
+          m.channel.messages.find('id', embedId).delete().catch(console.error)
           dispatcher.end()
         }
+        m.delete(1200)
       })
       dispatcher.on('end', () => {
         connection.channel.leave()
