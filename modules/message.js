@@ -232,6 +232,7 @@ exports.cmds = (msg) => {
 
   if (commands.hasOwnProperty(msg.content.toLowerCase().slice(1).split(' ')[0])) {
     console.log(msg.author.username + ' - ' + msg.guild.name + ' used command: ' + msg.content.slice(0))
-    commands[msg.content.toLowerCase().slice(1).split(' ')[0]](msg).then(message => {if (!message.content.startsWith('!wipe')) Fn.deleteCommand(message)})
+    commands[msg.content.toLowerCase().slice(1).split(' ')[0]](msg)
+    if (!message.content.startsWith('!wipe')||!message.content.startsWith('!radio')) Fn.deleteCommand(message)
   }
 }
