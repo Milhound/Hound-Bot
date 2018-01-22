@@ -21,7 +21,6 @@ module.exports = {
           description: "Playing radio use !end to stop playing.",
           url: url,
           color: 14473566,
-          timestamp: msg.createdTimestamp,
           thumbnail: {
             url: "http://icons.iconarchive.com/icons/webalys/kameleon.pics/512/Radio-4-icon.png"
           },
