@@ -14,7 +14,7 @@ module.exports = {
   'streamFromURL': (msg, url) => {
     join(msg).then(connection => {
       setInterval(() => { if (connection.channel.members.size === 0) dispatcher.end() }, 300000)
-      embedId
+      var embedId
       msg.send({
         "embed": {
           "title": "Playing " + url,
