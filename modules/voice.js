@@ -138,6 +138,7 @@ function getSongFunctions(msg, dispatcher) {
       queue[msg.guild.id].songs = []
       dispatcher.end()
     }
+    m.delete(1200)
   })
   return collector
 }
