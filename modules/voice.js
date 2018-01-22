@@ -16,18 +16,18 @@ module.exports = {
       setInterval(() => { if (connection.channel.members.size === 0) dispatcher.end() }, 300000)
       var embedId
       msg.channel.send({
-        "embed": {
-          "title": "Playing " + url,
-          "description": "Playing radio use !end to stop playing.",
-          "url": url,
-          "color": 14473566,
-          "timestamp": msg.createdTimestamp.toString(),
-          "thumbnail": {
-            "url": "http://icons.iconarchive.com/icons/webalys/kameleon.pics/512/Radio-4-icon.png"
+        embed: {
+          title: "Playing " + url,
+          description: "Playing radio use !end to stop playing.",
+          url: url,
+          color: 14473566,
+          timestamp: msg.createdTimestamp,
+          thumbnail: {
+            url: "http://icons.iconarchive.com/icons/webalys/kameleon.pics/512/Radio-4-icon.png"
           },
-          "author": {
-            "name": msg.author.username,
-            "icon_url": msg.author.defaultAvatarURL
+          author: {
+            name: msg.author.username,
+            icon_url: msg.author.defaultAvatarURL
           }
         }
       }).then(message => embedId = message.id)
