@@ -42,9 +42,10 @@ exports.cmds = (msg) => {
         !volume++ - Increases volume by 2x
         !volume- - Reduces volume by 25%
         !volume-- - Reduces volume by 2x
-        !radio - plays dub radio
+        !dub - plays dub radio
         !weeb - Plays weeabo radio
         !mix - Plays mix radio
+        !radio <url> - Plays a radio station
         !setVolume - Sets preferred server volume`
       msg.channel.send(text)
     },
@@ -192,7 +193,7 @@ exports.cmds = (msg) => {
     'ban': (msg) => {
       Admin.ban(msg)
     },
-    'radio': (msg) => {
+    'dub': (msg) => {
       Voice.streamFromURL(msg, 'http://stream1.ml1.t4e.dj/dublovers_high.mp3')
     },
     'weeb': (msg) => {
@@ -201,7 +202,7 @@ exports.cmds = (msg) => {
     'mix': (msg) => {
       Voice.streamFromURL(msg, 'http://14963.live.streamtheworld.com/KHMXFMAAC?streamtheworld_user=1&SRC=CBS&DIST=CBS&TGT=cbslocalplayer&demographic=false')
     },
-    'test': (msg) => {
+    'radio': (msg) => {
       if (msg.content.split(' ')[1]) var url = msg.content.split(' ')[1]
       if (url.indexOf('http') === -1) return
       Voice.streamFromURL(msg, url)
