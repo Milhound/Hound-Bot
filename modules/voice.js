@@ -47,7 +47,7 @@ module.exports = {
           dispatcher.setVolume(dispatcher.volume / 2)
           msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         } else if (m.content === '!end' || m.content.startsWith('!play') || m.content.startsWith('!request') || m.content.startsWith('!add')) {
-          m.channel.messages.find('id', embedId).delete().catch(console.error)
+          m.channel.messages.find('id', embedId).delete().then(console.log("Deleted embed")).catch(console.error)
           dispatcher.end()
         }
         m.delete(1200)
