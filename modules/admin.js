@@ -22,7 +22,11 @@ module.exports = {
       var argsWipe = msg.content.split(' ')
       if (argsWipe[1] !== undefined && !isNaN(parseInt(argsWipe[1])) && argsWipe[1] <= 50) {
         var messages = msg.channel.fetchMessages({limit: (parseInt(argsWipe[1]) + 1)})
-        messages.then(messages => { msg.channel.bulkDelete(messages) })
+        messages.then(messages => { 
+          msg.channel.bulkDelete(messages)
+            .then(messages => console.log(`Deleted ${messages.size} messages.`))
+            .catch(console.error)
+          })
       } else if (argsWipe[1] > 50 || argsWipe[1] === ' ') {
         msg.reply('Attempted to wipe too many messages')
       }
