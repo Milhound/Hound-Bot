@@ -52,7 +52,7 @@ module.exports = {
           msg.channel.send(`Volume set to ${Math.floor(dispatcher.volume * 1000)}%`)
         } else if (m.content === '!end' || m.content.startsWith('!play') || m.content.startsWith('!request') || m.content.startsWith('!add')) {
           m.delete(1200)
-          m.channel.messages.find('id', embedId).delete().catch(console.error)
+          m.channel.messages.find(x => x.id == embedId).delete().catch(console.error)
           dispatcher.end()
         }
       })

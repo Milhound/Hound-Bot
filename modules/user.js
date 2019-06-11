@@ -6,8 +6,6 @@ var expLocked = new Map()
 
 module.exports = {
   initiateSave: initiateSave,
-  logUser: logUser,
-  logUserLeave: logUserLeave,
   welcomeMessage: welcomeMessage,
   'level': (msg) => {
     if (!msg.mentions.users.first()) {
@@ -156,12 +154,6 @@ function addUser (msg) {
   Usr[msg.guild.id].users[msg.author.id] = {}
   Usr[msg.guild.id].users[msg.author.id].username = msg.author.username
   Usr[msg.guild.id].users[msg.author.id].experience = 0
-}
-function logUser (member) {
-  member.guild.channels.find('id', Config.server.channels.log).send(`${member.user.username} has joined the Server.`)
-}
-function logUserLeave (member) {
-  member.guild.channels.find('id', Config.server.channels.log).send(`${member.user.username} has left the Server.`)
 }
 function welcomeMessage (member) {
   if (Config.server.greet === true) {

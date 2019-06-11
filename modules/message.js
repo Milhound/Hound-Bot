@@ -86,7 +86,7 @@ exports.cmds = (msg) => {
       }
     },
     'cat': (msg) => {
-      Fn.apiRequest('http://random.cat/meow').then(response => msg.channel.send(response.file))
+      Fn.apiRequest('http://aws.random.cat/meow').then(response => msg.channel.send(response.file))
     },
     'insult': (msg) => {
       if (msg.mentions.users.array().length >= 0) {
