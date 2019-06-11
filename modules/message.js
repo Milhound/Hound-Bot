@@ -13,27 +13,27 @@ exports.cmds = (msg) => {
     'commands': (msg) => {
       var text = `List of Commands:
         **TEXT:**
-        !ping - Replys Pong
+        !ping - Replies with Pong
         !coin - Flip a coin
-        !dice <O: X> - Roll the dice (x)
+        !dice (# - Optional) - Roll a dice
         !chuck - Chuck Norris Joke
         !toast - Prints Toast
         !slap @user - Slaps all mentioned users
-        !insult (@user - optional) - Insults the sender or @user.
+        !insult (@user - Optional) - Insults the sender or @user.
         !cat - Random Cat
         !boom - Roast your fellow users
-        !to_C <#> - Converts Fahrenheit to Celsius
-        !to_F <#> - Converts Celsius to Fahrenheit
-        !to_K <Cel> - Converts Celsius to Kelvin
-        !time <TIMEZONE> - Returns current time in zone. Ex: !time CST
-        !level <O: user> - Prints out your (or user) current level and experience
+        !to_C (Temperature) - Converts Fahrenheit to Celsius
+        !to_F (Temperature) - Converts Celsius to Fahrenheit
+        !to_K (Temp in Celsius) - Converts Celsius to Kelvin
+        !time (Timezone) - Returns current time in zone. Ex: !time CST
+        !level (@user - Optional) - User's current level and exp
         !leaderboard - Shows the current rankings of the Server.
-        !yt - Search for YouTube video
-        !ud <word> - Urban dictonary defintition
+        ~~!yt - Search for YouTube video~~
+        !ud (Word) - Urban dictonary defintition
 
         **VOICE:**
-        !add <url> - Plays a song from YouTube.
-        !request <Search Query> - Add youtube video to queue
+        !add (URL) - Plays a song from YouTube.
+        !request (Query) - Add youtube video to queue
         !skip - Skips current song.
         !pause - Pauses song
         !resume - Resumes song
@@ -41,10 +41,10 @@ exports.cmds = (msg) => {
         !volume++ - Increases volume by 2x
         !volume- - Reduces volume by 25%
         !volume-- - Reduces volume by 2x
-        !dub - plays dub radio
+        !dub - Plays dub radio
         !weeb - Plays weeabo radio
         !mix - Plays mix radio
-        !radio <url> - Plays a radio station
+        !radio (URL) - Plays a radio station
         !setVolume - Sets preferred server volume`
       msg.channel.send(text)
     },
