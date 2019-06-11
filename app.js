@@ -5,7 +5,7 @@ const Usr = require('./modules/user.js')
 const Config = require('./data/config.json')
 
 bot.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`)
+  console.log(`Logged in as ${bot.user.tag}!`)
   Usr.initiateSave()
 })
 
