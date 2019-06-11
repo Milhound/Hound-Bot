@@ -3,7 +3,6 @@ const Fn = require('./functions.js')
 const User = require('./user.js')
 const Voice = require('./voice.js')
 const Config = require('../data/config.json')
-const Guild = require('./guild.js')
 
 let apiKey
 if (Config.yt.key) { apiKey = Config.yt.key } else { apiKey = process.env.GOOGLE_API_KEY }
@@ -212,15 +211,6 @@ exports.cmds = (msg) => {
     },
     'channel': (msg) => {
       Admin.channelInfo(msg)
-    },
-    'addguild': (msg) => {
-      Guild.addServer(msg)
-    },
-    'welcome': (msg) => {
-      Guild.setWelcome(msg)
-    },
-    'greet': (msg) => {
-      Guild.toggleGreet(msg)
     },
     'ud': (msg) => {
       var wordToDefine = msg.content.slice(3).trim().replace(' ', '%20')

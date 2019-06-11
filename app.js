@@ -2,13 +2,11 @@ const Discord = require('discord.js')
 const bot = new Discord.Client()
 const Message = require('./modules/message.js')
 const Usr = require('./modules/user.js')
-const Guild = require('./modules/guild.js')
 const Config = require('./data/config.json')
 
 bot.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`)
   Usr.initiateSave()
-  Guild.initGuildSave()
 })
 
 bot.on('message', message => {
