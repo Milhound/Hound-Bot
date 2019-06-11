@@ -4,8 +4,7 @@
   "main": "bot.js",
   "scripts": {
     "start": "node app.js",
-    "clear": "npm cache clear",
-    "test": "node_modules/.bin/mocha -w"
+    "clear": "npm cache clear"
   },
   "author": "Daniel Milholland - http://milhound.com <Milhound@icloud.com>",
   "description": "Hound Bot for Discordapp, created using Discord.js.",
@@ -16,23 +15,22 @@
     "Node",
     "Music"
   ],
-  "license": "CC-BY",
-  "dependencies": {
-    "bufferutil": "^3.0.3",
-    "discord.js": "^11.3.0",
-    "erlpack": "github:hammerandchisel/erlpack",
-    "libsodium-wrappers": "^0.5.4",
-    "node-opus": "^0.2.7",
-    "opusscript": "0.0.3",
-    "request": "2.83.0",
-    "sodium": "^2.0.3",
-    "superagent": "^3.8.2",
-    "uws": "^0.14.5",
-    "ytdl-core": "^0.18.7"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Milhound/Hound-Bot.git"
   },
-  "devDependencies": {
-    "chai": "^4.1.2",
-    "mocha": "^4.1.0",
-    "sinon": "^4.2.2"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "erlpack": "github:discordapp/erlpack",
+    "request": "latest",
+    "ytdl-core": "latest",
+    "bufferutil": "latest",
+    "node-opus": "^0.2.7",
+    "opusscript": "0.0.6",
+    "libsodium-wrappers": "0.7.3",
+    "@discordjs/uws": "10.149.0",
+    "node-sodium": "github:general-programming/node-sodium",
+    "discord.js": "latest",
+    "superagent": "latest"
   }
 }

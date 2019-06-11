@@ -1,6 +1,4 @@
 {
-  "id": "169874052675010560",
-  "token": null,
   "prefix": "!",
   "yt": {
     "url": "https://www.googleapis.com/youtube/v3/search?type=video&part=snippet&q=",
@@ -12,15 +10,8 @@
     "greet": false,
     "welcome": "",
     "channels": {
-      "music": "240125330390646786",
-      "log": "253191667291652107"
     },
     "roles": {
-      "programmer": "235562658877800448",
-      "music": "240125651007438849",
-      "requestBAN":"243181388164104193",
-      "skipBAN":"243181397869723649",
-      "gamer": "235440340981514240",
       "member": "180510856868528128",
       "vip": "343132510529519617",
       "moderator": "240269802411655179"
