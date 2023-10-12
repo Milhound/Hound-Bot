@@ -16,7 +16,7 @@ Yes! You are more than welcome to use any of the code in part or in whole to dev
 I will happily accept all help with regards to Hound Bot. As it is a personal project I would love to see flourish. I will review all requests, and address them as necessary.
 
 ## Is Hound Bot still in development?
-While Hound Bots development has slowed greatly in the recent months. I try to keep it as up-to-date as possible. I do try to resolve issues with bugs, and updates to the core libraries Hound Bot uses. As far as new features are concerned, I add them as I find use for them or need them. Recently there has not been many requests for additional features on Hound Bot, but I am looking to improve it wherever possible. This is a passion project, that will not die any time soon.
+No, I have stopped all development on the Javascript version of this bot.
 
 ## License:
 CC-BY (Attribution Strongly Encouraged, Not required for small components)
